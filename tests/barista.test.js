@@ -115,6 +115,18 @@ RouterTests = {
     assert.ok(route, this.fail)
   },
 
+  // create a static route with key match requirements as an array of strings
+  'test Route With An Array of String Reqs' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: [ 'bob', 'frank', 'ted' ] } );
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with key match requirements as a mixed array
+  'test Route With An Array of Mixed Reqs' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: [ /\d{1}/, '\\d\\d', '123' ] } );
+    assert.ok(route, this.fail)
+  },
+
   // create a static route with key match requirements AND a method
   'test Route With Reqs And Method' : function() {
     var route = router.match('/:controller/:action/:id', 'GET').where( { id: /\d+/ } );
@@ -146,8 +158,54 @@ RouterTests = {
   },
 
   // test that the route accepts a regexp parameter
-  'test Simple Route Parses with conditions' : function() {
+  'test Simple Route Parses with regex condition' : function() {
     var route = router.match('/:controller/:action/:id').where( { id: /\d+/ } );
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  // test that the route accepts a string regex condition
+  'test Simple Route Parses with string regex condition' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: '\\d+' } );
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  // test that the route accepts a string condition
+  'test Simple Route Parses with string condition' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: '1' } );
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  // test that the route accepts an array of mixed condition
+  'test Simple Route Parses with an array of mixed conditions' : function() {
+    var route = router.match('/:controller/:action/:id')
+                      .where({ id: [ '\\d\\d', /\d{1}/, '123' ] });
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'products', this.fail);

@@ -1,4 +1,4 @@
-Barista is a simple URL router for nodejs.
+Barista is a simple URL router for NodeJS.
 
 Getting Barista
 ===============
@@ -18,23 +18,54 @@ var Router = require('barista').Router;
 var router = new Router;
 ```
 
+Adding routes
+-------------
 
-### Adding routes
+### A simple example
 
 ```javascript
-// a basic example
 router.match( '/products', 'GET' )
       .to( 'products.index' )
+```
 
-// Rails-style variables
+### Rails-esque variable names
+
+```javascript
 router.match( '/products/:id', 'GET' )
       .to( 'products.show' )
 
-// optional parts
+router.match( '/profiles/:username', 'GET' )
+      .to( 'users.show' )
+
 router.match( '/products/:id(.:format)', 'GET' )
       .to( 'products.show' )
+```
 
-// convenience methods
+### Match conditions
+
+```javascript
+router.match( '/:beverage/near/:zipcode', 'GET' )
+      .to( 'beverage.byZipCode' )
+      .where({
+        // an array of options
+        beverage: [ 'coffee', 'tea', 'beer', 'warm_sake' ],
+        // a regex pattern
+        zipcode: /^\d{5}(-\d{4})?$/
+      })
+
+router.match( '/:beverage/near/:location', 'GET' )
+      .to( 'beverage.byLocation' )
+      .where({
+        // could be a postal code
+        // OR a zip code
+        // OR the word 'me' (geolocation FTW)
+        location: [ /^\d{5}(-\d{4})?$/, /^[ABCEGHJKLMNPRSTVXY]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/, 'me' ]
+      })
+```
+
+### Convenience methods
+
+```javascript
 router.get( '/products/:id(.:format)' )
       .to( 'products.show' )
 
