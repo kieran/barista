@@ -4,7 +4,7 @@ var Router    = require('../index').Router;
 
 
 RouterTests = {
-  //pass and fail messages to be used in reporting success or failure 
+  //pass and fail messages to be used in reporting success or failure
 
   //basic test setup
   setup : function(opts) {
@@ -23,7 +23,7 @@ RouterTests = {
     }
   },
 
- // create a router 
+ // create a router
   'test Create Router' : function() {
     assert.ok(router, this.fail);
   },
@@ -76,7 +76,7 @@ RouterTests = {
     });
   },
 
-  // create a static route with fixed params 
+  // create a static route with fixed params
   'test Route With Params' : function() {
     var route = router.match('/hello/there').to( 'applicaton.index' );
     assert.ok(route, this.fail)
@@ -85,19 +85,19 @@ RouterTests = {
     });
   },
 
-  // create a static route with extra fixed params 
+  // create a static route with extra fixed params
   'test Route With Extra Params' : function() {
     var route = router.match('/hello/there').to( 'applicaton.index', { language: 'english' } );
     assert.ok(route, this.fail)
   },
 
-  // create a static route with extra fixed params 
+  // create a static route with extra fixed params
   'test Route With Extra Params And Route-Implied Endpoint' : function() {
     var route = router.match('/:controller/:action').to( { language: 'english' } );
     assert.ok(route, this.fail)
   },
 
-  // create a static route with a specific request method 
+  // create a static route with a specific request method
   'test Route With Method' : function() {
     var route = router.match('/:controller/:action', 'GET');
     assert.ok(route, this.fail)
@@ -183,7 +183,7 @@ RouterTests = {
     });
   },
 
-  // create a static route with extra fixed params 
+  // create a static route with extra fixed params
   'test Route With Extra Params And Route-Implied Endpoint Parses' : function() {
     var route = router.match('/:controller/:action').to( { language: 'english' } );
     var params = router.first('/products/show','GET');
@@ -296,28 +296,28 @@ RouterTests = {
   },
 
 // fuck, how repetitive. how about methods for a bit?
-  
+
   'test GET' : function() {
     var route = router.match('/:controller/:action(/:id)(.:format)','GET');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'GET', this.fail);
   },
-  
+
   'test POST' : function() {
     var route = router.match('/:controller/:action(/:id)(.:format)','POST');
     var params = router.first('/products/show/1.html','POST');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'POST', this.fail);
   },
-  
+
   'test PUT' : function() {
     var route = router.match('/:controller/:action(/:id)(.:format)','PUT');
     var params = router.first('/products/show/1.html','PUT');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'PUT', this.fail);
   },
-  
+
   'test DELETE' : function() {
     var route = router.match('/:controller/:action(/:id)(.:format)','DELETE');
     var params = router.first('/products/show/1.html','DELETE');
@@ -331,21 +331,21 @@ RouterTests = {
     assert.ok(params, this.fail);
     assert.equal(params.method, 'GET', this.fail);
   },
-  
+
   'test POST Shorthand' : function() {
     var route = router.post('/:controller/:action(/:id)(.:format)');
     var params = router.first('/products/show/1.html','POST');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'POST', this.fail);
   },
-  
+
   'test PUT Shorthand' : function() {
     var route = router.put('/:controller/:action(/:id)(.:format)');
     var params = router.first('/products/show/1.html','PUT');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'PUT', this.fail);
   },
-  
+
   'test DELETE Shorthand' : function() {
     var route = router.delete('/:controller/:action(/:id)(.:format)');
     var params = router.first('/products/show/1.html','DELETE');
@@ -354,12 +354,12 @@ RouterTests = {
     assert.equal(params.action, 'show', this.fail);
   },
 
-  
+
 // that was fun. Let's do a little resource testing
-  
+
   'test Resource Matches' : function() {
     var routes = router.resource('snow_dogs');
-  
+
     // index
     assert.ok( router.first('/snow_dogs','GET'), this.fail);
     assert.ok( router.first('/snow_dogs.html','GET'), this.fail);
@@ -435,7 +435,7 @@ RouterTests = {
     assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5, format:'html' } ), '/snow_dogs/pet/5.html', this.fail);
     assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5, format:'json' } ), '/snow_dogs/pet/5.json', this.fail);
     assert.equal( router.url( { controller:'snow_dogs', action:'pet', format:'html' } ), '/snow_dogs/pet.html', this.fail);
-    
+
     bench(function(){
       router.url( { controller:'snow_dogs', action:'pet', id:5, format:'html' } )
     });
@@ -452,7 +452,7 @@ RouterTests = {
     // test with QS params OFF (default behaviour)
     assert.equal( router.url( { controller:'snow_dogs', action:'pet', awesome:'yes' }, false ), '/snow_dogs/pet', this.fail);
   },
-  
+
   'test Creating a route without a string path will throw an error' : function() {
     assert.throws( function() {
       var route = router.match(5)
@@ -467,8 +467,8 @@ RouterTests = {
     }, /path must be a string/,
     this.fail );
   },
-  
-  
+
+
 }
 
 function bench(fn){
@@ -484,7 +484,7 @@ function bench(fn){
 // Run tests -- additionally setting up custom failure message and calling setup() and teardown()
 for(e in RouterTests) {
   if (e.match(/test/)) {
-    RouterTests.fail = "\033[0;1;31mFAILED  :: \033[0m" + e; 
+    RouterTests.fail = "\033[0;1;31mFAILED  :: \033[0m" + e;
     try {
       RouterTests.setup();
       RouterTests[e]();

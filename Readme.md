@@ -104,17 +104,17 @@ Route generation
 
 Pass in a params hash, get back a tasty string:
 ```javascript
-router.url( { 
-  controller: 'products', 
-  action: 'show', 
+router.url( {
+  controller: 'products',
+  action: 'show',
   id: 5
 } )
 //=> '/products/5'
 
 router.url( {
-  controller: 'products', 
-  action: 'show', 
-  id: 5, 
+  controller: 'products',
+  action: 'show',
+  id: 5,
   format: 'json'
 } )
 //=> '/products/5.json'
@@ -122,12 +122,12 @@ router.url( {
 Set the optional second parameter to `true` if you want
 extra params appended as a query string:
 ```javascript
-router.url({ 
-  controller: 'products', 
-  action: 'show', 
-  id: 5, 
-  format: 'json', 
-  love: 'cheese' 
+router.url({
+  controller: 'products',
+  action: 'show',
+  id: 5,
+  format: 'json',
+  love: 'cheese'
 }, true )
 //=> '/products/5.json?love=cheese'
 ```
