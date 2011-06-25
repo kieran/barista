@@ -1,0 +1,9 @@
+{
+  "name": "barista",
+  "description": "URL router / generator",
+  "version": "0.0.1",
+  "author": "Kieran Huggins <kieran@kieran.ca>",
+  "repository": "git://github.com/kieran/barista",
+  "main": "./index.js",
+  "engines": { "node": ">= 0.3.0" }
+}

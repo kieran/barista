@@ -1,0 +1,496 @@
+var util      = require ('util');
+var assert    = require('assert');
+var Router    = require('../index').Router;
+
+
+RouterTests = {
+  //pass and fail messages to be used in reporting success or failure 
+
+  //basic test setup
+  setup : function(opts) {
+    return function() {
+      router = new Router();
+    }();
+  },
+
+  //tear down must be run at the completion of every test
+  teardown : function(test) {
+    util.puts("\033[0;1;32mPASSED  ::  \033[0m" + test);
+    return function() {
+      process.addListener("exit", function () {
+        assert.equal(0, exitStatus);
+      })();
+    }
+  },
+
+ // create a router 
+  'test Create Router' : function() {
+    assert.ok(router, this.fail);
+  },
+
+  // create a simple route
+  'test Create Static Route' : function() {
+    var route = router.match('/path/to/thing');
+    assert.ok(route, this.fail);
+    bench(function(){
+      router.match('/path/to/thing');
+    });
+  },
+
+  // create a simple route
+  'test Create Simple Route' : function() {
+    var route = router.match('/:controller/:action/:id');
+    assert.ok(route, this.fail);
+    bench(function(){
+      router.match('/:controller/:action/:id');
+    });
+  },
+
+  // create a route with optional segments
+  'test Create Optional Route' : function() {
+    var route = router.match('/:controller/:action/:id(.:format)')
+    assert.ok(route, this.fail)
+    bench(function(){
+      router.match('/:controller/:action/:id(.:format)')
+    });
+  },
+
+  // create a route with multiple optional segments
+  'test Create Multiple Optional Route' : function() {
+    var route = router.match('/:controller/:id(/:action)(.:format)')
+    assert.ok(route, this.fail)
+    bench(function(){
+      router.match('/:controller/:id(/:action)(.:format)')
+    });
+  },
+
+  // create a resource
+  'test Create Resource' : function() {
+    var routes = router.resource('snow_dogs');
+    assert.ok(routes.length === 7, this.fail)
+    for ( var i in routes ) {
+      assert.ok(routes[i], this.fail)
+    }
+    bench(function(){
+      router.resource('snow_dogs');
+    });
+  },
+
+  // create a static route with fixed params 
+  'test Route With Params' : function() {
+    var route = router.match('/hello/there').to( 'applicaton.index' );
+    assert.ok(route, this.fail)
+    bench(function(){
+      router.match('/hello/there').to( 'applicaton.index' );
+    });
+  },
+
+  // create a static route with extra fixed params 
+  'test Route With Extra Params' : function() {
+    var route = router.match('/hello/there').to( 'applicaton.index', { language: 'english' } );
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with extra fixed params 
+  'test Route With Extra Params And Route-Implied Endpoint' : function() {
+    var route = router.match('/:controller/:action').to( { language: 'english' } );
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with a specific request method 
+  'test Route With Method' : function() {
+    var route = router.match('/:controller/:action', 'GET');
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with key regex match requirements
+  'test Route With Regex Reqs' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: /\d+/ } );
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with key match requirements as a regex string
+  'test Route With String Regex Reqs' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: '\\d+' } );
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with key match requirements AND a method
+  'test Route With Reqs And Method' : function() {
+    var route = router.match('/:controller/:action/:id', 'GET').where( { id: /\d+/ } );
+    assert.ok(route, this.fail)
+  },
+
+  // create a static route with key match requirements AND a method in reverse order
+  'test Route With Name' : function() {
+    var route = router.match('/:controller/:action/:id', 'GET').where( { id: /\d+/ } ).name('awesome');
+    assert.ok(route, this.fail)
+  },
+
+
+// ok - let's start doing things with these routes
+
+  // test that the router matches a URL
+  'test Simple Route Parses' : function() {
+    var route = router.match('/:controller/:action/:id');
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  // test that the route accepts a regexp parameter
+  'test Simple Route Parses with conditions' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: /\d+/ } );
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  // test that the route rejects a bad regexp parameter
+  'test Simple Route fails to Parse with bad conditions' : function() {
+    var route = router.match('/:controller/:action/:id').where( { id: /\d+/ } );
+    var params = router.first('/products/show/bob','GET');
+    assert.equal(params, false, this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  // test that the callback fires with the right args
+  'test Callback Fires With Params' : function() {
+    var route = router.match('/:controller/:action/:id');
+    router.first('/products/show/1','GET',function(err,params){
+      assert.ok(params, this.fail);
+      assert.equal(params.controller, 'products', this.fail);
+      assert.equal(params.action, 'show', this.fail);
+      assert.equal(params.id, 1, this.fail);
+      assert.equal(params.method, 'GET', this.fail);
+    });
+  },
+
+  // create a static route with extra fixed params 
+  'test Route With Extra Params And Route-Implied Endpoint Parses' : function() {
+    var route = router.match('/:controller/:action').to( { language: 'english' } );
+    var params = router.first('/products/show','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+    assert.equal(params.language, 'english', this.fail);
+  },
+
+  // test that the router matches a URL
+  'test Simple Route Parses With Optional Segment' : function() {
+    var route = router.match('/:controller/:action/:id(.:format)');
+    var params = router.first('/products/show/1.html','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+    assert.equal(params.format, 'html', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1.html','GET');
+    });
+  },
+
+  'test Simple Route Parses With Optional Segment Missing' : function() {
+    var route = router.match('/:controller/:action/:id(.:format)','GET');
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+    assert.equal(typeof(params.format), 'undefined', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  'test Simple Route Failing Due To Bad Method' : function() {
+    var route = router.match('/:controller/:action/:id(.:format)','GET');
+    var params = router.first('/products/show/1','POST');
+    assert.equal(params, false, this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','POST');
+    });
+  },
+
+  'test Simple Route With Two Optional Segments' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
+    var params = router.first('/products/show','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(typeof(params.id), 'undefined', this.fail);
+    assert.equal(typeof(params.format), 'undefined', this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show','GET');
+    });
+  },
+
+  'test Simple Route With Two Optional Segments With First Used' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(typeof(params.format), 'undefined', this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+
+  'test Simple Route With Two Optional Segments With Second Used' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
+    var params = router.first('/products/show.html','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(typeof(params.id), 'undefined', this.fail);
+    assert.equal(params.format, 'html', this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show.html','GET');
+    });
+  },
+
+  'test Simple Route With Two Optional Segments With Both Used' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
+    var params = router.first('/products/show/1.html','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.format, 'html', this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1.html','GET');
+    });
+  },
+
+// fuck, how repetitive. how about methods for a bit?
+  
+  'test GET' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
+    var params = router.first('/products/show/1.html','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+  },
+  
+  'test POST' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','POST');
+    var params = router.first('/products/show/1.html','POST');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'POST', this.fail);
+  },
+  
+  'test PUT' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','PUT');
+    var params = router.first('/products/show/1.html','PUT');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'PUT', this.fail);
+  },
+  
+  'test DELETE' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','DELETE');
+    var params = router.first('/products/show/1.html','DELETE');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'DELETE', this.fail);
+  },
+
+  'test GET Shorthand' : function() {
+    var route = router.get('/:controller/:action(/:id)(.:format)');
+    var params = router.first('/products/show/1.html','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+  },
+  
+  'test POST Shorthand' : function() {
+    var route = router.post('/:controller/:action(/:id)(.:format)');
+    var params = router.first('/products/show/1.html','POST');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'POST', this.fail);
+  },
+  
+  'test PUT Shorthand' : function() {
+    var route = router.put('/:controller/:action(/:id)(.:format)');
+    var params = router.first('/products/show/1.html','PUT');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'PUT', this.fail);
+  },
+  
+  'test DELETE Shorthand' : function() {
+    var route = router.delete('/:controller/:action(/:id)(.:format)');
+    var params = router.first('/products/show/1.html','DELETE');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'DELETE', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+  },
+
+  
+// that was fun. Let's do a little resource testing
+  
+  'test Resource Matches' : function() {
+    var routes = router.resource('snow_dogs');
+  
+    // index
+    assert.ok( router.first('/snow_dogs','GET'), this.fail);
+    assert.ok( router.first('/snow_dogs.html','GET'), this.fail);
+    assert.equal( router.first('/snow_dogs','GET').action, 'index', this.fail);
+    // show
+    assert.ok( router.first('/snow_dogs/1','GET'), this.fail);
+    assert.ok( router.first('/snow_dogs/1.html','GET'), this.fail);
+    assert.equal( router.first('/snow_dogs/1','GET').action, 'show', this.fail);
+    // add form
+    assert.ok( router.first('/snow_dogs/add','GET'), this.fail);
+    assert.ok( router.first('/snow_dogs/add.html','GET'), this.fail);
+    assert.equal( router.first('/snow_dogs/add','GET').action, 'add', this.fail);
+    // edit form
+    assert.ok( router.first('/snow_dogs/1/edit','GET'), this.fail);
+    assert.ok( router.first('/snow_dogs/1/edit.html','GET'), this.fail);
+    assert.equal( router.first('/snow_dogs/1/edit','GET').action, 'edit', this.fail);
+    // create
+    assert.ok( router.first('/snow_dogs','POST'), this.fail);
+    assert.ok( router.first('/snow_dogs.html','POST'), this.fail);
+    assert.equal( router.first('/snow_dogs','POST').action, 'create', this.fail);
+    // update
+    assert.ok( router.first('/snow_dogs/1','PUT'), this.fail);
+    assert.ok( router.first('/snow_dogs/1.html','PUT'), this.fail);
+    assert.equal( router.first('/snow_dogs/1','PUT').action, 'update', this.fail);
+    // delete
+    assert.ok( router.first('/snow_dogs/1','DELETE'), this.fail);
+    assert.ok( router.first('/snow_dogs/1.html','DELETE'), this.fail);
+    assert.equal( router.first('/snow_dogs/1','DELETE').action, 'destroy', this.fail);
+  },
+
+// url generation time nao
+
+  'test Resource Url Generation' : function() {
+    var routes = router.resource('snow_dogs');
+    // index
+    assert.equal( router.url( { controller:'snow_dogs', action:'index' } ), '/snow_dogs', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'index', format: 'html' } ), '/snow_dogs.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'index', format: 'json' } ), '/snow_dogs.json', this.fail);
+    // show
+    assert.equal( router.url( { controller:'snow_dogs', action:'show', id:1 } ), '/snow_dogs/1', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'show', id:1, format: 'html' } ), '/snow_dogs/1.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'show', id:1, format: 'json' } ), '/snow_dogs/1.json', this.fail);
+    // add form
+    assert.equal( router.url( { controller:'snow_dogs', action:'add' } ), '/snow_dogs/add', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'add', format: 'html' } ), '/snow_dogs/add.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'add', format: 'json' } ), '/snow_dogs/add.json', this.fail);
+    // edit form
+    assert.equal( router.url( { controller:'snow_dogs', action:'edit', id:1 } ), '/snow_dogs/1/edit', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'edit', id:1, format: 'html' } ), '/snow_dogs/1/edit.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'edit', id:1, format: 'json' } ), '/snow_dogs/1/edit.json', this.fail);
+    // create
+    assert.equal( router.url( { controller:'snow_dogs', action:'create' } ), '/snow_dogs', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'create', format: 'html' } ), '/snow_dogs.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'create', format: 'json' } ), '/snow_dogs.json', this.fail);
+    // update
+    assert.equal( router.url( { controller:'snow_dogs', action:'update', id:1 } ), '/snow_dogs/1', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'update', id:1, format: 'html' } ), '/snow_dogs/1.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'update', id:1, format: 'json' } ), '/snow_dogs/1.json', this.fail);
+    // delete
+    assert.equal( router.url( { controller:'snow_dogs', action:'destroy', id:1 } ), '/snow_dogs/1', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'destroy', id:1, format: 'html' } ), '/snow_dogs/1.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'destroy', id:1, format: 'json' } ), '/snow_dogs/1.json', this.fail);
+
+    bench(function(){
+      router.url( { controller:'snow_dogs', action:'destroy', id:1, format: 'json' } )
+    });
+  },
+
+  'test Route Url Generation' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)');
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet' } ), '/snow_dogs/pet', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5 } ), '/snow_dogs/pet/5', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5, format:'html' } ), '/snow_dogs/pet/5.html', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5, format:'json' } ), '/snow_dogs/pet/5.json', this.fail);
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet', format:'html' } ), '/snow_dogs/pet.html', this.fail);
+    
+    bench(function(){
+      router.url( { controller:'snow_dogs', action:'pet', id:5, format:'html' } )
+    });
+  },
+
+  'test Route Url Generates Route With QueryString Params' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)');
+    // test with QS params ON
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet', awesome:'yes' }, true ), '/snow_dogs/pet?awesome=yes', this.fail);
+  },
+
+  'test Route Url Generates Route Without QueryString Params' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)');
+    // test with QS params OFF (default behaviour)
+    assert.equal( router.url( { controller:'snow_dogs', action:'pet', awesome:'yes' }, false ), '/snow_dogs/pet', this.fail);
+  },
+  
+  'test Creating a route without a string path will throw an error' : function() {
+    assert.throws( function() {
+      var route = router.match(5)
+    }, /path must be a string/,
+    this.fail );
+    assert.throws( function() {
+      var route = router.match(/bob/)
+    }, /path must be a string/,
+    this.fail );
+    assert.throws( function() {
+      var route = router.match({})
+    }, /path must be a string/,
+    this.fail );
+  },
+  
+  
+}
+
+function bench(fn){
+  return true
+  var start = new Date().getTime();
+  for ( var i=0; i<1000; i++ ) {
+    fn();
+  }
+  util.puts('\navg time: '+(new Date().getTime() - start) / 1000 + 'ms for the following test:');
+}
+
+
+// Run tests -- additionally setting up custom failure message and calling setup() and teardown()
+for(e in RouterTests) {
+  if (e.match(/test/)) {
+    RouterTests.fail = "\033[0;1;31mFAILED  :: \033[0m" + e; 
+    try {
+      RouterTests.setup();
+      RouterTests[e]();
+      RouterTests.teardown(e);
+    } catch (e) {
+      util.puts(RouterTests.fail)
+    }
+  }
+}

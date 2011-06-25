@@ -1,0 +1,65 @@
+<!DOCTYPE html>  <html> <head>   <title>key.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="helpers.html">                 helpers.js               </a>                                           <a class="source" href="key.html">                 key.js               </a>                                           <a class="source" href="route.html">                 route.js               </a>                                           <a class="source" href="router.html">                 router.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               key.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h1>new Key( name, optional )</h1>
+
+<p>those variable thingies</p>
+
+<pre><code>key = new Key('name')
+key = new Key('name', true)
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">Key</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">optional</span> <span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span>
+
+  <span class="nx">self</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">name</span>
+  <span class="nx">self</span><span class="p">.</span><span class="nx">optional</span> <span class="o">=</span> <span class="p">(</span><span class="nx">optional</span><span class="o">===</span><span class="kc">true</span><span class="p">)</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span>
+  <span class="nx">self</span><span class="p">.</span><span class="nx">regex</span> <span class="o">=</span> <span class="sr">/[\w\-]+/</span> <span class="c1">// default url-friendly regex</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>special defaults for controllers &amp; actions, which will always be function-name-safe</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">name</span> <span class="o">==</span> <span class="s1">&#39;controller&#39;</span> <span class="o">||</span> <span class="nx">self</span><span class="p">.</span><span class="nx">name</span> <span class="o">==</span> <span class="s1">&#39;action&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">self</span><span class="p">.</span><span class="nx">regex</span> <span class="o">=</span> <span class="sr">/[a-zA-Z_][\w\-]*/</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>key.regexString()</h2>
+
+<p>makes a regex string of the key - used by key.test()</p>
+
+<p>returns a string of this keys regex</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">regexString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="nb">String</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">regex</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^\//</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\/[gis]?$/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">optional</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="nx">ret</span> <span class="o">+</span> <span class="s1">&#39;)?&#39;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="nx">ret</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>key.test( string )</h2>
+
+<p>validates a string using the key's regex pattern</p>
+
+<p>returns true/false if the string matches</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">test</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">string</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">&#39;^&#39;</span><span class="o">+</span><span class="nx">self</span><span class="p">.</span><span class="nx">regexString</span><span class="p">()</span><span class="o">+</span><span class="s1">&#39;$&#39;</span><span class="p">).</span><span class="nx">test</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>key.url( string )</h2>
+
+<p>returns a string for buulding the url
+if it matches the key conditions</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">string</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">string</span><span class="p">))</span> <span class="p">{</span>
+      <span class="cm">/*</span>
+<span class="cm">      -- no longer needed </span>
+<span class="cm">      snake_caseify the controller, if there is one</span>
+<span class="cm">      if (self.name == &#39;controller&#39;) return snakeize(string)</span>
+<span class="cm">      */</span>
+      <span class="k">return</span> <span class="nx">string</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">false</span> <span class="c1">// doesn&#39;t match, let it go</span>
+  <span class="p">};</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>key.where( conditions )</h2>
+
+<p>adds conditions that the key must match</p>
+
+<p>returns the key... because it can?</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">where</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">conditions</span> <span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">condition</span> <span class="o">=</span> <span class="nx">conditions</span><span class="p">[</span><span class="nx">self</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">condition</span> <span class="k">instanceof</span> <span class="nb">RegExp</span><span class="p">)</span> <span class="nx">self</span><span class="p">.</span><span class="nx">regex</span> <span class="o">=</span> <span class="nx">condition</span> <span class="c1">//  e.g. /\d+/</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">condition</span> <span class="k">instanceof</span> <span class="nb">String</span><span class="p">)</span> <span class="nx">self</span><span class="p">.</span><span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="nx">condition</span><span class="p">)</span> <span class="c1">//  e.g. &quot;/\d+/&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>an array of allowed values, e.g. ['stop','play','pause']</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">condition</span> <span class="k">instanceof</span> <span class="nb">Array</span><span class="p">)</span> <span class="nx">self</span><span class="p">.</span><span class="nx">regex</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">condition</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nx">self</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">self</span> <span class="c1">// just in case we forgot the new operator</span>
+<span class="p">};</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">Key</span> <span class="o">=</span> <span class="nx">Key</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
