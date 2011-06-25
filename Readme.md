@@ -20,6 +20,7 @@ var router = new Router;
 
 
 ### Adding routes
+
 ```javascript
 // a basic example
 router.match( '/products', 'GET' )
@@ -46,6 +47,7 @@ router.post( '/products' )
 router.delete( '/products' )
       .to( 'products.destroy' )
 ```
+
 ### REST Resources
 
 ```javascript
@@ -80,12 +82,14 @@ router.delete('/products/:id(.:format)' )
 Resolution & dispatching
 ------------------------
 
-The `router.all( url, method [, callback] )` method can be used in two ways:
+The `router.first( url, method [, callback] )` method can be used in two ways:
 
 ```javascript
 var params = router.first( '/products/15', 'GET' )
 ```
+
 OR
+
 ```javascript
 router.first( '/products/15', 'GET', function( params ){
   // dispatch the request or something
@@ -93,6 +97,7 @@ router.first( '/products/15', 'GET', function( params ){
 ```
 
 You can get all the matching routes like so:
+
 ```javascript
 var params = router.all( '/products/15', 'GET' )
 
@@ -103,6 +108,7 @@ Route generation
 ----------------
 
 Pass in a params hash, get back a tasty string:
+
 ```javascript
 router.url( {
   controller: 'products',
@@ -119,8 +125,10 @@ router.url( {
 } )
 //=> '/products/5.json'
 ```
+
 Set the optional second parameter to `true` if you want
 extra params appended as a query string:
+
 ```javascript
 router.url({
   controller: 'products',
