@@ -171,6 +171,18 @@ router.url({
 //=> '/products/5.json?love=cheese'
 ```
 
+
+Caveats & TODOs
+---------------
+nested optional segments are currently unsupported. e.g. this won't work:
+
+```javascript
+router.get( '/:controller(/:action(/:id(.:format)))' )
+```
+
+nesting routes & resources is also still on the TODO list
+
+
 Things I forgot...
 ------------------
 ...might be in the `/docs` folder...
