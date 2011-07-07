@@ -1,5 +1,27 @@
 Barista is a simple URL router for NodeJS.
 
+
+In a nutshell
+=============
+
+```javascript
+router.get( '/:beverage/near/:location(.:format)' )
+      .to( 'beverage.byLocation' )
+
+router.first( '/coffee/near/90210', 'GET' )
+// -> { controller:'beverage', action:'byLocation', beverage:'coffee', location:90210 }
+
+router.url({
+  controller: 'beverage',
+  action: 'byLocation',
+  beverage: 'coffee',
+  location: 90210,
+  format: 'json'
+})
+// -> '/coffee/near/90210.json'
+```
+
+
 Getting Barista
 ===============
 
