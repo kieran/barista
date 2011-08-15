@@ -97,7 +97,7 @@ router.put( '/products/:id(.:format)' )
 router.post( '/products' )
       .to( 'products.create' )
 
-router.delete( '/products' )
+router.del( '/products' )
       .to( 'products.destroy' )
 ```
 
@@ -128,7 +128,7 @@ router.post('/products(.:format)' )
 router.put('/products/:id(.:format)' )
       .to( 'products.update' )
 
-router.delete('/products/:id(.:format)' )
+router.del('/products/:id(.:format)' )
       .to( 'products.destroy' )
 ```
 

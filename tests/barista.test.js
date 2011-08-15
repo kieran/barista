@@ -405,7 +405,7 @@ RouterTests = {
   },
 
   'test DELETE Shorthand' : function() {
-    var route = router.delete('/:controller/:action(/:id)(.:format)');
+    var route = router.del('/:controller/:action(/:id)(.:format)');
     var params = router.first('/products/show/1.html','DELETE');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'DELETE', this.fail);
