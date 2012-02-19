@@ -66,19 +66,18 @@ router.match( '/products/:id(.:format)', 'GET' )
 ### Globs (they also capture slashes)
 
 ```javascript
-router.match( '/*path', 'GET' )
-      .to( 'errors.notFound' )
+router.get('/timezones/*tzname')
+      .to( 'timezones.select' )
 
-router.first( '/somewhere/that/four-oh-fours', 'GET' )
-// -> { controller:'errors', action:'notFound', path:'somewhere/that/four-oh-fours' }
+router.first( '/timezones/America/Toronto', 'GET' )
+// -> { controller:'timezones', action:'select', tzname:'America/Toronto' }
 
 
-router.match( '/*path(.:format)', 'GET' )
+router.match( '/*path(.:format)' ) // a "catch-all" route:
       .to( 'errors.notFound' )
 
 router.first( '/somewhere/that/four-oh-fours.json', 'GET' )
 // -> { controller:'errors', action:'notFound', path:'somewhere/that/four-oh-fours', format:'json' }
-
 ```
 
 ### Match conditions
