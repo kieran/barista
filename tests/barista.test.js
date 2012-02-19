@@ -560,6 +560,15 @@ RouterTests = {
 
   },
 
+  'test A catch-all path' : function() {
+    var route = router.match('/*path(.:format)').to( { controller:'Errors', action:'notFound' } )
+      , params = router.first('/One/Two/three/four/Five.json','GET')
+      , expectedParams = { method:'GET', controller:'Errors', action:'notFound', path:'One/Two/three/four/Five', format:'json' }
+
+	  assert.equal( router.url( expectedParams ), '/One/Two/three/four/Five.json', this.fail);
+
+  },
+
 }
 
 function bench(fn){
