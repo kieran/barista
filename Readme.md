@@ -63,6 +63,24 @@ router.match( '/products/:id(.:format)', 'GET' )
       .to( 'products.show' )
 ```
 
+### Globs (they also capture slashes)
+
+```javascript
+router.match( '/*path', 'GET' )
+      .to( 'errors.notFound' )
+
+router.first( '/somewhere/that/four-oh-fours', 'GET' )
+// -> { controller:'errors', action:'notFound', path:'somewhere/that/four-oh-fours' }
+
+
+router.match( '/*path(.:format)', 'GET' )
+      .to( 'errors.notFound' )
+
+router.first( '/somewhere/that/four-oh-fours.json', 'GET' )
+// -> { controller:'errors', action:'notFound', path:'somewhere/that/four-oh-fours', format:'json' }
+
+```
+
 ### Match conditions
 
 ```javascript
