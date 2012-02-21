@@ -531,7 +531,9 @@ RouterTests = {
       , params = router.first('/timezones/America/New_York','GET')
       , expectedParams = { method:'GET', controller:'Timezones', action:'select', tzname:'America/New_York' }
 
-	  assert.equal( router.url( expectedParams ), '/timezones/America/New_York', this.fail);
+    // tests both parsing & generation
+    assert.equal( router.url( params ), '/timezones/America/New_York', this.fail);
+    assert.equal( router.url( expectedParams ), '/timezones/America/New_York', this.fail);
   },
 
   'test A route with a glob and a format' : function() {
@@ -539,6 +541,8 @@ RouterTests = {
       , params = router.first('/timezones/America/New_York.json','GET')
       , expectedParams = { method:'GET', controller:'Timezones', action:'select', tzname:'America/New_York', format:'json' }
 
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/timezones/America/New_York.json', this.fail);
 	  assert.equal( router.url( expectedParams ), '/timezones/America/New_York.json', this.fail);
   },
 
@@ -547,8 +551,9 @@ RouterTests = {
       , params = router.first('/America/Toronto/to/America/San_Francisco','GET')
       , expectedParams = { method:'GET', controller:'Timezones', action:'between', tzname_one:'America/Toronto', tzname_two:'America/San_Francisco' }
 
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/America/Toronto/to/America/San_Francisco', this.fail);
 	  assert.equal( router.url( expectedParams ), '/America/Toronto/to/America/San_Francisco', this.fail);
-
   },
 
   'test A route with 2 globs and a format' : function() {
@@ -556,8 +561,9 @@ RouterTests = {
       , params = router.first('/America/Toronto/to/America/San_Francisco.json','GET')
       , expectedParams = { method:'GET', controller:'Timezones', action:'between', tzname_one:'America/Toronto', tzname_two:'America/San_Francisco', format:'json' }
 
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/America/Toronto/to/America/San_Francisco.json', this.fail);
 	  assert.equal( router.url( expectedParams ), '/America/Toronto/to/America/San_Francisco.json', this.fail);
-
   },
 
   'test A catch-all path' : function() {
@@ -565,8 +571,9 @@ RouterTests = {
       , params = router.first('/One/Two/three/four/Five.json','GET')
       , expectedParams = { method:'GET', controller:'Errors', action:'notFound', path:'One/Two/three/four/Five', format:'json' }
 
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/One/Two/three/four/Five.json', this.fail);
 	  assert.equal( router.url( expectedParams ), '/One/Two/three/four/Five.json', this.fail);
-
   },
 
 }
