@@ -1,8 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-/*      min-height: 1500px;*/
-  background: -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg) top center repeat;
+  background: #000 top center repeat;
+  background-image: -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg);
+  background-image:      -o-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg);
+  background-image:    -moz-radial-gradient(center 250px, circle closest-corner, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg);
 }
 
 #title {
@@ -37,6 +39,7 @@ section pre {
 
 h1 {
   display: block;
+  font-weight: normal;
   width: 550px;
   text-align: center;
   font-family: 'Swanky and Moo Moo', cursive;
@@ -52,8 +55,17 @@ h1 {
   to { opacity: auto; }
 }
 
+@-moz-keyframes pulse {
+  from { opacity: auto; }
+  50% { opacity: 0.5; }
+  to { opacity: auto; }
+}
+
 pre:hover span.highlight {
-  -webkit-animation-name: pulse; 
-  -webkit-animation-duration: 0.5s; 
+  -webkit-animation-name: pulse;
+  -webkit-animation-duration: 0.5s;
   -webkit-animation-iteration-count: 3;
+  -moz-animation-name: pulse;
+  -moz-animation-duration: 0.5s;
+  -moz-animation-iteration-count: 3;
 }
