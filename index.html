@@ -18,6 +18,7 @@
   <script>
   $(function(){
     sh_highlightDocument();
+
     $('pre span.sh_string').each(function(id,el){
       $(el).html(
         $(el).text()
@@ -25,7 +26,33 @@
           .replace(/(\*\w+)/g,'<span class="barista_glob">$1</span>')
       )
     })
+
+    $('#convenience_methods span.sh_function').each(function(id,el){
+      var t = $(el).text()
+      if ( t == 'get' ||  t == 'put' || t == 'post' || t == 'del' ) $(el).addClass('highlight')
+    })
+
+    $('#variables span.barista_key').addClass('highlight')
+    $('#globs span.barista_glob').addClass('highlight')
+
+    $('#resources span.sh_function').each(function(id,el){
+      if ( $(el).text() == 'resource' ) $(el).addClass('highlight')
+    })
+
+    $('#conditions span.sh_function').each(function(id,el){
+      if ( $(el).text() == 'where' ) $(el).addClass('highlight')
+    })
+
+    $('#generation span.sh_function, #generation span.sh_keyword').each(function(id,el){
+      if ( $(el).text() == 'url' || $(el).text() == 'true' ) $(el).addClass('highlight')
+    })
+
+    $('#resolution span.sh_function').each(function(id,el){
+      if ( $(el).text() == 'first' || $(el).text() == 'all' ) $(el).addClass('highlight')
+    })
+
   })
+
 
   </script>
 </head>
@@ -36,9 +63,52 @@
 
   <img id='title' src="barista.png" />
 
+
+
+
+
+  <section>
+    <header>
+      <h2>The Skinny</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// define a route
+router.get( '/:beverage/near/:location(.:format)' )
+      .to( 'beverage.byLocation' )
+
+// convert a URL to a params object
+router.first( '/coffee/near/90210', 'GET' )
+
+/* returns:
+{
+  controller: 'beverage',
+  action: 'byLocation',
+  beverage: 'coffee',
+  location: 90210
+}
+*/
+
+// generate a URL from a params object
+router.url({
+  controller: 'beverage',
+  action: 'byLocation',
+  beverage: 'coffee',
+  location: 90210,
+  format: 'json'
+})
+
+// => '/coffee/near/90210.json'
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Installation</h1>
+
   <section id="installation">
     <header>
-      <h2>Install it</h2>
+      <h2>Install via npm</h2>
     </header>
     <div class='code'>
 <pre>
@@ -49,7 +119,7 @@ npm install barista
 
   <section>
     <header>
-      <h2>Require it</h2>
+      <h2>Use it in your app</h2>
     </header>
     <div class='code'>
 <pre class="sh_javascript">
@@ -59,26 +129,261 @@ var Router = require('barista').Router
     </div>
   </section>
 
+
+  <h1>Defining routes</h1>
+
   <section>
     <header>
-      <h2>Define your routes</h2>
+      <h2>A simple example</h2>
     </header>
     <div class='code'>
 <pre class="sh_javascript">
-router.get( '/:beverage/near/:location(.:format)' )
-      .to( 'beverage.byLocation' )
+// a GET request to '/products'
+router.match( '/products', 'GET' )
+      .to( 'products.index' )
+
+/* returns:
+  {
+    controller: 'products',
+    action: 'index'
+  }
+*/
+</pre>
+    </div>
+  </section>
+
+  <section id='variables'>
+    <header>
+      <h2>Rails-esque variable names</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.match( '/products/:id', 'GET' )
+      .to( 'products.show' )
+
+router.match( '/profiles/:username', 'GET' )
+      .to( 'users.show' )
+
+// things enclosed in parens are optional
+router.match( '/products/:id(.:format)', 'GET' )
+      .to( 'products.show' )
 </pre>
     </div>
   </section>
 
 
-  <section>
+  <section id='convenience_methods'>
     <header>
-      <h2>Dispatch away</h2>
+      <h2>Convenience methods</h2>
     </header>
     <div class='code'>
 <pre class="sh_javascript">
-router.first( '/coffee/near/90210', 'GET' )
+router.get( '/products/:id(.:format)' )
+      .to( 'products.show' )
+
+router.put( '/products/:id(.:format)' )
+      .to( 'products.update' )
+
+router.post( '/products' )
+      .to( 'products.create' )
+
+router.del( '/products' )
+      .to( 'products.destroy' )
+</pre>
+    </div>
+  </section>
+
+
+  <section id='globs'>
+    <header>
+      <h2>Route globbing</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.get('/timezones/*tzname')
+      .to( 'timezones.select' )
+
+router.first( '/timezones/America/Toronto', 'GET' )
+
+/* returns:
+{
+  controller: 'timezones',
+  action: 'select',
+  tzname: 'America/Toronto'
+}
+*/
+</pre>
+<br/>
+<pre class="sh_javascript">
+// a "catch-all" route:
+router.match( '/*path(.:format)' )
+      .to( 'errors.notFound' )
+
+
+router.first( '/somewhere/that/four-oh-fours.json', 'GET' )
+
+/* returns:
+{
+  controller: 'errors',
+  action: 'notFound',
+  path: 'somewhere/that/four-oh-fours',
+  format: 'json'
+}
+*/
+</pre>
+    </div>
+  </section>
+
+
+
+  <section id='resources'>
+    <header>
+      <h2>REST resources</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.resource( 'products' )
+
+// is equivalent to:
+
+router.get( '/products(.:format)' )
+      .to( 'products.index' )
+
+router.get( '/products/add(.:format)' )
+      .to( 'products.add' )
+
+router.get( '/products/:id(.:format)' )
+      .to('products.show' )
+
+router.get('/products/:id/edit(.:format)' )
+      .to( 'products.edit' )
+
+router.post('/products(.:format)' )
+      .to( 'products.create' )
+
+router.put('/products/:id(.:format)' )
+      .to( 'products.update' )
+
+router.del('/products/:id(.:format)' )
+      .to( 'products.destroy' )
+</pre>
+    </div>
+  </section>
+
+
+  <section id='conditions'>
+    <header>
+      <h2>Match conditions</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.get( '/:beverage/near/:zipcode' )
+      .to( 'beverage.byZipCode' )
+      .where({
+        // an array of options
+        beverage: [ 'coffee', 'tea', 'beer', 'warm_sake' ],
+        // a regex pattern
+        zipcode: /^\d{5}(-\d{4})?$/
+      })
+</pre>
+<br/>
+<pre class="sh_javascript">
+router.get( '/:beverage/near/:location' )
+      .to( 'beverage.byLocation' )
+      .where({
+        location: [
+          // could be a zip code
+          /^\d{5}(-\d{4})?$/,
+          // OR a postal code
+          /^[A-Z]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/,
+          // OR the word 'me'
+          'me'
+        ]
+      })
+</pre>
+    </div>
+  </section>
+
+
+
+  <h1>URL generation</h1>
+
+
+
+  <section id='generation'>
+    <header>
+      <h2>Turn a params object into a URL</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// assuming:
+router.resource( 'products' )
+
+// then
+router.url( {
+  controller: 'products',
+  action: 'show',
+  id: 5
+} )
+
+// => '/products/5'
+</pre>
+<br/>
+<pre class="sh_javascript">
+router.url( {
+  controller: 'products',
+  action: 'show',
+  id: 5,
+  format: 'json'
+} )
+
+// => '/products/5.json'
+</pre>
+<br/>
+<pre class="sh_javascript">
+// you can optionally include extra params as a query string
+router.url({
+  controller: 'products',
+  action: 'show',
+  id: 5,
+  format: 'json',
+  love: 'cheese'
+}, true )
+//=> '/products/5.json?love=cheese'
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Resolution &amp; dispatching</h1>
+  <section id='resolution'>
+    <header>
+      <h2>router.first</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// get the first route that matches
+
+var params = router.first( '/products/15', 'GET' )
+
+// returns a params object, or false if nothing matches
+</pre>
+<br/>
+<pre class="sh_javascript">
+// go all callback on this shit
+
+router.first( '/products/15', 'GET', function(params){
+  // passes a params object in
+  // this has not been well thought out.
+})
+</pre>
+<br/>
+<pre class="sh_javascript">
+// if you want all matching routes...
+
+var params_array = router.all( '/products/15', 'GET' )
+
+// => [ params, params, params... ]
 </pre>
     </div>
   </section>

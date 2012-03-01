@@ -1,39 +1,59 @@
-    body {
-      margin: 0;
-      padding: 0;
+body {
+  margin: 0;
+  padding: 0;
 /*      min-height: 1500px;*/
-      background: -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg) top center repeat;
-   }
+  background: -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg) top center repeat;
+}
 
-   #title {
-     display: block;
-     margin: 0 auto;
-     height: 500px;
-   }
+#title {
+  display: block;
+  margin: 0 auto;
+  height: 500px;
+}
 
-   section {
-     display: block;
-     margin: 0 auto 4em auto;
-     width: 550px;
-   }
+section {
+  display: block;
+  margin: 0 auto 4em auto;
+  width: 550px;
+}
 
-   section header {
-     font-family: 'Swanky and Moo Moo', cursive;
-     color: rgba(255,255,255,0.5);
-     padding-left: 0.5em;
-     margin-bottom: -1em;
-     text-shadow: 2px 2px 2px rgba(0,0,0,0.8);
-   }
+section header {
+  font-family: 'Swanky and Moo Moo', cursive;
+  color: rgba(255,255,255,0.5);
+  padding-left: 0.5em;
+  margin-bottom: -1em;
+  text-shadow: 2px 2px 2px rgba(0,0,0,0.8);
+}
 
-   section .code {
-     background: rgba(0,0,0,0.55);
-     border-radius: 5px;
-     width: 550px;
-     font-family: sans-serif;
-     font-size: 11pt;
-     color: rgba(255,255,255,0.9);
-     margin: 0;
-     padding: 0.1em 1em;
-/*     -webkit-box-shadow: 0px 0px 2px rgba(0,0,0,0.4);*/
+section pre {
+  background: rgba(0,0,0,0.55);
+  border-radius: 5px;
+  width: 550px;
+  font-size: 11pt;
+  color: rgba(255,255,255,0.9);
+  margin: 0;
+  padding: 1em 1.3em;
+}
 
-   }
+h1 {
+  display: block;
+  width: 550px;
+  text-align: center;
+  font-family: 'Swanky and Moo Moo', cursive;
+  color: rgba(255,255,255,0.8);
+  text-shadow: 2px 2px 2px rgba(0,0,0,0.8);
+  margin: 1em auto 0.5em auto;
+}
+
+
+@-webkit-keyframes pulse {
+  from { opacity: auto; }
+  50% { opacity: 0.5; }
+  to { opacity: auto; }
+}
+
+pre:hover span.highlight {
+  -webkit-animation-name: pulse; 
+  -webkit-animation-duration: 0.5s; 
+  -webkit-animation-iteration-count: 3;
+}
