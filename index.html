@@ -287,6 +287,9 @@ router.get( '/:beverage/near/:zipcode' )
       })
 </pre>
 <br/>
+<header>
+  <h2>Mixing conditions</h2>
+</header>
 <pre class="sh_javascript">
 router.get( '/:beverage/near/:location' )
       .to( 'beverage.byLocation' )
@@ -340,6 +343,9 @@ router.url( {
 // => '/products/5.json'
 </pre>
 <br/>
+<header>
+  <h2>Extra params</h2>
+</header>
 <pre class="sh_javascript">
 // you can optionally include extra params as a query string
 router.url({
@@ -378,6 +384,9 @@ router.first( '/products/15', 'GET', function(params){
 })
 </pre>
 <br/>
+<header>
+  <h2>router.all</h2>
+</header>
 <pre class="sh_javascript">
 // if you want all matching routes...
 
