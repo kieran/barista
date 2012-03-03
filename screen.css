@@ -2,9 +2,9 @@ body {
   margin: 0;
   padding: 0;
   background: #000 top center repeat;
-  background-image: -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg);
-  background-image:      -o-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg);
-  background-image:    -moz-radial-gradient(center 250px, circle closest-corner, rgba(255,255,255,0.22), rgba(255,255,255,0)), url(wood.jpg);
+  background-image: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.12), rgba(255,255,255,0)), url(wood.jpg);
+  background-image:      -o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -o-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.1), rgba(255,255,255,0)), url(wood.jpg);
+  background-image:    -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -moz-radial-gradient(center 250px, circle closest-corner, rgba(255,255,255,0.1), rgba(255,255,255,0)), url(wood.jpg);
 }
 
 #title {
@@ -14,9 +14,9 @@ body {
 }
 
 section {
+  width: 575px;
   display: block;
   margin: 0 auto 4em auto;
-  width: 550px;
 }
 
 section header {
@@ -30,7 +30,6 @@ section header {
 section pre {
   background: rgba(0,0,0,0.55);
   border-radius: 5px;
-  width: 550px;
   font-size: 11pt;
   color: rgba(255,255,255,0.9);
   margin: 0;
@@ -40,7 +39,6 @@ section pre {
 h1 {
   display: block;
   font-weight: normal;
-  width: 550px;
   text-align: center;
   font-family: 'Swanky and Moo Moo', cursive;
   color: rgba(255,255,255,0.8);
