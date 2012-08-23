@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/kieran/barista.png)](http://travis-ci.org/kieran/barista)
 Barista is a simple URL router for NodeJS.
 
 
