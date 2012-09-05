@@ -66,10 +66,10 @@ RouterTests = {
 
   // create a resource
   'test Create Resource' : function() {
-    var routes = router.resource('snow_dogs');
-    assert.ok(routes.length === 7, this.fail)
-    for ( var i in routes ) {
-      assert.ok(routes[i], this.fail)
+    var resource = router.resource('snow_dogs');
+    assert.ok(resource.routes.length === 7, this.fail)
+    for ( var i in resource.routes ) {
+      assert.ok(resource.routes[i], this.fail)
     }
     bench(function(){
       router.resource('snow_dogs');
@@ -451,7 +451,10 @@ RouterTests = {
 // url generation time nao
 
   'test Resource Url Generation' : function() {
-    var routes = router.resource('snow_dogs');
+    var routes = router.resource('snow_dogs').routes;
+
+    // console.log(routes)
+
     // index
     assert.equal( router.url( { controller:'snow_dogs', action:'index' } ), '/snow_dogs', this.fail);
     assert.equal( router.url( { controller:'snow_dogs', action:'index', format: 'html' } ), '/snow_dogs.html', this.fail);
@@ -576,6 +579,81 @@ RouterTests = {
 	  assert.equal( router.url( expectedParams ), '/One/Two/three/four/Five.json', this.fail);
   },
 
+  'test finding all matching routes' : function() {
+    var routes = router.resource('snow_dogs').routes;
+    // assert.equal( 2, 2);
+    // util.puts( JSON.stringify(router.routes,null,2) )
+    // util.puts( JSON.stringify( router.all('/snow_dogs'), null, 2 ) )
+    // assert.equal( router.all('/snow_dogs').length, 2);
+  },
+
+  'test A resource with member routes' : function() {
+    var route = router.resource('posts').member(function(){
+      this.get('/print').to('Posts.print')
+    })
+
+    , params = router.first('/posts/5/print','GET')
+    , expectedParams = { method:'GET', controller:'Posts', action:'print', id:5 }
+
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/posts/5/print', this.fail);
+	  assert.equal( router.url( expectedParams ), '/posts/5/print', this.fail);
+  },
+
+  'test A resource with collection routes' : function() {
+    var route = router.resource('posts').collection(function(){
+      this.get('/print').to('Posts.printAll')
+    })
+
+    , params = router.first('/posts/print','GET')
+    , expectedParams = { method:'GET', controller:'Posts', action:'printAll' }
+
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/posts/print', this.fail);
+	  assert.equal( router.url( expectedParams ), '/posts/print', this.fail);
+  },
+
+  'test A resource with member routes with optional segments' : function() {
+    var route = router.resource('Posts').member(function(){
+      this.get('/print(.:format)').to('Posts.printAll')
+    })
+
+    , params = router.first('/posts/5/print.pdf','GET')
+    , expectedParams = { method:'GET', controller:'Posts', action:'printAll', format: 'pdf', id:5 }
+
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/posts/5/print.pdf', this.fail);
+	  assert.equal( router.url( expectedParams ), '/posts/5/print.pdf', this.fail);
+
+  },
+
+  'test A resource with member resource' : function() {
+    var route = router.resource('Posts').member(function(){
+      this.resource('Comments')
+    })
+
+    , params = router.first('/posts/5/comments/3','GET')
+    , expectedParams = { method:'GET', controller:'Comments', action:'show', posts_id:5, id:3 }
+
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/posts/5/comments/3', this.fail);
+	  assert.equal( router.url( expectedParams ), '/posts/5/comments/3', this.fail);
+
+  },
+
+  'test A resource with collection resource' : function() {
+    var route = router.resource('Posts').collection(function(){
+      this.resource('Comments')
+    })
+
+    , params = router.first('/posts/comments','GET')
+    , expectedParams = { method:'GET', controller:'Comments', action:'index' }
+
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/posts/comments', this.fail);
+	  assert.equal( router.url( expectedParams ), '/posts/comments', this.fail);
+
+  },
 }
 
 function bench(fn){
@@ -591,7 +669,7 @@ function bench(fn){
 // Run tests -- additionally setting up custom failure message and calling setup() and teardown()
 for(e in RouterTests) {
   if (e.match(/test/)) {
-    RouterTests.fail = "\033[0;1;31mFAILED  :: \033[0m" + e;
+    RouterTests.fail = "\033[0;1;31mFAILED  ::  \033[0m" + e;
     try {
       RouterTests.setup();
       RouterTests[e]();
