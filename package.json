@@ -1,7 +1,7 @@
 {
   "name": "barista",
   "description": "URL router & generator, similar to Rails / merb",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Kieran Huggins <kieran@kieran.ca>",
   "repository": "git://github.com/kieran/barista",
   "main": "./index.js",
