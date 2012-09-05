@@ -654,6 +654,25 @@ RouterTests = {
 	  assert.equal( router.url( expectedParams ), '/posts/comments', this.fail);
 
   },
+
+  'test A HEAD request should resolve to GET' : function() {
+    var route = router.get('/something').to('App.index')
+
+    , params = router.first('/something','HEAD')
+    , expectedParams = { method:'HEAD', controller:'App', action:'index' }
+
+    // tests both parsing & generation
+	  assert.equal( router.url( params ), '/something', this.fail);
+	  assert.equal( router.url( expectedParams ), '/something', this.fail);
+
+  },
+
+  'test A HEAD request should not resolve to not-GET' : function() {
+    var route = router.post('/something').to('App.index')
+    , params = router.first('/something','HEAD')
+
+    assert.equal( params, false, this.fail);
+  },
 }
 
 function bench(fn){
