@@ -592,8 +592,10 @@ RouterTests = {
       this.get('/print').to('Posts.print')
     })
 
-    , params = router.first('/posts/5/print','GET')
-    , expectedParams = { method:'GET', controller:'Posts', action:'print', id:5 }
+    var params = router.first('/posts/5/print','GET')
+
+    var expectedParams = { method:'GET', controller:'Posts', action:'print', post_id:5 }
+
 
     // tests both parsing & generation
 	  assert.equal( router.url( params ), '/posts/5/print', this.fail);
@@ -619,7 +621,7 @@ RouterTests = {
     })
 
     , params = router.first('/posts/5/print.pdf','GET')
-    , expectedParams = { method:'GET', controller:'Posts', action:'printAll', format: 'pdf', id:5 }
+    , expectedParams = { method:'GET', controller:'Posts', action:'printAll', format: 'pdf', post_id:5 }
 
     // tests both parsing & generation
 	  assert.equal( router.url( params ), '/posts/5/print.pdf', this.fail);
@@ -633,7 +635,7 @@ RouterTests = {
     })
 
     , params = router.first('/posts/5/comments/3','GET')
-    , expectedParams = { method:'GET', controller:'Comments', action:'show', posts_id:5, id:3 }
+    , expectedParams = { method:'GET', controller:'Comments', action:'show', post_id:5, id:3 }
 
     // tests both parsing & generation
 	  assert.equal( router.url( params ), '/posts/5/comments/3', this.fail);
@@ -671,8 +673,63 @@ RouterTests = {
     var route = router.post('/something').to('App.index')
     , params = router.first('/something','HEAD')
 
-    assert.equal( params, false, this.fail);
+    assert.equal( params, false, this.fail );
   },
+
+  'test Nesting: Route -> Route' : function() {
+    var route = router.post('/something').to('App.index').nest(function(){
+      this.get('/something_else').to('App.somewhere')
+    })
+    , params = router.first('/something/something_else','GET')
+    , expectedParams = { method:'GET', controller:'App', action:'somewhere' }
+
+	  assert.equal( router.url( params ), '/something/something_else', this.fail);
+	  assert.equal( router.url( expectedParams ), '/something/something_else', this.fail);
+  },
+
+  'test Nesting: Resource -> Route' : function() {
+    var route = router.resource('Posts').nest(function(){
+      this.get('/print(.:format)').to('Posts.print')
+    })
+
+    var url = '/posts/5/print.pdf'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'Posts', action:'print', format:'pdf', post_id:5 }
+
+	  assert.equal( router.url( params ), url, this.fail);
+	  assert.equal( router.url( expectedParams ), url, this.fail);
+  },
+
+  'test Nesting: Resource -> Resource' : function() {
+    var res = router.resource('Posts').nest(function(){
+      this.resource('Comments')
+    })
+
+    var url = '/posts/5/comments'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'Comments', action:'index', post_id:'5' }
+
+	  assert.equal( router.url( params ), url, this.fail);
+	  assert.equal( router.url( expectedParams ), url, this.fail);
+  },//
+  //
+  //   'test Nesting: Resource -> Route -> Resource -> Route' : function() {
+  //     var res = router.resource('Ones').collection(function(){
+  //       this.get('/twos').to('Twos.index').nest(function(){
+  //         this.resource('Threes').collection(function(){
+  //           this.get('/fours').to('Fours.index')
+  //         })
+  //       })
+  //     })
+  // router.list()
+  // console.log(router.first('/ones/twos/threes/fours'))
+  //     var url = '/ones/twos/threes/fours'
+  //       , params = router.first(url,'GET')
+  //       , expectedParams = { method:'GET', controller:'Fours', action:'index' }
+  //
+  //    assert.equal( router.url( params ), url, this.fail);
+  //    assert.equal( router.url( expectedParams ), url, this.fail);
+  //   },
 }
 
 function bench(fn){
