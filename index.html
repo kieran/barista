@@ -75,14 +75,15 @@ router.get( '/:beverage/near/:location(.:format)' )
 // convert a URL to a params object
 router.first( '/coffee/near/90210', 'GET' )
 
-/* returns:
+// =>
 {
   controller: 'beverage',
   action: 'byLocation',
   beverage: 'coffee',
-  location: 90210
+  location: 90210,
+  method: 'GET'
 }
-*/
+
 
 // generate a URL from a params object
 router.url({
@@ -137,12 +138,12 @@ var Router = require('barista').Router
 router.match( '/products', 'GET' )
       .to( 'products.index' )
 
-/* returns:
-  {
-    controller: 'products',
-    action: 'index'
-  }
-*/
+// =>
+{
+  controller: 'products',
+  action: 'index',
+  method: 'GET'
+}
 </pre>
     </div>
   </section>
@@ -154,14 +155,14 @@ router.match( '/products', 'GET' )
     <div class='code'>
 <pre class="sh_javascript">
 router.match( '/products/:id', 'GET' )
-      .to( 'products.show' )
+      .to( 'Products.show' )
 
 router.match( '/profiles/:username', 'GET' )
-      .to( 'users.show' )
+      .to( 'Users.show' )
 
 // things enclosed in parens are optional
 router.match( '/products/:id(.:format)', 'GET' )
-      .to( 'products.show' )
+      .to( 'Products.show' )
 </pre>
     </div>
   </section>
@@ -174,16 +175,16 @@ router.match( '/products/:id(.:format)', 'GET' )
     <div class='code'>
 <pre class="sh_javascript">
 router.get( '/products/:id(.:format)' )
-      .to( 'products.show' )
+      .to( 'Products.show' )
 
 router.put( '/products/:id(.:format)' )
-      .to( 'products.update' )
+      .to( 'Products.update' )
 
 router.post( '/products' )
-      .to( 'products.create' )
+      .to( 'Products.create' )
 
 router.del( '/products' )
-      .to( 'products.destroy' )
+      .to( 'Products.destroy' )
 </pre>
     </div>
   </section>
@@ -196,76 +197,155 @@ router.del( '/products' )
     <div class='code'>
 <pre class="sh_javascript">
 router.get('/timezones/*tzname')
-      .to( 'timezones.select' )
+      .to( 'Timezones.select' )
 
 router.first( '/timezones/America/Toronto', 'GET' )
 
-/* returns:
+// =>
 {
-  controller: 'timezones',
+  controller: 'Timezones',
   action: 'select',
-  tzname: 'America/Toronto'
+  tzname: 'America/Toronto',
+  method: 'GET'
 }
-*/
 </pre>
 <br/>
 <pre class="sh_javascript">
 // a "catch-all" route:
 router.match( '/*path(.:format)' )
-      .to( 'errors.notFound' )
+      .to( 'Errors.notFound' )
 
 
 router.first( '/somewhere/that/four-oh-fours.json', 'GET' )
 
-/* returns:
+// =>
 {
-  controller: 'errors',
+  controller: 'Errors',
   action: 'notFound',
   path: 'somewhere/that/four-oh-fours',
-  format: 'json'
+  format: 'json',
+  method: 'GET'
 }
-*/
 </pre>
     </div>
   </section>
 
 
+  <h1>Resolution &amp; dispatching</h1>
+  <section id='resolution'>
+    <header>
+      <h2>router.first</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// get the first route that matches
 
+params = router.first( '/products/15', 'GET' )
+
+// returns a params object, or false if nothing matches
+</pre>
+<br/>
+<pre class="sh_javascript">
+// go all callback on this shit
+
+router.first( '/products/15', 'GET', function(params){
+  // passes a params object in
+  // this has not been well thought out.
+})
+</pre>
+<br/>
+<header>
+  <h2>router.all</h2>
+</header>
+<pre class="sh_javascript">
+// if you want all matching routes...
+
+params_array = router.all( '/products/15', 'GET' )
+
+// => [ params, params, params... ]
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Resources</h1>
   <section id='resources'>
     <header>
       <h2>REST resources</h2>
     </header>
     <div class='code'>
 <pre class="sh_javascript">
-router.resource( 'products' )
+router.resource( 'BlogPosts' )
 
 // is equivalent to:
 
-router.get( '/products(.:format)' )
-      .to( 'products.index' )
+router.get( '/blog_posts(.:format)' )
+      .to( 'BlogPosts.index' )
 
-router.get( '/products/add(.:format)' )
-      .to( 'products.add' )
+router.get( '/blog_posts/add(.:format)' )
+      .to( 'BlogPosts.add' )
 
-router.get( '/products/:id(.:format)' )
-      .to('products.show' )
+router.get( '/blog_posts/:id(.:format)' )
+      .to('BlogPosts.show' )
 
-router.get('/products/:id/edit(.:format)' )
-      .to( 'products.edit' )
+router.get('/blog_posts/:id/edit(.:format)' )
+      .to( 'BlogPosts.edit' )
 
-router.post('/products(.:format)' )
-      .to( 'products.create' )
+router.post('/blog_posts(.:format)' )
+      .to( 'BlogPosts.create' )
 
-router.put('/products/:id(.:format)' )
-      .to( 'products.update' )
+router.put('/blog_posts/:id(.:format)' )
+      .to( 'BlogPosts.update' )
 
-router.del('/products/:id(.:format)' )
-      .to( 'products.destroy' )
+router.del('/blog_posts/:id(.:format)' )
+      .to( 'BlogPosts.destroy' )
+</pre>
+    </div>
+
+    <header>
+      <h2>Nested routes &amp; resources</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// resources can nest both routes and deeper resources
+router.resource( 'BlogPosts' )
+      // nest on the collection
+      .collection(function(){
+        this.get( 'print(.:format)' )
+            .to('BlogPosts.print')
+      })
+      // nest on the member
+      .member(function(){
+        this.resource( 'Comments' )
+      })
+
+
+router.first( '/blog_posts/5/comments' )
+
+// =>
+{
+  controller: 'Comments',
+  action: 'index',
+  blog_posts_id: 5,
+  method: 'GET'
+}
+
+
+router.first( '/blog_posts/print.pdf' )
+
+// =>
+{
+  controller: 'BlogPosts',
+  action: 'print',
+  format: 'pdf',
+  method: 'GET'
+}
 </pre>
     </div>
   </section>
 
 
+  <h1>Conditions</h1>
   <section id='conditions'>
     <header>
       <h2>Match conditions</h2>
@@ -303,11 +383,7 @@ router.get( '/:beverage/near/:location' )
   </section>
 
 
-
   <h1>URL generation</h1>
-
-
-
   <section id='generation'>
     <header>
       <h2>Turn a params object into a URL</h2>
@@ -348,50 +424,13 @@ router.url({
   action: 'show',
   id: 5,
   format: 'json',
-  love: 'cheese'
+  love: 'cheese' // <--------
 }, true )
-//=> '/products/5.json?love=cheese'
+
+// => '/products/5.json?love=cheese'
 </pre>
     </div>
   </section>
-
-
-  <h1>Resolution &amp; dispatching</h1>
-  <section id='resolution'>
-    <header>
-      <h2>router.first</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-// get the first route that matches
-
-var params = router.first( '/products/15', 'GET' )
-
-// returns a params object, or false if nothing matches
-</pre>
-<br/>
-<pre class="sh_javascript">
-// go all callback on this shit
-
-router.first( '/products/15', 'GET', function(params){
-  // passes a params object in
-  // this has not been well thought out.
-})
-</pre>
-<br/>
-<header>
-  <h2>router.all</h2>
-</header>
-<pre class="sh_javascript">
-// if you want all matching routes...
-
-var params_array = router.all( '/products/15', 'GET' )
-
-// => [ params, params, params... ]
-</pre>
-    </div>
-  </section>
-
 
 </body>
 </html>

@@ -5,6 +5,7 @@ body {
   background-image: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.12), rgba(255,255,255,0)), url(wood.jpg);
   background-image:      -o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -o-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.1), rgba(255,255,255,0)), url(wood.jpg);
   background-image:    -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -moz-radial-gradient(center 250px, circle closest-corner, rgba(255,255,255,0.1), rgba(255,255,255,0)), url(wood.jpg);
+/*  background-attachment: fixed;*/
 }
 
 #title {
