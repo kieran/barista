@@ -149,6 +149,28 @@ router.del('/products/:id(.:format)' )
       .to( 'products.destroy' )
 ```
 
+Removing Routes
+------------------------
+
+In some cases, you will need to remove routes on a running router.  The `router.remove( name )` method will work for this, but requires
+use of the otherwise unused `route.name( name )` method.
+
+### Adding a name (currently only used with this functionality)
+
+```javascript
+router.match( '/products/:id', 'GET' )
+      .to( 'products.show' )
+      .name('products_show')
+```
+
+### Removing a named route
+
+```javascript
+
+router.remove('products_show')
+
+```
+
 Resolution & dispatching
 ------------------------
 
