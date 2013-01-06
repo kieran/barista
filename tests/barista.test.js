@@ -711,7 +711,81 @@ RouterTests = {
 
 	  assert.equal( router.url( params ), url, this.fail);
 	  assert.equal( router.url( expectedParams ), url, this.fail);
-  },//
+  },
+  'test Simple Remove' : function() {
+
+    //Start by repeating the simple route test, to make sure nothing was broken by using name
+    var route = router.match('/:controller/:action/:id').name("delete_me");
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    //Remove the route
+    router.remove("delete_me");
+
+    params = router.first('/products/show/1','GET'); 
+    assert.equal(params, false, this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+  'test Remove With Multiple Routes' : function() {
+
+    //Start by repeating the simple route test, to make sure nothing was broken by using name
+    var route = router.match('/:controller/:action/:id').name("delete_me");
+    var route = router.match('/a/:controller/:action/:id').name("do_not_delete_me");
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+    params = router.first('/a/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    //Remove the route
+    router.remove("delete_me");
+
+    params = router.first('/products/show/1','GET'); 
+    assert.equal(params, false, this.fail);
+    params = router.first('/a/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+  'test Bad Remove does no damage and fails to remove good route' : function() {
+
+    //Same as the simple route test, with the invalid delete in the middle
+    var route = router.match('/:controller/:action/:id').name("do_not_delete_me");
+    router.remove("delete_me");
+
+    var params = router.first('/products/show/1','GET');
+    assert.ok(params, this.fail);
+    assert.equal(params.controller, 'products', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+    assert.equal(params.id, 1, this.fail);
+    assert.equal(params.method, 'GET', this.fail);
+
+    bench(function(){
+      router.first('/products/show/1','GET');
+    });
+  },
+  
+  //
   //
   //   'test Nesting: Resource -> Route -> Resource -> Route' : function() {
   //     var res = router.resource('Ones').collection(function(){
