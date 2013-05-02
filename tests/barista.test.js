@@ -453,8 +453,6 @@ RouterTests = {
   'test Resource Url Generation' : function() {
     var routes = router.resource('snow_dogs').routes;
 
-    // console.log(routes)
-
     // index
     assert.equal( router.url( { controller:'snow_dogs', action:'index' } ), '/snow_dogs', this.fail);
     assert.equal( router.url( { controller:'snow_dogs', action:'index', format: 'html' } ), '/snow_dogs.html', this.fail);
@@ -491,6 +489,7 @@ RouterTests = {
 
   'test Route Url Generation' : function() {
     var route = router.match('/:controller/:action(/:id)(.:format)');
+
     assert.equal( router.url( { controller:'snow_dogs', action:'pet' } ), '/snow_dogs/pet', this.fail);
     assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5 } ), '/snow_dogs/pet/5', this.fail);
     assert.equal( router.url( { controller:'snow_dogs', action:'pet', id:5, format:'html' } ), '/snow_dogs/pet/5.html', this.fail);
@@ -596,7 +595,6 @@ RouterTests = {
 
     var expectedParams = { method:'GET', controller:'Posts', action:'print', post_id:5 }
 
-
     // tests both parsing & generation
 	  assert.equal( router.url( params ), '/posts/5/print', this.fail);
 	  assert.equal( router.url( expectedParams ), '/posts/5/print', this.fail);
@@ -683,6 +681,9 @@ RouterTests = {
     , params = router.first('/something/something_else','GET')
     , expectedParams = { method:'GET', controller:'App', action:'somewhere' }
 
+    debugger
+
+
 	  assert.equal( router.url( params ), '/something/something_else', this.fail);
 	  assert.equal( router.url( expectedParams ), '/something/something_else', this.fail);
   },
@@ -726,7 +727,7 @@ RouterTests = {
     //Remove the route
     router.remove("delete_me");
 
-    params = router.first('/products/show/1','GET'); 
+    params = router.first('/products/show/1','GET');
     assert.equal(params, false, this.fail);
 
     bench(function(){
@@ -754,7 +755,7 @@ RouterTests = {
     //Remove the route
     router.remove("delete_me");
 
-    params = router.first('/products/show/1','GET'); 
+    params = router.first('/products/show/1','GET');
     assert.equal(params, false, this.fail);
     params = router.first('/a/products/show/1','GET');
     assert.ok(params, this.fail);
@@ -784,7 +785,7 @@ RouterTests = {
       router.first('/products/show/1','GET');
     });
   },
-  
+
   //
   //
   //   'test Nesting: Resource -> Route -> Resource -> Route' : function() {

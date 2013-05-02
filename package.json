@@ -8,6 +8,7 @@
   "engines": { "node": ">= 0.4.0" },
   "dependencies": {
     "inflection": "*",
-    "coffee-script": "*"
+    "coffee-script": "*",
+    "mocha": "*"
   }
 }
