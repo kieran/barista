@@ -7,6 +7,7 @@
   "main": "./index.js",
   "engines": { "node": ">= 0.4.0" },
   "dependencies": {
-    "inflection": "*"
+    "inflection": "*",
+    "coffee-script": "*"
   }
 }
