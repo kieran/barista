@@ -5,10 +5,11 @@
 #     key = new Key('name')
 #     key = new Key('name', true)
 #
+exports.Key =
 class Key
-  constructor: ( @name, @optional, @glob )->
+  constructor: ( @name, @optional )->
 
-    @regex = if @glob then /[\w\-\/]+?/ else /[\w\-]+/ # default url-friendly regex
+    @regex = /[\w\-]+/ # default url-friendly regex
 
     # special defaults for controllers & actions, which will always be function-name-safe
     if @name == 'controller' || @name == 'action'
@@ -63,10 +64,9 @@ class Key
 
     #  an array of allowed values, e.g. ['stop','play','pause']
     if condition instanceof Array
-      condition = condition.map((cond)->
+      @regex = new RegExp condition.map( (cond)->
         cond.toString().replace(/^\//, '').replace /\/[gis]?$/, ''
-      )
-      @regex = new RegExp condition.join '|'
+      ).join '|'
 
     this # chainable
 
@@ -78,4 +78,21 @@ class Key
   toString: ->
     "key-#{@name}"
 
-exports.Key = Key
+
+# new Glob( name, optional )
+# =================================
+# globs are just greedy keys
+#
+#     glob = new Glob('name')
+#     glob = new Glob('name', true)
+#
+exports.Glob =
+class Glob extends Key
+  constructor: ( @name, @optional )->
+
+    @regex = /[\w\-\/]+?/ # default url-friendly regex
+
+    # special defaults for controllers & actions, which will always be function-name-safe
+    if @name == 'controller' || @name == 'action'
+      @regex = /[a-zA-Z_][\w\-]*/
+

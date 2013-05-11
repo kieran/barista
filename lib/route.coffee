@@ -1,9 +1,7 @@
-Key           = require('./key').Key
-Resource      = require('./resource').Resource
-regExpEscape  = require('./helpers').regExpEscape
-mixin         = require('./helpers').mixin
-kindof        = require('./helpers').kindof
-inflection    = require('inflection')
+{ Key, Glob } = require './key'
+{ Text }      = require './text'
+{ Resource }  = require './resource'
+inflection    = require 'inflection'
 
 # !x! regexen crossing !x!
 # matches keys
@@ -12,13 +10,16 @@ KEY   = /:([a-zA-Z_][\w\-]*)/
 GLOB  = /\*([a-zA-Z_][\w\-\/]*)/
 # optional group (the part in parens)
 OGRP  = /\(([^)]+)\)/
-# breaks a string into atomic parts: ogrps, keys, then everything else
-PARTS = /\([^)]+\)|:[a-zA-Z_][\w\-]*|\*[a-zA-Z_][\w\-]*|[\w\-_\\\/\.]+/g
 
-
+PARTS = ///
+        \([^)]+\)             # OGRPS
+      |  :[a-zA-Z_][\w\-]*    # KEYS
+      | \*[a-zA-Z_][\w\-]*    # GLOBS
+      | [\w\-_\\\/\.]+        # TEXT
+///g
 
 # new Route( router, path [, method] )
-# =================
+# ====================================
 # turns strings into magical ponies that come when you call them
 #
 #     route = new Route(router, '/:controller/:action/:id(.:format)')
@@ -28,6 +29,7 @@ PARTS = /\([^)]+\)|:[a-zA-Z_][\w\-]*|\*[a-zA-Z_][\w\-]*|[\w\-_\\\/\.]+/g
 #
 # Pretty familiar to anyone who's used Merb/Rails - called by Router.match()
 #
+exports.Route =
 class Route
   constructor: ( router, path, method )->
     if router && path
@@ -39,7 +41,7 @@ class Route
   #
   # the actual route builder function, mostly called by `new Route`
   #
-  match: ( router, path, method, optional )->
+  match: ( router, path, method, @optional=false )->
 
     if typeof path != 'string'
       throw new Error 'path must be a string'
@@ -48,10 +50,10 @@ class Route
     if @path?
       prefix = @path
 
-      # get a list of key names in the new segment
+      # get a list of key names in the new segment TODO: globs
       new_keys = []
       new_keys.push ':id' if @collection || @member # force id to be renamed for resources
-      Array.prototype.push.apply new_keys, path.match RegExp(KEY.source, 'g') # find ALL
+      Array::push.apply new_keys, path.match RegExp(KEY.source, 'g') # find ALL
 
       # rename earlier keys
       for key in new_keys
@@ -60,9 +62,6 @@ class Route
 
       # return the new awesomeness
       return new Route router, prefix+path, method
-
-    # is this a nested, optional url segment like (.:format)
-    @optional = optional == true
 
     # uppercase the method name
     if typeof(method) == 'string'
@@ -91,7 +90,7 @@ class Route
       else if KEY.test part # key
         @parts[i] = new Key KEY.exec(part)[1]
       else if GLOB.test part # glob
-        @parts[i] = new Key GLOB.exec(part)[1], false, true
+        @parts[i] = new Glob GLOB.exec(part)[1]
       else # string
         @parts[i] = String part
 
@@ -242,7 +241,7 @@ class Route
       throw new Error 'conditions must be an object'
 
     for part in @parts
-      if part instanceof Key || part instanceof Route
+      unless typeof part == 'string'
         # recursively apply all conditions to sub-parts
         part.where conditions
 
@@ -258,10 +257,10 @@ class Route
   # **this is meant to be called & modified by router.url()**
   #
   stringify: ( params )->
-    url = [] # urls start life as an array to enble a second pass
+    url = [] # urls start life as an array to enable a second pass
 
     for part in @parts
-      if part instanceof Key
+      if part instanceof Key || part instanceof Glob
         if params[part.name]? && part.regex.test params[part.name]
           # there's a param named this && the param matches the key's regex
           url.push part.url params[part.name] # push it onto the stack
@@ -304,17 +303,17 @@ class Route
   #
   keysAndRoutes: ->
     @parts.filter (part)->
-      part instanceof Key || part instanceof Route
+      part instanceof Key || part instanceof Glob || part instanceof Route
 
   # route.keys()
   # ---------------------
-  # just the parts that are Keys
+  # just the parts that are Keys (or globs)
   #
   # returns an array of aforementioned Keys
   #
   keys: ->
     @parts.filter (part)->
-      part instanceof Key
+      part instanceof Key || part instanceof Glob
 
 
   # route.parse( url, method )
@@ -388,7 +387,7 @@ class Route
       segm = pair[0]
 
       # actually mixin the params
-      if segm instanceof Key
+      if segm instanceof Key || segm instanceof Glob
         params[segm.name] = part
       else if segm instanceof Route
         mixin params, segm.parse(part, method)
@@ -423,4 +422,32 @@ class Route
     ].join ''
 
 
-exports.Route = Route
+
+# Helper methods
+# =============================================
+
+# deep object mixer
+mixin = ( ret, mixins... )->
+  for obj in mixins
+    for own key, val of obj
+      if kindof(val) == 'object'
+        ret[key] = mixin {}, val
+      else
+        ret[key] = val
+  ret
+
+# better than typeof
+kindof = ( o )->
+  switch
+    when typeof o != "object"     then typeof o
+    when o == null                then "null"
+    when o.constructor == Array   then "array"
+    when o.constructor == Date    then "date"
+    when o.constructor == RegExp  then "regex"
+    else "object"
+
+# escape a string for literal embedding in a regexp
+regExpEscape = do ->
+  specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ]
+  sRE = new RegExp "(\\#{ specials.join '|\\' })", 'g'
+  ( text )-> text.replace sRE, '\\$1'

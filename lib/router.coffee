@@ -1,7 +1,8 @@
-Route     = require('./route').Route
-Resource  = require('./resource').Resource
-qstring   = require('querystring')
+{ Route }     = require './route'
+{ Resource }  = require './resource'
+qstring       = require 'querystring'
 
+exports.Router =
 class Router
   constructor: ->
     @methods =  [ 'GET', 'HEAD', 'POST', 'PUT', 'DELETE' ]
@@ -24,7 +25,7 @@ class Router
       method = method.toUpperCase()
 
     # upcase the method
-    if typeof(method) != 'undefined' && !@methods_regexp().test method
+    if method? && !@methods_regexp().test method
       throw new Error "method must be one of: #{ @methods.join ', ' }"
 
     route = new Route this, path, method
@@ -234,6 +235,3 @@ class Router
   #
   methods_regexp: ->
     RegExp "^(#{ @methods.join '|' })$",'i'
-
-
-exports.Router = Router
