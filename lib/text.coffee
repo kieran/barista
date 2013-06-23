@@ -43,7 +43,7 @@ class Text
   # returns a unique id that can be compared to other parts
   #
   toString: ->
-    "text-#{@text}"
+    @text
 
 regExpEscape = do ->
   specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ]

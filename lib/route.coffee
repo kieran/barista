@@ -408,19 +408,11 @@ class Route
 
 
   toString: ->
-
-    # right-pads strings
-    rpad = (str,len)->
-      ret = new Array len+1 # +1 for fenceposting
-      ret.splice 0, str.length, str
-      ret.join ' '
-
-    [
-      rpad( @method || 'ALL',8 ),
-      rpad( @path, 50 ),
-      [ @params.controller, @params.action ].join('.')
-    ].join ''
-
+    defn = @parts.reduce (m='',part)-> m+part.toString()
+    if @optional
+      "(#{ defn })"
+    else
+      defn
 
 
 # Helper methods

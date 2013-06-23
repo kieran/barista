@@ -73,10 +73,10 @@ class Key
 
   # key.toString()
   # --------------
-  # returns a unique id that can be compared to other parts
+  # returns the original key definition
   #
   toString: ->
-    "key-#{@name}"
+    ":#{@name}"
 
 
 # new Glob( name, optional )
@@ -96,3 +96,9 @@ class Glob extends Key
     if @name == 'controller' || @name == 'action'
       @regex = /[a-zA-Z_][\w\-]*/
 
+  # glob.toString()
+  # ---------------
+  # returns the original glob definition
+  #
+  toString: ->
+    "*#{@name}"
