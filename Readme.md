@@ -116,6 +116,9 @@ router.post( '/products' )
 
 router.del( '/products' )
       .to( 'products.destroy' )
+
+router.options( '/products' )
+      .to( 'products.destroy' )
 ```
 
 ### REST Resources
