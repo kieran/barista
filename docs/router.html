@@ -1,199 +1,630 @@
-<!DOCTYPE html>  <html> <head>   <title>router.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="helpers.html">                 helpers.js               </a>                                           <a class="source" href="key.html">                 key.js               </a>                                           <a class="source" href="resource.html">                 resource.js               </a>                                           <a class="source" href="route.html">                 route.js               </a>                                           <a class="source" href="router.html">                 router.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               router.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">Route</span>     <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./route&#39;</span><span class="p">).</span><span class="nx">Route</span>
-  <span class="p">,</span> <span class="nx">Resource</span>  <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./resource&#39;</span><span class="p">).</span><span class="nx">Resource</span>
-  <span class="p">,</span> <span class="nx">qstring</span>   <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;querystring&#39;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>, snakeize  = require('./helpers').snakeize</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h1>new Router</h1>
+<!DOCTYPE html>
 
-<p>Simple router for Node -- setting up routes looks like this:</p>
+<html>
+<head>
+  <title>router.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="key.html">
+                key.coffee
+              </a>
+            
+              
+              <a class="source" href="resource.html">
+                resource.coffee
+              </a>
+            
+              
+              <a class="source" href="route.html">
+                route.coffee
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.coffee
+              </a>
+            
+              
+              <a class="source" href="text.html">
+                text.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>router.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>{ Route }     = require <span class="string">'./route'</span>
+{ Resource }  = require <span class="string">'./resource'</span>
+qstring       = require <span class="string">'querystring'</span>
 
-<pre><code> router = new Router();
+exports.Router =
+<span class="class"><span class="keyword">class</span> <span class="title">Router</span></span>
+  constructor: -&gt;
+    <span class="property">@methods</span> =  [ <span class="string">'GET'</span>, <span class="string">'HEAD'</span>, <span class="string">'POST'</span>, <span class="string">'PUT'</span>, <span class="string">'DELETE'</span>, <span class="string">'OPTIONS'</span> ]
+    <span class="property">@routes</span> =   []</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2>router.match( path [, method] )</h2>
 
- router.match('/')
-  .to('application.index')
-  .name('main');
-
- router.match('/users/:user_id/messages/:message_id')
-  .to('users.read_message');
-</code></pre>
-
-<p>Pretty familiar to anyone who's used Merb/Rails</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">Router</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">Router</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-
-  <span class="k">this</span><span class="p">.</span><span class="nx">METHODS</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span> <span class="p">]</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">routes</span> <span class="o">=</span> <span class="p">[]</span>
-
-  <span class="k">return</span> <span class="k">this</span>
-<span class="p">};</span> <span class="c1">// Router</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>router.match( path [, method] )</h2>
-
-<pre><code>router.match('/:controller/:action(/:id)(.:format)', 'GET')
- .to(......)
-</code></pre>
-
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <pre><code>router.match(&#39;/:controller/:action(/:id)(.:format)&#39;, &#39;GET&#39;)
+ .to(......)</code></pre>
 <p>path is mandatory (duh)
 method is optional, routes without a method will apply in all cases</p>
+<p>returns the route (for chaining)</p>
 
-<p>returns the route (for chaining)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">match</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">method</span> <span class="p">)</span> <span class="p">{</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  match: ( path, method )-&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>upcase the method</p>
 
-  <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">method</span> <span class="o">==</span> <span class="s1">&#39;string&#39;</span> <span class="p">)</span> <span class="nx">method</span> <span class="o">=</span> <span class="nx">method</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">()</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="keyword">typeof</span>(method) == <span class="string">'string'</span>
+      method = method.toUpperCase()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>upcase the method</p>
 
-  <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">method</span> <span class="o">!=</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">methods_regexp</span><span class="p">().</span><span class="nx">test</span><span class="p">(</span><span class="nx">method</span><span class="p">))</span> <span class="k">throw</span> <span class="s1">&#39;method must be one of: &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">METHODS</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> method? &amp;&amp; !<span class="property">@methods_regexp</span>().test method
+      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">"method must be one of: <span class="subst">#{ @methods.join ', ' }</span>"</span>
 
-  <span class="kd">var</span> <span class="nx">route</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Route</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">method</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>this.routes.push(route)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="nx">route</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>convenience methods</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>router.get( path )</h3>
-
+    route = <span class="keyword">new</span> Route <span class="keyword">this</span>, path, method</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h3>router.get( path )</h3>
 <p>equivalent to</p>
+<pre><code>router.match( path, &#39;GET&#39; )</code></pre>
 
-<pre><code>router.match( path, 'GET' )
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">get</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span> <span class="p">){</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">)</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>router.put( path )</h3>
-
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  get: ( path )-&gt;
+    <span class="property">@match</span> path, <span class="string">'GET'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h3>router.options( path )</h3>
 <p>equivalent to</p>
+<pre><code>router.match( path, &#39;OPTIONS&#39; )</code></pre>
 
-<pre><code>router.match( path, 'PUT' )
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">put</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span> <span class="p">){</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">)</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>router.post( path )</h3>
-
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  options: ( path )-&gt;
+    <span class="property">@match</span> path, <span class="string">'OPTIONS'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h3>router.put( path )</h3>
 <p>equivalent to</p>
+<pre><code>router.match( path, &#39;PUT&#39; )</code></pre>
 
-<pre><code>router.match( path, 'POST' )
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">post</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span> <span class="p">){</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">)</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>router.del( path )</h3>
-
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  put: ( path )-&gt;
+    <span class="property">@match</span> path, <span class="string">'PUT'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h3>router.post( path )</h3>
 <p>equivalent to</p>
+<pre><code>router.match( path, &#39;POST&#39; )</code></pre>
 
-<pre><code>router.match( path, 'DELETE' )
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">del</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span> <span class="p">){</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">)</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h2>router.resource( controller )</h2>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  post: ( path )-&gt;
+    <span class="property">@match</span> path, <span class="string">'POST'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <h3>router.del( path )</h3>
+<p>equivalent to</p>
+<pre><code>router.match( path, &#39;DEL&#39; )</code></pre>
 
-<p>generates standard resource routes for a controller name</p>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  del: ( path )-&gt;
+    <span class="property">@match</span> path, <span class="string">'DELETE'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h2>router.resource( controller )</h2>
 
-<pre><code>router.resource('products')
-</code></pre>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>generates standard resource routes for a controller name</p>
+<pre><code>router.resource(&#39;products&#39;)</code></pre>
+<p>returns a Resource object</p>
 
-<p>returns a Resource object</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">resource</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">controller</span> <span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">resource</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Resource</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">controller</span> <span class="p">)</span>
-  <span class="k">return</span> <span class="nx">resource</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h2>router.first( path, method, callback )</h2>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  resource: ( controller )-&gt;
+    <span class="keyword">new</span> Resource <span class="keyword">this</span>, controller</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2>// router.first( path, method, callback )</h2>
 
-<p>find the first route that match the path &amp; method</p>
-
-<pre><code>router.first('/products/5', 'GET')
-=&gt; { controller: 'products', action: 'show', id: 5, method: 'GET' }
-</code></pre>
-
-<p>find &amp; return a params hash from the first route that matches. If there's no match, this will return false</p>
-
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>find the first route that match the path &amp; method</p>
+<pre><code>router.first(&#39;/products/5&#39;, &#39;GET&#39;)
+=&gt; { controller: &#39;products&#39;, action: &#39;show&#39;, id: 5, method: &#39;GET&#39; }</code></pre>
+<p>find &amp; return a params hash from the first route that matches. If there&#39;s no match, this will return false</p>
 <p>If the options callback function is provided, it will be fired like so:</p>
+<pre><code>callback( error, params )</code></pre>
 
-<pre><code>callback( error, params )
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">first</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span> <span class="nx">cb</span> <span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="kc">false</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  first: ( path, method, cb )-&gt;
+    params = <span class="literal">false</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>attempt the parse</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">parse</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">method</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>fire the callback if given</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">cb</span> <span class="o">==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="nx">cb</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="nx">params</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>may as well return this</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">return</span> <span class="nx">params</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+    <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>attempt the parse</p>
 
-  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">cb</span> <span class="o">==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="nx">cb</span><span class="p">(</span><span class="s1">&#39;No matching routes found&#39;</span><span class="p">)</span>
-  <span class="k">return</span> <span class="kc">false</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>router.all( path [, method] )</h2>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      params = route.parse(path, method)
 
-<p>find &amp; return a params hash from ALL routes that match</p>
+      <span class="keyword">if</span> params</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>fire the callback if given</p>
 
-<pre><code>router.all( '/products/5' )
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> <span class="keyword">typeof</span> cb == <span class="string">'function'</span>
+          cb <span class="literal">undefined</span>, params</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>may as well return this</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> params
+
+    <span class="keyword">if</span> <span class="keyword">typeof</span> cb == <span class="string">'function'</span>
+      cb <span class="string">'No matching routes found'</span>
+    <span class="literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h2>router.all( path [, method] )</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>find &amp; return a params hash from ALL routes that match</p>
+<pre><code>router.all( &#39;/products/5&#39; )
 
   =&gt; [
-    { controller: 'products', action: 'show', id: 5, method: 'GET' },
-    { controller: 'products', action: 'update', id: 5, method: 'PUT' },
-    { controller: 'products', action: 'destroy', id: 5, method: 'DELETE' },
-  ]
-</code></pre>
+    { controller: &#39;products&#39;, action: &#39;show&#39;, id: 5, method: &#39;GET&#39; },
+    { controller: &#39;products&#39;, action: &#39;update&#39;, id: 5, method: &#39;PUT&#39; },
+    { controller: &#39;products&#39;, action: &#39;destroy&#39;, id: 5, method: &#39;DELETE&#39; },
+  ]</code></pre>
+<p>if there ares no matches, returns an empty array</p>
 
-<p>if there ares no matches, returns an empty array</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">all</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">method</span> <span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">[],</span>
-      <span class="nx">params</span> <span class="o">=</span> <span class="kc">false</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  all: ( path, method )-&gt;
+    ret = []
+    params = <span class="literal">false</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">parse</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
-<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h2>router.url( params[, add_querystring=false] )</h2>
+    <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span>
+      params = route.parse.apply route, arguments
+      <span class="keyword">if</span> params
+        ret.push params
+    ret</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h2>// router.url( params[, add_querystring=false] )</h2>
 
-<p>generates a URL from a params hash</p>
-
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>generates a URL from a params hash</p>
 <pre><code>router.url( {
-  controller: 'products',
-  action: 'show',
+  controller: &#39;products&#39;,
+  action: &#39;show&#39;,
   id: 5
 } )
-=&gt; '/products/5'
+=&gt; &#39;/products/5&#39;
 
 router.url( {
-  controller: 'products',
-  action: 'show',
+  controller: &#39;products&#39;,
+  action: &#39;show&#39;,
   id: 5,
-  format: 'json'
+  format: &#39;json&#39;
 } )
-=&gt; '/products/5.json'
+=&gt; &#39;/products/5.json&#39;
 
 router.url({
-  controller: 'products',
-  action: 'show',
+  controller: &#39;products&#39;,
+  action: &#39;show&#39;,
   id: 5,
-  format: 'json',
-  love: 'cheese'
+  format: &#39;json&#39;,
+  love: &#39;cheese&#39;
 }, true )
-=&gt; '/products/5.json?love=cheese'
-</code></pre>
+=&gt; &#39;/products/5.json?love=cheese&#39;</code></pre>
+<p>returns false if there are no suitable routes</p>
 
-<p>returns false if there are no suitable routes</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">add_querystring</span> <span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="kc">false</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>iterate through the existing routes until a suitable match is found</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>do the controller &amp; acton match?</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">params</span><span class="p">.</span><span class="nx">controller</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">params</span><span class="p">.</span><span class="nx">controller</span> <span class="o">!=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">controller</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">continue</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">params</span><span class="p">.</span><span class="nx">action</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">&amp;&amp;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">params</span><span class="p">.</span><span class="nx">action</span> <span class="o">!=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">continue</span>
-    <span class="p">}</span>
-    <span class="nx">url</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">break</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  url: ( params, add_querystring )-&gt;
+    url = <span class="literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>iterate through the existing routes until a suitable match is found</p>
 
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">url</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span>  <span class="c1">// no love? return false</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>do the controller &amp; acton match?</p>
 
-  <span class="kd">var</span> <span class="nx">qs</span> <span class="o">=</span> <span class="nx">qstring</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">url</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1">// build the possibly empty query string</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">continue</span> <span class="keyword">if</span> route.params.controller? &amp;&amp; route.params.controller != params.controller
+      <span class="keyword">continue</span> <span class="keyword">if</span> route.params.action? &amp;&amp; route.params.action != params.action
 
-  <span class="k">if</span> <span class="p">(</span><span class="nx">add_querystring</span> <span class="o">&amp;&amp;</span> <span class="nx">qs</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="nx">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="nx">qs</span>  <span class="c1">// if there is a query string...</span>
+      <span class="keyword">break</span> <span class="keyword">if</span> url = route.stringify params
 
-  <span class="k">return</span> <span class="nx">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">// just return the url</span>
-<span class="p">};</span>
+    <span class="keyword">return</span> <span class="literal">false</span> <span class="keyword">unless</span> url<span class="comment"># no love? return false</span>
+    qs = qstring.stringify url[<span class="number">1</span>] <span class="comment"># build the possibly empty query string</span>
 
-<span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">methods_regexp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){</span>
-  <span class="k">return</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">&#39;^(&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">METHODS</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)$&#39;</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
-<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h2>router.defer( testfn() )</h2>
+    <span class="keyword">if</span> add_querystring &amp;&amp; qs.length &gt; <span class="number">0</span>
+      <span class="keyword">return</span> url[<span class="number">0</span>] + <span class="string">'?'</span> + qs <span class="comment"># if there is a query string...</span>
 
-<pre><code>router.defer( test( path, method ) )
-</code></pre>
+    url[<span class="number">0</span>] <span class="comment"># just return the url</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h2>router.remove( name )</h2>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Removes previously created routes by name</p>
+<p>The route must be a named route, and the name is passed in.</p>
+<p>returns: Nothing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  remove: ( name )-&gt;
+    <span class="property">@routes</span> = <span class="property">@routes</span>.filter (el)-&gt;
+      el.route_name != name</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h2>router.defer( testfn() )</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <pre><code>router.defer( test( path, method ) )</code></pre>
 <p>test should be a function that examines non-standard URLs</p>
-
 <p>path and method will be passed in - expects a params hash back OR false on a non-match</p>
-
 <p>returns: DeferredRoute (for... reference? I dunno.)</p>
+<p><strong>THIS IS CURRENTLY COMPLETELY UNTESTED. IT MIGHT NOT EVEN WORK. SERIOUSLY.</strong></p>
 
-<p><strong>THIS IS CURRENTLY COMPLETELY UNTESTED. IT MIGHT NOT EVEN WORK. SERIOUSLY.</strong></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Router</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">defer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">fn</span> <span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;function&#39;</span> <span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;Router.defer requires a function as the only argument&#39;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  defer: ( fn )-&gt;
+    <span class="keyword">if</span> <span class="keyword">typeof</span>(fn) != <span class="string">'function'</span>
+      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'Router.defer requires a function as the only argument'</span>
 
-  <span class="kd">var</span> <span class="nx">route</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Route</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39;deferred&#39;</span><span class="p">)</span>
-  <span class="nx">route</span><span class="p">.</span><span class="nx">parse</span> <span class="o">=</span> <span class="nx">fn</span> <span class="c1">// add the custom parser</span>
-  <span class="k">delete</span> <span class="nx">route</span><span class="p">.</span><span class="nx">test</span> <span class="c1">// = function(){return false};</span>
-  <span class="k">delete</span> <span class="nx">route</span><span class="p">.</span><span class="nx">stringify</span> <span class="c1">//= function(){ throw &#39;Deferred routes are NOT generatable&#39;};</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">route</span><span class="p">)</span>
-  <span class="k">return</span> <span class="nx">route</span>
-<span class="p">}</span>
+    route = <span class="keyword">new</span> Route <span class="keyword">this</span>, <span class="string">'deferred'</span>
+    route.parse = fn <span class="comment"># add the custom parser</span>
+    <span class="keyword">delete</span> route.test <span class="comment"># = function(){return false};</span>
+    <span class="keyword">delete</span> route.stringify <span class="comment"># = function(){ throw new Error('Deferred routes are NOT generatable')};</span>
+    <span class="property">@routes</span>.push route
+    route</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h2>router.toString</h2>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>renders a textual description of the router for inpection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  toString: -&gt;
+    <span class="property">@routes</span>.map ((rt)-&gt;
+      rt.toString()
+    ).join <span class="string">'\n'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <h2>methods_regexp</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>builds a regexp out of the methods for method validation (used once, remove?)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  methods_regexp: -&gt;
+    RegExp <span class="string">"^(<span class="subst">#{ @methods.join '|' }</span>)$"</span>,<span class="string">'i'</span></pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

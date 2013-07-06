@@ -1,35 +1,125 @@
-<!DOCTYPE html>  <html> <head>   <title>resource.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="helpers.html">                 helpers.js               </a>                                           <a class="source" href="key.html">                 key.js               </a>                                           <a class="source" href="resource.html">                 resource.js               </a>                                           <a class="source" href="route.html">                 route.js               </a>                                           <a class="source" href="router.html">                 router.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               resource.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">snakeize</span>  <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./helpers&#39;</span><span class="p">).</span><span class="nx">snakeize</span>
-  <span class="p">,</span> <span class="nx">mixin</span>     <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./helpers&#39;</span><span class="p">).</span><span class="nx">mixin</span>
+<!DOCTYPE html>
 
-<span class="kd">var</span> <span class="nx">Resource</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">Resource</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">base</span><span class="p">,</span> <span class="nx">controller</span> <span class="p">){</span>
+<html>
+<head>
+  <title>resource.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="key.html">
+                key.coffee
+              </a>
+            
+              
+              <a class="source" href="resource.html">
+                resource.coffee
+              </a>
+            
+              
+              <a class="source" href="route.html">
+                route.coffee
+              </a>
+            
+              
+              <a class="source" href="router.html">
+                router.coffee
+              </a>
+            
+              
+              <a class="source" href="text.html">
+                text.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>resource.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>inflection    = require <span class="string">'inflection'</span>
 
-  <span class="kd">var</span> <span class="nx">controller_slug</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">snakeize</span><span class="p">(</span><span class="nx">controller</span><span class="p">)</span>
+exports.Resource =
+<span class="class"><span class="keyword">class</span> <span class="title">Resource</span></span>
+  constructor: ( base, controller )-&gt;
 
-  <span class="k">this</span><span class="p">.</span><span class="nx">routes</span> <span class="o">=</span> <span class="p">[]</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>set up the actual routes for the resource</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">this</span><span class="p">.</span><span class="nx">routes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">collection_route</span> <span class="o">=</span>
-    <span class="nx">base</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.index&#39;</span><span class="p">)</span>
-  <span class="p">,</span> <span class="nx">base</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;/add(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.add&#39;</span><span class="p">)</span>
-  <span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">member_route</span> <span class="o">=</span>
-    <span class="nx">base</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;/:id(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.show&#39;</span><span class="p">)</span>
-  <span class="p">,</span> <span class="nx">base</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;/:id/edit(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;GET&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.edit&#39;</span><span class="p">)</span>
-  <span class="p">,</span> <span class="nx">base</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.create&#39;</span><span class="p">)</span>
-  <span class="p">,</span> <span class="nx">base</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;/:id(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.update&#39;</span><span class="p">)</span>
-  <span class="p">,</span> <span class="nx">base</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">+</span><span class="nx">controller_slug</span><span class="o">+</span><span class="s1">&#39;/:id(.:format)&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">).</span><span class="nx">to</span><span class="p">(</span><span class="nx">controller</span><span class="o">+</span><span class="s1">&#39;.destroy&#39;</span><span class="p">)</span>
-  <span class="p">)</span>
+    slug = inflection.underscore(inflection.pluralize(controller))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>set up the actual routes for the resource</p>
 
-  <span class="k">return</span> <span class="k">this</span>
-<span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="property">@routes</span> = [
+        base.get(<span class="string">"/<span class="subst">#{slug}</span>(.:format)"</span>)           .to(<span class="string">"<span class="subst">#{controller}</span>.index"</span>)
+      , base.post(<span class="string">"/<span class="subst">#{slug}</span>(.:format)"</span>)          .to(<span class="string">"<span class="subst">#{controller}</span>.create"</span>)
+      , base.get(<span class="string">"/<span class="subst">#{slug}</span>/add(.:format)"</span>)       .to(<span class="string">"<span class="subst">#{controller}</span>.add"</span>)
+      , base.get(<span class="string">"/<span class="subst">#{slug}</span>/:id(.:format)"</span>)       .to(<span class="string">"<span class="subst">#{controller}</span>.show"</span>)
+      , base.get(<span class="string">"/<span class="subst">#{slug}</span>/:id/edit(.:format)"</span>)  .to(<span class="string">"<span class="subst">#{controller}</span>.edit"</span>)
+      , base.put(<span class="string">"/<span class="subst">#{slug}</span>/:id(.:format)"</span>)       .to(<span class="string">"<span class="subst">#{controller}</span>.update"</span>)
+      , base.del(<span class="string">"/<span class="subst">#{slug}</span>/:id(.:format)"</span>)       .to(<span class="string">"<span class="subst">#{controller}</span>.destroy"</span>)
+    ]
 
-<span class="nx">Resource</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">collection</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">){</span>
-  <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">cb</span> <span class="o">!=</span> <span class="s1">&#39;function&#39;</span> <span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;resource.collection() requires a callback function&#39;</span>
-  <span class="nx">cb</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">collection_route</span> <span class="p">)</span>
-  <span class="k">return</span> <span class="k">this</span> <span class="c1">// for chaining</span>
-<span class="p">}</span>
+    <span class="property">@collection_route</span> = <span class="property">@routes</span>[<span class="number">0</span>]
+    <span class="property">@member_route</span> = <span class="property">@routes</span>[<span class="number">3</span>]
 
-<span class="nx">Resource</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">member</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">cb</span><span class="p">){</span>
-  <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">cb</span> <span class="o">!=</span> <span class="s1">&#39;function&#39;</span> <span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;resource.member() requires a callback function&#39;</span>
-  <span class="nx">cb</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">member_route</span> <span class="p">)</span>
-  <span class="k">return</span> <span class="k">this</span> <span class="c1">// for chaining</span>
-<span class="p">}</span>
+    <span class="property">@collection_route</span>.collection = <span class="literal">true</span>
+    <span class="property">@member_route</span>.member = <span class="literal">true</span>
+    <span class="keyword">this</span>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+  collection: ( cb )-&gt;
+    <span class="property">@collection_route</span>.nest cb
+    <span class="keyword">this</span> <span class="comment"># for chaining</span>
+
+  member: ( cb )-&gt;
+    <span class="property">@member_route</span>.nest cb
+    <span class="keyword">this</span> <span class="comment"># for chaining</span>
+
+  nest: ( cb )-&gt;
+    <span class="property">@member_route</span>.nest cb
+    <span class="property">@collection_route</span>.nest cb
+    <span class="keyword">this</span> <span class="comment"># for chaining</span></pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
