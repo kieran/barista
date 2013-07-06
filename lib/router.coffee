@@ -5,7 +5,7 @@ qstring       = require 'querystring'
 exports.Router =
 class Router
   constructor: ->
-    @methods =  [ 'GET', 'HEAD', 'POST', 'PUT', 'DELETE' ]
+    @methods =  [ 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'OPTIONS' ]
     @routes =   []
 
   # router.match( path [, method] )
@@ -37,6 +37,14 @@ class Router
   #
   get: ( path )->
     @match path, 'GET'
+
+  # ### router.options( path )
+  # equivalent to
+  #
+  #     router.match( path, 'OPTIONS' )
+  #
+  options: ( path )->
+    @match path, 'OPTIONS'
 
   # ### router.put( path )
   # equivalent to
