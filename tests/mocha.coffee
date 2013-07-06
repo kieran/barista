@@ -4,10 +4,11 @@ assert      = require 'assert'
 router    = null
 
 verbs =
-  get:  'GET'
-  post: 'POST'
-  put:  'PUT'
-  del:  'DELETE'
+  get:      'GET'
+  post:     'POST'
+  put:      'PUT'
+  del:      'DELETE'
+  options:  'OPTIONS'
 
 describe 'Barista', ->
 

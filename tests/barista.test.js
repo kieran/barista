@@ -383,6 +383,13 @@ RouterTests = {
     assert.equal(params.method, 'DELETE', this.fail);
   },
 
+  'test OPTIONS' : function() {
+    var route = router.match('/:controller/:action(/:id)(.:format)','OPTIONS');
+    var params = router.first('/products/show/1.html','OPTIONS');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'OPTIONS', this.fail);
+  },
+
   'test GET Shorthand' : function() {
     var route = router.get('/:controller/:action(/:id)(.:format)');
     var params = router.first('/products/show/1.html','GET');
@@ -409,6 +416,14 @@ RouterTests = {
     var params = router.first('/products/show/1.html','DELETE');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'DELETE', this.fail);
+    assert.equal(params.action, 'show', this.fail);
+  },
+
+  'test OPTIONS Shorthand' : function() {
+    var route = router.options('/:controller/:action(/:id)(.:format)');
+    var params = router.first('/products/show/1.html','OPTIONS');
+    assert.ok(params, this.fail);
+    assert.equal(params.method, 'OPTIONS', this.fail);
     assert.equal(params.action, 'show', this.fail);
   },
 
