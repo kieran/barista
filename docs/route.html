@@ -980,7 +980,7 @@ assigning the vals from the url to the names of the keys as we go (potentially s
             </div>
             
             <div class="content"><div class='highlight'><pre>    url =     require(<span class="string">'url'</span>).parse urlParam <span class="comment"># TODO: fix this</span>
-    path =    url.pathname
+    path =    decodeURI url.pathname
     params =  { method: method }
 
     mixin params, <span class="property">@params</span></pre></div></div>

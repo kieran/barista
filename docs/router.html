@@ -390,7 +390,7 @@ method is optional, routes without a method will apply in all cases</p>
     params = <span class="literal">false</span>
 
     <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span>
-      params = route.parse.apply route, arguments
+      params = route.parse.apply path, arguments
       <span class="keyword">if</span> params
         ret.push params
     ret</pre></div></div>

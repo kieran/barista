@@ -80,7 +80,7 @@ key = new Key(&#39;name&#39;, true)</code></pre>
 <span class="class"><span class="keyword">class</span> <span class="title">Key</span></span>
   constructor: ( <span class="property">@name</span>, <span class="property">@optional</span> )-&gt;
 
-    <span class="property">@regex</span> = <span class="regexp">/[\w\-]+/</span> <span class="comment"># default url-friendly regex</span></pre></div></div>
+    <span class="property">@regex</span> = <span class="regexp">/[\w\-\s]+/</span> <span class="comment"># default url-friendly regex</span></pre></div></div>
             
         </li>
         
@@ -307,7 +307,7 @@ glob = new Glob(&#39;name&#39;, true)</code></pre>
 <span class="class"><span class="keyword">class</span> <span class="title">Glob</span> <span class="keyword">extends</span> <span class="title">Key</span></span>
   constructor: ( <span class="property">@name</span>, <span class="property">@optional</span> )-&gt;
 
-    <span class="property">@regex</span> = <span class="regexp">/[\w\-\/]+?/</span> <span class="comment"># default url-friendly regex</span></pre></div></div>
+    <span class="property">@regex</span> = <span class="regexp">/[\w\-\/\s]+?/</span> <span class="comment"># default url-friendly regex</span></pre></div></div>
             
         </li>
         
