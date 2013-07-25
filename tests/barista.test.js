@@ -812,7 +812,14 @@ RouterTests = {
     assert.equal( router.url( expectedParams ), '/something_with/cray cray param', this.fail);
   },
 
+  'test all with a simple route': function () {
 
+    var route = router.match('/all_routes/test').to( { controller:'All', action: 'test' } )
+      , routes = router.all('/all_routes/test', 'GET')
+      , expectedRoutes = [{ method: 'GET', controller: 'All', action: 'test' }];
+
+    assert.deepEqual(routes, expectedRoutes);
+  }
 
   //
   //
