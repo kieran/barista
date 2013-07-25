@@ -132,7 +132,7 @@ class Router
     params = false
 
     for route in @routes
-      params = route.parse.apply path, arguments
+      params = route.parse.apply route, arguments
       if params
         ret.push params
     ret
