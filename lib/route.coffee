@@ -334,7 +334,7 @@ class Route
 
     # let's chop off the QS to make life easier
     url =     require('url').parse urlParam # TODO: fix this
-    path =    url.pathname
+    path =    decodeURI url.pathname
     params =  { method: method }
 
     mixin params, @params

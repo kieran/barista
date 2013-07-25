@@ -801,6 +801,19 @@ RouterTests = {
     });
   },
 
+  'test A route with URI encoded params' : function() {
+
+    var route = router.match('/something_with/:weird_shit').to( { controller:'Wat', action:'lol' } )
+      , params = router.first('/something_with/cray cray param','GET')
+      , expectedParams = { method:'GET', controller:'Wat', action:'lol', weird_shit:'cray cray param' }
+
+    // tests both parsing & generation
+    assert.equal( router.url( params ), '/something_with/cray cray param', this.fail);
+    assert.equal( router.url( expectedParams ), '/something_with/cray cray param', this.fail);
+  },
+
+
+
   //
   //
   //   'test Nesting: Resource -> Route -> Resource -> Route' : function() {

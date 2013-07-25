@@ -9,7 +9,7 @@ exports.Key =
 class Key
   constructor: ( @name, @optional )->
 
-    @regex = /[\w\-]+/ # default url-friendly regex
+    @regex = /[\w\-\s]+/ # default url-friendly regex
 
     # special defaults for controllers & actions, which will always be function-name-safe
     if @name == 'controller' || @name == 'action'
@@ -90,7 +90,7 @@ exports.Glob =
 class Glob extends Key
   constructor: ( @name, @optional )->
 
-    @regex = /[\w\-\/]+?/ # default url-friendly regex
+    @regex = /[\w\-\/\s]+?/ # default url-friendly regex
 
     # special defaults for controllers & actions, which will always be function-name-safe
     if @name == 'controller' || @name == 'action'
