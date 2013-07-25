@@ -1,21 +1,34 @@
 {
   "name": "barista",
   "description": "URL router & generator, similar to Rails / merb",
-  "version": "0.0.9",
-  "author": "Kieran Huggins <kieran@kieran.ca>",
-  "repository": "git://github.com/kieran/barista",
+  "version": "0.0.10",
+  "homepage": "http://kieran.github.io/barista/",
+  "bugs": {
+    "url": "https://github.com/kieran/barista/issues"
+  },
+  "author": {
+    "name": "Kieran Huggins",
+    "email": "kieran@kieran.ca",
+    "url": "http://kieran.ca"
+  },
   "main": "./index.js",
   "scripts": {
     "prepublish": "./node_modules/.bin/coffee -c ./lib/",
     "test": "./node_modules/.bin/mocha --reporter list --growl --compilers coffee:coffee-script tests/mocha.coffee",
     "autotest": "cd lib; ../node_modules/.bin/mocha -w --reporter list --growl --compilers coffee:coffee-script ../tests/mocha.coffee"
   },
-  "engines": { "node": ">= 0.4.0" },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
   "dependencies": {
     "inflection": "*"
   },
   "devDependencies": {
     "coffee-script": "*",
     "mocha": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kieran/barista.git"
   }
 }
