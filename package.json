@@ -15,8 +15,7 @@
   "scripts": {
     "prepublish": "./node_modules/.bin/coffee -c ./lib/",
     "test": "./node_modules/.bin/mocha --reporter list --growl --compilers coffee:coffee-script tests/mocha.coffee",
-    "autotest": "cd lib; ../node_modules/.bin/mocha -w --reporter list --growl --compilers coffee:coffee-script ../tests/mocha.coffee",
-    "postpublish": "rm ./lib/*.js"
+    "autotest": "cd lib; ../node_modules/.bin/mocha -w --reporter list --growl --compilers coffee:coffee-script ../tests/mocha.coffee"
   },
   "engines": {
     "node": ">= 0.4.0"
