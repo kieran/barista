@@ -232,7 +232,7 @@ class Router
   # renders a textual description of the router for inpection
   #
   toString: ->
-    @routes.map ((rt)->
+    @routes.map( (rt)->
       rt.toString()
     ).join '\n'
 
