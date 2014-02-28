@@ -696,9 +696,6 @@ RouterTests = {
     , params = router.first('/something/something_else','GET')
     , expectedParams = { method:'GET', controller:'App', action:'somewhere' }
 
-    debugger
-
-
 	  assert.equal( router.url( params ), '/something/something_else', this.fail);
 	  assert.equal( router.url( expectedParams ), '/something/something_else', this.fail);
   },
@@ -812,6 +809,18 @@ RouterTests = {
     assert.equal( router.url( expectedParams ), '/something_with/cray cray param', this.fail);
   },
 
+  'test A route with base64 encoded params' : function() {
+    var b64_regex = /[\w\-\/+]+={0,2}/
+    var route = router.match('/something_with/:weird_shit').to( { controller:'Wat', action:'lol' } ).where({ weird_shit: b64_regex })
+      , test_url = '/something_with/R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
+      , params = router.first(test_url,'GET')
+      , expectedParams = { method:'GET', controller:'Wat', action:'lol', weird_shit:'R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=' }
+
+    // tests both parsing & generation
+    assert.equal( router.url( params ), test_url, this.fail);
+    assert.equal( router.url( expectedParams ), test_url, this.fail);
+  },
+
   'test all with a simple route': function () {
     // with thanks to @larzconwell
     var route1 = router.match('/all_routes/test').to( { controller:'All', action: 'test' } )
@@ -820,6 +829,28 @@ RouterTests = {
       , expectedRoutes = [{ method: 'GET', controller: 'All', action: 'test' },{ method: 'GET', controller:'All', action: 'test2', whatever_path: 'all_routes/test' } ];
 
     assert.deepEqual(routes, expectedRoutes);
+  },
+
+  // issues/20
+  'test Route With Regex Reqs and periods in the var' : function() {
+    var route = router.get('/sites/:id/edit').to('sites.edit').where( { id: /[\w\-\s.]+/ } )
+      , params = router.first('/sites/site.ru/edit','GET')
+      , expectedParams = { method:'GET', controller:'sites', action:'edit', id:'site.ru' }
+
+    assert.equal( router.url( params ), '/sites/site.ru/edit', this.fail);
+    assert.equal( router.url( expectedParams ), '/sites/site.ru/edit', this.fail);
+  },
+
+  // issues/20
+  'test nested admin route works' : function() {
+    var admin_ns = router.match('/admin').to('errors.index').nest(function(){
+      this.resource('Posts')
+    })
+    var params = router.first('/admin/posts/456','GET')
+      , expectedParams = { method:'GET', controller:'Posts', action:'show', id:456 }
+
+    assert.equal( router.url( params ), '/admin/posts/456', this.fail);
+    assert.equal( router.url( expectedParams ), '/admin/posts/456', this.fail);
   },
 
 
