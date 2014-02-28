@@ -129,6 +129,24 @@ describe 'Barista', ->
           assert.equal paramsIn[key], paramsOut[key]
 
 
+
+    describe 'a where clause with a period', ->
+
+      beforeEach ->
+        router.match('/sites/:id/edit','GET').to('sites.edit').where(id:/[\w.]+/)
+
+      it 'params should match', ->
+        paramsIn =
+          method:     'GET'
+          controller: 'sites'
+          action:     'edit'
+          id:         'site.ru'
+
+        paramsOut = router.first '/sites/site.ru/edit', 'GET'
+
+        for key, val of paramsIn
+          assert.equal paramsIn[key], paramsOut[key]
+
     # describe 'a keyed route', ->
     #   it 'should not throw an exception', ->
     #     route = router.match '/:controller/:action/:id'
