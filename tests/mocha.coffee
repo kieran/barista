@@ -7,6 +7,7 @@ verbs =
   get:      'GET'
   post:     'POST'
   put:      'PUT'
+  patch:    'PATCH'
   del:      'DELETE'
   options:  'OPTIONS'
 

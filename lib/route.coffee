@@ -128,6 +128,14 @@ class Route
   post: ( path )->
     @match @router, path, 'POST'
 
+  # ### route.patch( path )
+  # equivalent to
+  #
+  #     route.match( path, 'PATCH' )
+  #
+  patch: ( path )->
+    @match @router, path, 'PATCH'
+
   # ### route.del( path )
   # equivalent to
   #
