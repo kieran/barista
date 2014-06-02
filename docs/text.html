@@ -85,10 +85,11 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h2>text.regexString()</h2>
+              <p>no-op</p>
+<h2>text.regexString()</h2>
 
             </div>
             
@@ -196,7 +197,18 @@ if it matches the key conditions</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  toString: -&gt;
-    <span class="string">"text-<span class="subst">#{@text}</span>"</span>
+    <span class="property">@text</span>
+
+
+Text.regex = <span class="regexp">/[\w\-_\\\/\.]+/</span>
+
+Text.<span class="function"><span class="title">parse</span></span> = ( string )-&gt;
+  pattern = <span class="keyword">new</span> RegExp <span class="string">"^<span class="subst">#{ @regex.source }</span>"</span>
+
+  name = pattern.exec(string)[<span class="number">0</span>]
+
+  <span class="keyword">new</span> @ name
+
 
 regExpEscape = <span class="keyword">do</span> -&gt;
   specials = [ <span class="string">'/'</span>, <span class="string">'.'</span>, <span class="string">'*'</span>, <span class="string">'+'</span>, <span class="string">'?'</span>, <span class="string">'|'</span>, <span class="string">'('</span>, <span class="string">')'</span>, <span class="string">'['</span>, <span class="string">']'</span>, <span class="string">'{'</span>, <span class="string">'}'</span>, <span class="string">'\\'</span> ]

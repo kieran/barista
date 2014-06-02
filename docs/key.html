@@ -156,7 +156,7 @@ key = new Key(&#39;name&#39;, true)</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  test: ( string )-&gt;
+            <div class="content"><div class='highlight'><pre>  test: ( string )-&gt; <span class="comment"># this regex test passes for null &amp; undefined :-(</span>
     <span class="keyword">new</span> RegExp(<span class="string">"^<span class="subst">#{@regexString()}</span>$"</span>).test(string)</pre></div></div>
             
         </li>
@@ -268,12 +268,21 @@ if it matches the key conditions</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>returns a unique id that can be compared to other parts</p>
+              <p>returns the original key definition</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  toString: -&gt;
-    <span class="string">"key-<span class="subst">#{@name}</span>"</span></pre></div></div>
+    <span class="string">":<span class="subst">#{@name}</span>"</span>
+
+
+Key.regex = <span class="regexp">/:([a-zA-Z_][\w\-]*)/</span>
+
+Key.<span class="function"><span class="title">parse</span></span> = ( string, optional=<span class="literal">false</span> )-&gt;
+
+  [definition, name] = <span class="property">@regex</span>.exec string
+
+  <span class="keyword">new</span> @ name, optional</pre></div></div>
             
         </li>
         
@@ -324,6 +333,37 @@ glob = new Glob(&#39;name&#39;, true)</code></pre>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="property">@name</span> == <span class="string">'controller'</span> || <span class="property">@name</span> == <span class="string">'action'</span>
       <span class="property">@regex</span> = <span class="regexp">/[a-zA-Z_][\w\-]*/</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h2>glob.toString()</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>returns the original glob definition</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  toString: -&gt;
+    <span class="string">"*<span class="subst">#{@name}</span>"</span>
+
+Glob.regex = <span class="regexp">/\*([a-zA-Z_][\w\-]*)/</span></pre></div></div>
             
         </li>
         

@@ -77,15 +77,12 @@ inflection    = require <span class="string">'inflection'</span></pre></div></di
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>!x! regexen crossing !x!
-matches keys</p>
+              <h1>new Route( router, path [, method] )</h1>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>KEY   = <span class="regexp">/:([a-zA-Z_][\w\-]*)/</span></pre></div></div>
             
         </li>
         
@@ -95,56 +92,6 @@ matches keys</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>matches globs</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>GLOB  = <span class="regexp">/\*([a-zA-Z_][\w\-\/]*)/</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>optional group (the part in parens)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>OGRP  = <span class="regexp">/\(([^)]+)\)/</span>
-
-PARTS = <span class="regexp">///
-        \([^)]+\)             <span class="comment"># OGRPS</span>
-      |  :[a-zA-Z_][\w\-]*    <span class="comment"># KEYS</span>
-      | \*[a-zA-Z_][\w\-]*    <span class="comment"># GLOBS</span>
-      | [\w\-_\\\/\.]+        <span class="comment"># TEXT</span>
-///</span>g</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <h1>new Route( router, path [, method] )</h1>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>turns strings into magical ponies that come when you call them</p>
 <pre><code>route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;)
@@ -157,18 +104,18 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
             
             <div class="content"><div class='highlight'><pre>exports.Route =
 <span class="class"><span class="keyword">class</span> <span class="title">Route</span></span>
-  constructor: ( router, path, method )-&gt;
+  constructor: ( router, path, method, <span class="property">@optional</span>=<span class="literal">false</span> )-&gt;
     <span class="keyword">if</span> router &amp;&amp; path
       <span class="property">@match</span>.apply <span class="keyword">this</span>, arguments</pre></div></div>
             
         </li>
         
         
-        <li id="section-7">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <h2>route.match()</h2>
 
@@ -177,11 +124,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-8">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>the actual route builder function, mostly called by <code>new Route</code></p>
 
@@ -195,11 +142,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-9">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>is this a nested path?</p>
 
@@ -211,11 +158,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-10">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>get a list of key names in the new segment TODO: globs</p>
 
@@ -223,16 +170,16 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
             
             <div class="content"><div class='highlight'><pre>      new_keys = []
       new_keys.push <span class="string">':id'</span> <span class="keyword">if</span> <span class="property">@collection</span> || <span class="property">@member</span> <span class="comment"># force id to be renamed for resources</span>
-      Array::push.apply new_keys, path.match RegExp(KEY.source, <span class="string">'g'</span>) <span class="comment"># find ALL</span></pre></div></div>
+      Array::push.apply new_keys, path.match RegExp(Key.regex.source, <span class="string">'g'</span>) <span class="comment"># find ALL</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-11">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>rename earlier keys</p>
 
@@ -245,26 +192,26 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-12">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <p>return the new awesomeness</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">return</span> <span class="keyword">new</span> Route router, prefix+path, method</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">return</span> <span class="keyword">new</span> Route router, prefix+path, method, <span class="property">@optional</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-13">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>uppercase the method name</p>
 
@@ -276,11 +223,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-14">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>base properties</p>
 
@@ -294,60 +241,38 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-15">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p>@router = router</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    Object.defineProperty <span class="keyword">this</span>, <span class="string">"router"</span>, <span class="comment"># exclude in enumerables</span>
+            <div class="content"><div class='highlight'><pre>    Object.defineProperty <span class="keyword">this</span>, <span class="string">'router'</span>, <span class="comment"># exclude in enumerables</span>
       enumerable: <span class="literal">false</span>
       configurable: <span class="literal">false</span>
       writable: <span class="literal">false</span>
-      value: router</pre></div></div>
+      value: router
+
+    <span class="property">@parts</span> = Route.parse router, path, method, <span class="property">@optional</span></pre></div></div>
             
         </li>
         
         
-        <li id="section-16">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>path parsing</p>
+              <p>reset the path to the generated one (chop off any extra )&#39;s )</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">while</span> part = PARTS.exec path
-      <span class="property">@parts</span>.push part</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>have to do this in two passes due to RegExp execution limits</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> part, i <span class="keyword">in</span> <span class="property">@parts</span>
-      <span class="keyword">if</span> OGRP.test part <span class="comment"># optional group</span>
-        <span class="property">@parts</span>[i] = <span class="keyword">new</span> Route <span class="property">@router</span>, OGRP.exec(part)[<span class="number">1</span>], <span class="literal">true</span>, <span class="literal">true</span>
-      <span class="keyword">else</span> <span class="keyword">if</span> KEY.test part <span class="comment"># key</span>
-        <span class="property">@parts</span>[i] = <span class="keyword">new</span> Key KEY.exec(part)[<span class="number">1</span>]
-      <span class="keyword">else</span> <span class="keyword">if</span> GLOB.test part <span class="comment"># glob</span>
-        <span class="property">@parts</span>[i] = <span class="keyword">new</span> Glob GLOB.exec(part)[<span class="number">1</span>]
-      <span class="keyword">else</span> <span class="comment"># string</span>
-        <span class="property">@parts</span>[i] = String part
+            <div class="content"><div class='highlight'><pre>    <span class="property">@path</span> = <span class="property">@toString</span>()
 
     <span class="keyword">unless</span> <span class="property">@optional</span>
       <span class="property">@router</span>.routes.push <span class="keyword">this</span>
@@ -357,11 +282,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-18">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <h2>convenience methods</h2>
 
@@ -370,11 +295,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-19">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h3>route.get( path )</h3>
 <p>equivalent to</p>
@@ -388,11 +313,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-20">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <h3>route.put( path )</h3>
 <p>equivalent to</p>
@@ -406,11 +331,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-21">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <h3>route.post( path )</h3>
 <p>equivalent to</p>
@@ -424,11 +349,29 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-22">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h3>route.patch( path )</h3>
+<p>equivalent to</p>
+<pre><code>route.match( path, &#39;PATCH&#39; )</code></pre>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  patch: ( path )-&gt;
+    <span class="property">@match</span> <span class="property">@router</span>, path, <span class="string">'PATCH'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h3>route.del( path )</h3>
 <p>equivalent to</p>
@@ -442,11 +385,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-23">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <h2>route.resource( controller )</h2>
 
@@ -455,11 +398,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-24">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>generates standard resource routes for a controller name</p>
 <pre><code>route.resource(&#39;products&#39;)</code></pre>
@@ -473,11 +416,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-25">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <h2>route.regexString()</h2>
 
@@ -486,11 +429,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-26">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>returns a composite regex string of all route parts</p>
 
@@ -502,11 +445,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-27">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>a route regex is a composite of its parts&#39; regexe(s|n)</p>
 
@@ -520,11 +463,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-28">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-28">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h2>route.test( string )</h2>
 
@@ -533,11 +476,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-29">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-29">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>builds &amp; tests on a full regex of the entire path</p>
 <pre><code>route.test( &#39;/products/19/edit&#39; )
@@ -551,28 +494,28 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-30">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-30">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>cache the regex string</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="property">@regex</span> = RegExp <span class="string">"^<span class="subst">#{@regexString()}</span>(\\\?.*)?$"</span> <span class="keyword">unless</span> <span class="property">@regex</span>
+            <div class="content"><div class='highlight'><pre>    <span class="property">@regex</span> ?= RegExp <span class="string">"^<span class="subst">#{@regexString()}</span>(\\\?.*)?$"</span>
 
     <span class="property">@regex</span>.test string</pre></div></div>
             
         </li>
         
         
-        <li id="section-31">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-31">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <h2>route.to( endpoint [, extra_params ] )</h2>
 
@@ -581,11 +524,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         </li>
         
         
-        <li id="section-32">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>defines the endpoint &amp; mixes in optional params</p>
 <pre><code>route.to( &#39;controller.action&#39; )
@@ -604,11 +547,11 @@ route.to( &#39;controller.action&#39;, {lang:&#39;en&#39;} )</code></pre>
         </li>
         
         
-        <li id="section-33">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-33">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>TODO: make endpoint optional, since you can have the
 controller &amp; action in the URL utself,
@@ -632,11 +575,11 @@ even though that&#39;s a terrible idea...</p>
         </li>
         
         
-        <li id="section-34">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-34">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
               <h2>route.name( name )</h2>
 
@@ -645,11 +588,11 @@ even though that&#39;s a terrible idea...</p>
         </li>
         
         
-        <li id="section-35">
+        <li id="section-32">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-35">&#182;</a>
+                <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
               <p>just sets the route name - NAMED ROUTES ARE NOT CURRENTLY USED</p>
 <pre><code>route.name( &#39;login&#39; )
@@ -665,13 +608,61 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
         </li>
         
         
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <h2>route.where( conditions )</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>sets conditions that each url variable must match for the URL to be valid</p>
+<pre><code>route.where( { id:/\d+/, username:/\w+/ } )</code></pre>
+<p>returns: the route for chaining</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  where: ( conditions )-&gt;
+    <span class="keyword">if</span> kindof(conditions) != <span class="string">'object'</span>
+      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'conditions must be an object'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>recursively apply all conditions to sub-parts</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    part.where? conditions <span class="keyword">for</span> part <span class="keyword">in</span> <span class="property">@parts</span>
+    <span class="keyword">this</span> <span class="comment"># chainable</span></pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-36">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <h2>route.where( conditions )</h2>
+              <h2>route.stringify( params )</h2>
 
             </div>
             
@@ -684,18 +675,17 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
-              <p>sets conditions that each url variable must match for the URL to be valid</p>
-<pre><code>route.where( { id:/\d+/, username:/\w+/ } )</code></pre>
-<p>returns: the route for chaining</p>
+              <p>builds a string url for this Route from a params object</p>
+<p>returns: [ &quot;url&quot;, [leftover params] ]</p>
+<p><strong>this is meant to be called &amp; modified by router.url()</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  where: ( conditions )-&gt;
-    <span class="keyword">if</span> kindof(conditions) != <span class="string">'object'</span>
-      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'conditions must be an object'</span>
-
+            <div class="content"><div class='highlight'><pre>  stringify: ( params )-&gt;
+    url = [] <span class="comment"># urls start life as an array to enable a second pass</span>
     <span class="keyword">for</span> part <span class="keyword">in</span> <span class="property">@parts</span>
-      <span class="keyword">unless</span> <span class="keyword">typeof</span> part == <span class="string">'string'</span></pre></div></div>
+      <span class="keyword">if</span> part <span class="keyword">instanceof</span> Key || part <span class="keyword">instanceof</span> Glob
+        <span class="keyword">if</span> params[part.name]? &amp;&amp; part.regex.test params[part.name]</pre></div></div>
             
         </li>
         
@@ -705,58 +695,6 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
-              </div>
-              <p>recursively apply all conditions to sub-parts</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        part.where conditions
-
-    <span class="keyword">this</span> <span class="comment"># chainable</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-39">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-39">&#182;</a>
-              </div>
-              <h2>route.stringify( params )</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-40">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-40">&#182;</a>
-              </div>
-              <p>builds a string url for this Route from a params object</p>
-<p>returns: [ &quot;url&quot;, [leftover params] ]</p>
-<p><strong>this is meant to be called &amp; modified by router.url()</strong></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  stringify: ( params )-&gt;
-    url = [] <span class="comment"># urls start life as an array to enable a second pass</span>
-
-    <span class="keyword">for</span> part <span class="keyword">in</span> <span class="property">@parts</span>
-      <span class="keyword">if</span> part <span class="keyword">instanceof</span> Key || part <span class="keyword">instanceof</span> Glob
-        <span class="keyword">if</span> params[part.name]? &amp;&amp; part.regex.test params[part.name]</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-41">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>there&#39;s a param named this &amp;&amp; the param matches the key&#39;s regex</p>
 
@@ -768,11 +706,11 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
         </li>
         
         
-        <li id="section-42">
+        <li id="section-39">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-42">&#182;</a>
+                <a class="pilcrow" href="#section-39">&#182;</a>
               </div>
               <p><code>delete params[part.name]</code> # and remove from list of params</p>
 
@@ -783,11 +721,11 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
         </li>
         
         
-        <li id="section-43">
+        <li id="section-40">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-43">&#182;</a>
+                <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
               <p>(sub)route doesn&#39;t match, move on</p>
 
@@ -799,11 +737,11 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
         </li>
         
         
-        <li id="section-44">
+        <li id="section-41">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-44">&#182;</a>
+                <a class="pilcrow" href="#section-41">&#182;</a>
               </div>
               <p>sub-routes must be handled in the next pass
 to avoid leftover param duplication</p>
@@ -817,11 +755,11 @@ to avoid leftover param duplication</p>
         </li>
         
         
-        <li id="section-45">
+        <li id="section-42">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-45">&#182;</a>
+                <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
               <p>second pass, resolve optional parts (backwards, so later optionals are resolved first)
 for i=url.length-1; i&gt;=0; i--</p>
@@ -835,11 +773,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-46">
+        <li id="section-43">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-46">&#182;</a>
+                <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
               <p>it resolved to a url fragment!</p>
 
@@ -856,11 +794,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-47">
+        <li id="section-44">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-47">&#182;</a>
+                <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
               <p>remove from leftovers, they&#39;re implied in the to() portion of the route</p>
 
@@ -873,11 +811,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-48">
+        <li id="section-45">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-48">&#182;</a>
+                <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
               <h2>route.keysAndRoutes()</h2>
 
@@ -886,11 +824,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-49">
+        <li id="section-46">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-49">&#182;</a>
+                <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
               <p>just the parts that aren&#39;t strings. basically</p>
 <p>returns an array of Key and Route objects</p>
@@ -904,11 +842,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-50">
+        <li id="section-47">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-50">&#182;</a>
+                <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
               <h2>route.keys()</h2>
 
@@ -917,11 +855,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-51">
+        <li id="section-48">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-51">&#182;</a>
+                <a class="pilcrow" href="#section-48">&#182;</a>
               </div>
               <p>just the parts that are Keys (or globs)</p>
 <p>returns an array of aforementioned Keys</p>
@@ -935,11 +873,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-52">
+        <li id="section-49">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-52">&#182;</a>
+                <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
               <h2>route.parse( url, method )</h2>
 
@@ -948,11 +886,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-53">
+        <li id="section-50">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-53">&#182;</a>
+                <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>parses a URL into a params object</p>
 <pre><code>route.parse( &#39;/products/15/edit&#39;, &#39;GET&#39; )
@@ -967,11 +905,11 @@ for i=url.length-1; i&gt;=0; i--</p>
         </li>
         
         
-        <li id="section-54">
+        <li id="section-51">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-54">&#182;</a>
+                <a class="pilcrow" href="#section-51">&#182;</a>
               </div>
               <p>parse the URL with the regex &amp; step along with the parts,
 assigning the vals from the url to the names of the keys as we go (potentially stoopid)</p>
@@ -988,11 +926,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
         </li>
         
         
-        <li id="section-55">
+        <li id="section-52">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
+                <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
               <p>route HEAD requests to GET endpoints</p>
 
@@ -1005,11 +943,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
         </li>
         
         
-        <li id="section-56">
+        <li id="section-53">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
               <p>if the method doesn&#39;t match, gtfo immediately</p>
 
@@ -1022,11 +960,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
         </li>
         
         
-        <li id="section-57">
+        <li id="section-54">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
               <p>assign the route&#39;s method if there isn&#39;t one</p>
 
@@ -1037,11 +975,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
         </li>
         
         
-        <li id="section-58">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>TODO: implement substring checks for possible performance boost</p>
 <p>if the route doesn&#39;t match the regex, gtfo</p>
@@ -1053,11 +991,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
         </li>
         
         
-        <li id="section-59">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>parse the URL with the regex
 slice(2) returns just the array of matches from the regexp object</p>
@@ -1071,11 +1009,11 @@ slice(2) returns just the array of matches from the regexp object</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <p>loop 1 (forwards) - collect the key/route -&gt; part pairings for loop 2</p>
 
@@ -1087,24 +1025,24 @@ slice(2) returns just the array of matches from the regexp object</p>
         , segm = keysAndRoutes[i]
 
       <span class="comment">// if this part doesnt match the segment, move on</span>
-      <span class="keyword">if</span> ( !segm.test(part) ) { j++; <span class="keyword">continue</span> }
-
-      <span class="comment">// stash the pairings for loop 2</span>
-      pairings.push( [ segm, part ] )
+      <span class="keyword">if</span> ( segm.test(part) ) { <span class="comment">// !! testing builds a regex if we didn't have one before</span>
+        <span class="comment">// stash the pairings for loop 2</span>
+        pairings.push( [ segm, part ] )
+      }
 
       <span class="comment">// routes must advance the part iterator by the number of parts matched in the segment</span>
-      <span class="keyword">if</span> (segm <span class="keyword">instanceof</span> Route) j+= part.match(segm.regexString()).slice(<span class="number">2</span>).length || <span class="number">0</span>
+      j+= ( segm.regex.exec(part||<span class="string">''</span>).slice(<span class="number">2</span>).length || <span class="number">1</span> ) - <span class="number">1</span>
     }
     </span>`</pre></div></div>
             
         </li>
         
         
-        <li id="section-61">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>loop 2 (backwards) - parse the key/route -&gt; part pairings (backards so later optional matches are preferred)
 i.e. /path(.:format)/something(.:format) would keep the last format segment, while discarding the first
@@ -1119,11 +1057,11 @@ this makes life easier for nesting route definitions</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>actually mixin the params</p>
 
@@ -1137,11 +1075,11 @@ this makes life easier for nesting route definitions</p>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>replace HEAD method?</p>
 
@@ -1154,14 +1092,58 @@ this makes life easier for nesting route definitions</p>
 
 
   nest: ( cb )-&gt;
-    <span class="keyword">if</span> <span class="keyword">typeof</span> cb != <span class="string">'function'</span>
+    <span class="keyword">unless</span> <span class="keyword">typeof</span> cb == <span class="string">'function'</span>
       <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'route.nest() requires a callback function'</span>
     cb.call <span class="keyword">this</span>
-    <span class="keyword">this</span> <span class="comment"># for chaining</span>
+    <span class="keyword">this</span> <span class="comment"># for chaining</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <h2>route.toString()</h2>
 
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>returns the original route definition</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  toString: -&gt;
+    defn = <span class="property">@parts</span>.reduce (m=<span class="string">''</span>,part)-&gt; m+part.toString()
+    <span class="keyword">if</span> <span class="property">@optional</span>
+      <span class="string">"(<span class="subst">#{ defn }</span>)"</span>
+    <span class="keyword">else</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>toString() again just in case the callback never fired
+see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce</a></p>
 
-  toString: -&gt;</pre></div></div>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      defn.toString()</pre></div></div>
             
         </li>
         
@@ -1169,23 +1151,12 @@ this makes life easier for nesting route definitions</p>
         <li id="section-64">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <p>right-pads strings</p>
+              <h1>Route.parse( router, string, method, optional=false )</h1>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="function"><span class="title">rpad</span></span> = (str,len)-&gt;
-      ret = <span class="keyword">new</span> Array len+<span class="number">1</span> <span class="comment"># +1 for fenceposting</span>
-      ret.splice <span class="number">0</span>, str.length, str
-      ret.join <span class="string">' '</span>
-
-    [
-      rpad( <span class="property">@method</span> || <span class="string">'ALL'</span>,<span class="number">8</span> ),
-      rpad( <span class="property">@path</span>, <span class="number">50</span> ),
-      [ <span class="property">@params</span>.controller, <span class="property">@params</span>.action ].join(<span class="string">'.'</span>)
-    ].join <span class="string">''</span></pre></div></div>
             
         </li>
         
@@ -1193,12 +1164,20 @@ this makes life easier for nesting route definitions</p>
         <li id="section-65">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <h1>Helper methods</h1>
+              <p>parses a route definition into a swiss army bazooka</p>
+<pre><code>route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;)
+route = Route.parse(router, &#39;/:controller/:action(/:id)(.:format)&#39;, &#39;GET&#39;)
+route = Route.parse(router, &#39;/:controller/:action(/:id)(.:format)&#39;,
+route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET&#39;)</code></pre>
+<p>Pretty familiar to anyone who&#39;s used Merb/Rails - called by Router.match()</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>Route.<span class="function"><span class="title">parse</span></span> = ( router, string, method, optional=<span class="literal">false</span> )-&gt;
+  parts = []</pre></div></div>
             
         </li>
         
@@ -1208,6 +1187,80 @@ this makes life easier for nesting route definitions</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>parse it char by char, baby</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">for</span> char, i <span class="keyword">in</span> string</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>special consideration for Ogrp starts</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> char == <span class="string">'('</span> &amp;&amp; i==<span class="number">0</span>
+      <span class="keyword">continue</span> <span class="comment"># skip this char, since it's not strictly part of the route definition</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>the route definition is over, return what we have</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> char == <span class="string">')'</span>
+      <span class="keyword">return</span> parts
+
+    <span class="keyword">if</span> char == <span class="string">':'</span> &amp;&amp; string[i+<span class="number">1</span>] != <span class="string">':'</span>
+      parts.push Key.parse string[i..]
+    <span class="keyword">else</span> <span class="keyword">if</span> char == <span class="string">'*'</span>
+      parts.push Glob.parse string[i..]
+    <span class="keyword">else</span> <span class="keyword">if</span> char == <span class="string">'('</span>
+      parts.push <span class="keyword">new</span> Route router, string[i..], method, <span class="literal">true</span>
+    <span class="keyword">else</span>
+      parts.push Text.parse string[i..]
+
+    <span class="keyword">if</span> parts[parts.length-<span class="number">1</span>].toString().length
+      _i = i + parts[parts.length-<span class="number">1</span>].toString().length - <span class="number">1</span>
+
+  parts</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h1">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <h1>Helper methods</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>deep object mixer</p>
 
@@ -1225,11 +1278,11 @@ this makes life easier for nesting route definitions</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>better than typeof</p>
 
@@ -1247,11 +1300,11 @@ this makes life easier for nesting route definitions</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>escape a string for literal embedding in a regexp</p>
 
