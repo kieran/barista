@@ -236,15 +236,11 @@ router.url({
 ```
 
 
-Caveats & TODOs
----------------
-nested optional segments are currently unsupported. e.g. this won't work:
-
-```javascript
-router.get( '/:controller(/:action(/:id(.:format)))' )
-```
-
-nesting routes & resources is also still on the TODO list
+TODOs
+-----
+- Add namespace support
+- Better support for named routes
+- Customizable resources
 
 
 Things I forgot...
@@ -266,4 +262,4 @@ Patches welcome :-)
 
 Who are you?
 ------------
-I'm [Kieran Huggins](mailto:kieran@refactory.ca), partner at [Refactory](http://refactory.ca) in Toronto, Canada.
+I'm [Kieran Huggins](mailto:kieran@kieran.ca) in Toronto, Canada.
