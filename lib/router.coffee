@@ -107,7 +107,7 @@ class Router
 
     for route in @routes
       # attempt the parse
-      params = route.parse(path, method)
+      params = route.parse path, method
 
       if params
         # fire the callback if given
@@ -188,7 +188,7 @@ class Router
 
       break if url = route.stringify params
 
-    return false unless url# no love? return false
+    return false unless url # no love? return false
     qs = qstring.stringify url[1] # build the possibly empty query string
 
     if add_querystring && qs.length > 0

@@ -3,21 +3,6 @@
 { Resource }  = require './resource'
 inflection    = require 'inflection'
 
-# !x! regexen crossing !x!
-# matches keys
-KEY   = /:([a-zA-Z_][\w\-]*)/
-# matches globs
-GLOB  = /\*([a-zA-Z_][\w\-\/]*)/
-# optional group (the part in parens)
-OGRP  = /\(([^)]+)\)/
-
-PARTS = ///
-        \([^)]+\)             # OGRPS
-      |  :[a-zA-Z_][\w\-]*    # KEYS
-      | \*[a-zA-Z_][\w\-]*    # GLOBS
-      | [\w\-_\\\/\.]+        # TEXT
-///g
-
 # new Route( router, path [, method] )
 # ====================================
 # turns strings into magical ponies that come when you call them
@@ -31,7 +16,7 @@ PARTS = ///
 #
 exports.Route =
 class Route
-  constructor: ( router, path, method )->
+  constructor: ( router, path, method, @optional=false )->
     if router && path
       @match.apply this, arguments
 
@@ -53,7 +38,7 @@ class Route
       # get a list of key names in the new segment TODO: globs
       new_keys = []
       new_keys.push ':id' if @collection || @member # force id to be renamed for resources
-      Array::push.apply new_keys, path.match RegExp(KEY.source, 'g') # find ALL
+      Array::push.apply new_keys, path.match RegExp(Key.regex.source, 'g') # find ALL
 
       # rename earlier keys
       for key in new_keys
@@ -61,7 +46,7 @@ class Route
         prefix = prefix.replace replKey, ":#{inflection.underscore inflection.singularize @params.controller}_$1"
 
       # return the new awesomeness
-      return new Route router, prefix+path, method
+      return new Route router, prefix+path, method, @optional
 
     # uppercase the method name
     if typeof(method) == 'string'
@@ -73,32 +58,21 @@ class Route
     @route_name = null
     @path = path
     # @router = router
-    Object.defineProperty this, "router", # exclude in enumerables
+    Object.defineProperty this, 'router', # exclude in enumerables
       enumerable: false
       configurable: false
       writable: false
       value: router
 
-    # path parsing
-    while part = PARTS.exec path
-      @parts.push part
+    @parts = Route.parse router, path, method, @optional
 
-    # have to do this in two passes due to RegExp execution limits
-    for part, i in @parts
-      if OGRP.test part # optional group
-        @parts[i] = new Route @router, OGRP.exec(part)[1], true, true
-      else if KEY.test part # key
-        @parts[i] = new Key KEY.exec(part)[1]
-      else if GLOB.test part # glob
-        @parts[i] = new Glob GLOB.exec(part)[1]
-      else # string
-        @parts[i] = String part
+    # reset the path to the generated one (chop off any extra )'s )
+    @path = @toString()
 
     unless @optional
       @router.routes.push this
 
     this
-
 
 
   # convenience methods
@@ -170,7 +144,6 @@ class Route
 
     "(#{ret})#{if @optional then '?' else ''}"
 
-
   # route.test( string )
   # -----------
   # builds & tests on a full regex of the entire path
@@ -182,7 +155,7 @@ class Route
   #
   test: ( string )->
     # cache the regex string
-    @regex = RegExp "^#{@regexString()}(\\\?.*)?$" unless @regex
+    @regex ?= RegExp "^#{@regexString()}(\\\?.*)?$"
 
     @regex.test string
 
@@ -247,12 +220,8 @@ class Route
   where: ( conditions )->
     if kindof(conditions) != 'object'
       throw new Error 'conditions must be an object'
-
-    for part in @parts
-      unless typeof part == 'string'
-        # recursively apply all conditions to sub-parts
-        part.where conditions
-
+    # recursively apply all conditions to sub-parts
+    part.where? conditions for part in @parts
     this # chainable
 
 
@@ -266,7 +235,6 @@ class Route
   #
   stringify: ( params )->
     url = [] # urls start life as an array to enable a second pass
-
     for part in @parts
       if part instanceof Key || part instanceof Glob
         if params[part.name]? && part.regex.test params[part.name]
@@ -378,13 +346,13 @@ class Route
         , segm = keysAndRoutes[i]
 
       // if this part doesnt match the segment, move on
-      if ( !segm.test(part) ) { j++; continue }
-
-      // stash the pairings for loop 2
-      pairings.push( [ segm, part ] )
+      if ( segm.test(part) ) { // !! testing builds a regex if we didn't have one before
+        // stash the pairings for loop 2
+        pairings.push( [ segm, part ] )
+      }
 
       // routes must advance the part iterator by the number of parts matched in the segment
-      if (segm instanceof Route) j+= part.match(segm.regexString()).slice(2).length || 0
+      j+= ( segm.regex.exec(part||'').slice(2).length || 1 ) - 1
     }
     `
     # loop 2 (backwards) - parse the key/route -> part pairings (backards so later optional matches are preferred)
@@ -408,19 +376,65 @@ class Route
 
 
   nest: ( cb )->
-    if typeof cb != 'function'
+    unless typeof cb == 'function'
       throw new Error 'route.nest() requires a callback function'
     cb.call this
     this # for chaining
 
 
 
+  # route.toString()
+  # ----------------
+  # returns the original route definition
+  #
   toString: ->
     defn = @parts.reduce (m='',part)-> m+part.toString()
     if @optional
       "(#{ defn })"
     else
-      defn
+      # toString() again just in case the callback never fired
+      # see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
+      defn.toString()
+
+# Route.parse( router, string, method, optional=false )
+# =====================================================
+# parses a route definition into a swiss army bazooka
+#
+#     route = Route.parse(router, '/:controller/:action/:id(.:format)')
+#     route = Route.parse(router, '/:controller/:action(/:id)(.:format)', 'GET')
+#     route = Route.parse(router, '/:controller/:action(/:id)(.:format)',
+#     route = Route.parse(router, '/:controller/:action/:id(.:format)', 'GET')
+#
+# Pretty familiar to anyone who's used Merb/Rails - called by Router.match()
+#
+
+Route.parse = ( router, string, method, optional=false )->
+  parts = []
+
+  # parse it char by char, baby
+  for char, i in string
+    # special consideration for Ogrp starts
+
+    if char == '(' && i==0
+      continue # skip this char, since it's not strictly part of the route definition
+
+    # the route definition is over, return what we have
+    if char == ')'
+      return parts
+
+    if char == ':' && string[i+1] != ':'
+      parts.push Key.parse string[i..]
+    else if char == '*'
+      parts.push Glob.parse string[i..]
+    else if char == '('
+      parts.push new Route router, string[i..], method, true
+    else
+      parts.push Text.parse string[i..]
+
+    if parts[parts.length-1].toString().length
+      _i = i + parts[parts.length-1].toString().length - 1
+
+  parts
 
 
 # Helper methods

@@ -33,7 +33,7 @@ class Key
   #
   # returns true/false if the string matches
   #
-  test: ( string )->
+  test: ( string )-> # this regex test passes for null & undefined :-(
     new RegExp("^#{@regexString()}$").test(string)
 
 
@@ -79,6 +79,14 @@ class Key
     ":#{@name}"
 
 
+Key.regex = /:([a-zA-Z_][\w\-]*)/
+
+Key.parse = ( string, optional=false )->
+
+  [definition, name] = @regex.exec string
+
+  new @ name, optional
+
 # new Glob( name, optional )
 # =================================
 # globs are just greedy keys
@@ -102,3 +110,5 @@ class Glob extends Key
   #
   toString: ->
     "*#{@name}"
+
+Glob.regex = /\*([a-zA-Z_][\w\-]*)/

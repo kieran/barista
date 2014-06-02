@@ -867,6 +867,63 @@ RouterTests = {
     assert.equal( router.url( expectedParams ), '/admin/posts/456', this.fail);
   },
 
+  'test nested optional parts 1' : function() {
+    var route = router.match('/:controller(/:action(/:id))(.:format)','GET')
+
+    var url = '/products/show/1.pdf'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'products', action:'show', id:1, format:'pdf' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+  },
+
+  'test nested optional parts 2' : function() {
+    var route = router.match('/:controller(/:action(/:id))(.:format)','GET')
+
+    var url = '/products/show'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'products', action:'show' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+
+  },
+
+  'test nested optional parts 3' : function() {
+    var route = router.match('/:controller(/:action(/:id))(.:format)','GET')
+
+    var url = '/products'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'products' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+  },
+
+  'test nested optional parts 4' : function() {
+    var route = router.match('/:controller(/:action(/:id))(.:format)','GET')
+
+    var url = '/products/show.pdf'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'products', action:'show', format:'pdf' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+  },
+
+  'test nested optional parts 5' : function() {
+    var route = router.match('/:controller(/:action(/:id))(.:format)','GET')
+
+    var url = '/products.pdf'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'products', format:'pdf' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+
+  },
+
 
   //
   //

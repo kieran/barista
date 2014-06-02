@@ -1,5 +1,5 @@
 # new Text( name, optional )
-# ============================
+# ==========================
 # those variable thingies
 #
 #     text = new Static('text')
@@ -7,7 +7,7 @@
 exports.Text =
 class Text
   constructor: ( @text )->
-
+    # no-op
 
   # text.regexString()
   # --------------------
@@ -44,6 +44,17 @@ class Text
   #
   toString: ->
     @text
+
+
+Text.regex = /[\w\-_\\\/\.]+/
+
+Text.parse = ( string )->
+  pattern = new RegExp "^#{ @regex.source }"
+
+  name = pattern.exec(string)[0]
+
+  new @ name
+
 
 regExpEscape = do ->
   specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ]
