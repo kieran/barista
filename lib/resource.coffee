@@ -4,17 +4,55 @@ exports.Resource =
 class Resource
   constructor: ( base, controller )->
 
-    slug = inflection.underscore(inflection.pluralize(controller))
+    plural = inflection.underscore inflection.pluralize controller
+    singular = inflection.underscore inflection.singularize controller
 
     # set up the actual routes for the resource
     @routes = [
-        base.get("/#{slug}(.:format)")           .to("#{controller}.index")
-      , base.post("/#{slug}(.:format)")          .to("#{controller}.create")
-      , base.get("/#{slug}/add(.:format)")       .to("#{controller}.add")
-      , base.get("/#{slug}/:id(.:format)")       .to("#{controller}.show")
-      , base.get("/#{slug}/:id/edit(.:format)")  .to("#{controller}.edit")
-      , base.put("/#{slug}/:id(.:format)")       .to("#{controller}.update")
-      , base.del("/#{slug}/:id(.:format)")       .to("#{controller}.destroy")
+      base.get("/#{plural}(.:format)")
+      .to("#{controller}.index")
+      .as(
+        if base.collection || base.member
+          nomenclate base.route_name, plural
+        else
+          nomenclate plural
+      )
+
+      base.post("/#{plural}(.:format)")
+      .to("#{controller}.create")
+
+      base.get("/#{plural}/add(.:format)")
+      .to("#{controller}.add")
+      .as(
+        if base.collection || base.member
+          nomenclate 'add', base.route_name, singular
+        else
+          nomenclate 'add', singular
+      )
+
+      base.get("/#{plural}/:id(.:format)")
+      .to("#{controller}.show")
+      .as(
+        if base.collection || base.member
+          nomenclate base.route_name, singular
+        else
+          nomenclate singular
+      )
+
+      base.get("/#{plural}/:id/edit(.:format)")
+      .to("#{controller}.edit")
+      .as(
+        if base.collection || base.member
+          nomenclate 'edit', base.route_name, singular
+        else
+          nomenclate 'edit', singular
+      )
+
+      base.put("/#{plural}/:id(.:format)")
+      .to("#{controller}.update")
+
+      base.del("/#{plural}/:id(.:format)")
+      .to("#{controller}.destroy")
     ]
 
     @collection_route = @routes[0]
@@ -36,3 +74,13 @@ class Resource
     @member_route.nest cb
     @collection_route.nest cb
     this # for chaining
+
+
+# Helper methods
+# =============================================
+
+# builds route names
+# TODO: clean this up
+nomenclate = ->
+  args = Array::slice.call arguments
+  args.join('_') unless args.filter((a)->!a?).length
