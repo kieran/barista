@@ -140,7 +140,7 @@ class Route
     ret = ''
     # a route regex is a composite of its parts' regexe(s|n)
     for part in @parts
-      ret += if part.regexString then part.regexString() else regExpEscape part
+      ret += part.regexString()
 
     "(#{ret})#{if @optional then '?' else ''}"
 
