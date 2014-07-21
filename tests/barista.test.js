@@ -135,7 +135,7 @@ RouterTests = {
 
   // create a static route with key match requirements AND a method in reverse order
   'test Route With Name' : function() {
-    var route = router.match('/:controller/:action/:id', 'GET').where( { id: /\d+/ } ).name('awesome');
+    var route = router.match('/:controller/:action/:id', 'GET').where( { id: /\d+/ } ).as('awesome');
     assert.ok(route, this.fail)
   },
 
@@ -742,7 +742,7 @@ RouterTests = {
   'test Simple Remove' : function() {
 
     //Start by repeating the simple route test, to make sure nothing was broken by using name
-    var route = router.match('/:controller/:action/:id').name("delete_me");
+    var route = router.match('/:controller/:action/:id').as("delete_me");
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'products', this.fail);
@@ -763,8 +763,8 @@ RouterTests = {
   'test Remove With Multiple Routes' : function() {
 
     //Start by repeating the simple route test, to make sure nothing was broken by using name
-    var route = router.match('/:controller/:action/:id').name("delete_me");
-    var route = router.match('/a/:controller/:action/:id').name("do_not_delete_me");
+    var route = router.match('/:controller/:action/:id').as("delete_me");
+    var route = router.match('/a/:controller/:action/:id').as("do_not_delete_me");
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'products', this.fail);
@@ -797,7 +797,7 @@ RouterTests = {
   'test Bad Remove does no damage and fails to remove good route' : function() {
 
     //Same as the simple route test, with the invalid delete in the middle
-    var route = router.match('/:controller/:action/:id').name("do_not_delete_me");
+    var route = router.match('/:controller/:action/:id').as("do_not_delete_me");
     router.remove("delete_me");
 
     var params = router.first('/products/show/1','GET');

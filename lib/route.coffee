@@ -195,18 +195,26 @@ class Route
     this # chainable
 
 
-  # route.name( name )
+  # route.as( name )
   # ------------------
-  # just sets the route name - NAMED ROUTES ARE NOT CURRENTLY USED
+  # sets the route name - NAMED ROUTES ARE NOT CURRENTLY USED
   #
-  #     route.name( 'login' )
-  #     route.name( 'homepage' ) # etc...
+  #     route.as( 'login' )
+  #     route.as( 'homepage' ) # etc...
   #
   # returns: the route for chaining
   #
-  name: ( name )->
+  as: ( name )->
     @route_name = name
     this # chainable
+
+  # alias for as
+  name: ( name )->
+    console.log '''
+      DEPRECATION NOTICE: this method has been renamed "as"
+      and will be removed in a future version of Barista
+    '''
+    @as.apply this, arguments
 
 
   # route.where( conditions )
