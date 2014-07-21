@@ -62,6 +62,13 @@ class Resource
     @member_route.member = true
     this
 
+  where: ( conditions )->
+    if kindof(conditions) != 'object'
+      throw new Error 'conditions must be an object'
+    # recursively apply all conditions to sub-parts
+    route.where? conditions for route in @routes
+    this # chainable
+
   collection: ( cb )->
     @collection_route.nest cb
     this # for chaining
@@ -78,6 +85,16 @@ class Resource
 
 # Helper methods
 # =============================================
+
+# better than typeof
+kindof = ( o )->
+  switch
+    when typeof o != "object"     then typeof o
+    when o == null                then "null"
+    when o.constructor == Array   then "array"
+    when o.constructor == Date    then "date"
+    when o.constructor == RegExp  then "regex"
+    else "object"
 
 # builds route names
 # TODO: clean this up
