@@ -1,4 +1,4 @@
-var util      = require ('util')
+var util      = require('util')
   , assert    = require('assert')
   , Router    = require('../index').Router;
 
