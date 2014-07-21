@@ -261,7 +261,6 @@ class Route
         url.push part
 
     # second pass, resolve optional parts (backwards, so later optionals are resolved first)
-    #for i=url.length-1; i>=0; i--
     for part, i in url by -1
       if part instanceof Route
         part = part.stringify params # recursion is your friend
@@ -421,8 +420,8 @@ Route.parse = ( router, string, method, optional=false )->
 
   # parse it char by char, baby
   for char, i in string
-    # special consideration for Ogrp starts
 
+    # special consideration for Ogrp starts
     if char == '(' && i==0
       continue # skip this char, since it's not strictly part of the route definition
 
