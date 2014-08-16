@@ -1,5 +1,6 @@
 Barista is a simple URL router for NodeJS.
 
+[![Build Status](https://travis-ci.org/kieran/barista.svg?branch=master)](https://travis-ci.org/kieran/barista)
 
 In a nutshell
 =============
