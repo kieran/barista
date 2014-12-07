@@ -187,7 +187,10 @@ var params = router.first( '/products/15', 'GET' )
 OR
 
 ```javascript
-router.first( '/products/15', 'GET', function( params ){
+router.first( '/products/15', 'GET', function( err, params ){
+  if (err) { 
+    // couldn't find match 
+  }
   // dispatch the request or something
 })
 ```
