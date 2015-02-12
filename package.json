@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "inflection": "*",
-    "querystring": "^0.2.0"
+    "querystring": "0.2.0"
   },
   "devDependencies": {
     "coffee-script": "^1.9",
