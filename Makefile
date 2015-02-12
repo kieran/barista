@@ -9,3 +9,6 @@ debug_test:
 
 autotest:
 	@mocha --watch lib/ --reporter list --growl --compilers coffee:coffee-script/register tests/mocha.coffee
+
+browser:
+	@browserify -t coffeeify --extension=".coffee" browser.js -o dist/barista.js

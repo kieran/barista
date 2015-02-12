@@ -26,7 +26,7 @@
     "querystring": "^0.2.0"
   },
   "devDependencies": {
-    "coffee-script": "*",
+    "coffee-script": "^1.9",
     "mocha": "*"
   },
   "repository": {
