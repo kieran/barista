@@ -924,6 +924,52 @@ RouterTests = {
 
   },
 
+  'test find by email' : function() {
+    var route = router.match('/users/find_by_email/:email','GET')
+                      .where( { email:/[\w.@]+?/ } )
+                      .to('users.find_by_email')
+
+    var url = '/users/find_by_email/kieran@kieran.ca'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'users', action:'find_by_email', email:'kieran@kieran.ca' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+
+  },
+
+  'test find by email with sub-route' : function() {
+    var route = router.match('/users/find_by_email/:email/favourites','GET')
+                      .where( { email:/[\w.@]+?/ } )
+                      .to('users.favourites')
+
+    var url = '/users/find_by_email/kieran@kieran.ca/favourites'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'users', action:'favourites', email:'kieran@kieran.ca' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+
+  },
+
+  'test find by email with nested sub-route preserves where conditions' : function() {
+    var route = router.match('/users/find_by_email/:email','GET')
+                      .where( { email:/[\w.@]+?/ } )
+                      .to('users.find_by_email')
+                      .nest(function(){
+                        this.get('/favourites')
+                            .to('users.favourites')
+                      })
+
+    var url = '/users/find_by_email/kieran@kieran.ca/favourites'
+      , params = router.first(url,'GET')
+      , expectedParams = { method:'GET', controller:'users', action:'favourites', email:'kieran@kieran.ca' }
+
+    assert.equal( router.url( params ), url, this.fail);
+    assert.equal( router.url( expectedParams ), url, this.fail);
+
+  },
+
 
   //
   //
