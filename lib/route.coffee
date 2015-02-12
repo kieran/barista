@@ -45,8 +45,12 @@ class Route
         replKey = new RegExp ":(#{key.substring(1)}/?)"
         prefix = prefix.replace replKey, ":#{inflection.underscore inflection.singularize @params.controller}_$1"
 
+      # create a new route instance
+      nested_route = new Route router, prefix+path, method, @optional
+      # apply local conditions
+      nested_route.where @conditions if @conditions
       # return the new awesomeness
-      return new Route router, prefix+path, method, @optional
+      return nested_route
 
     # uppercase the method name
     if typeof(method) == 'string'
@@ -185,11 +189,11 @@ class Route
   #
   # returns: the route for chaining
   #
-  where: ( conditions )->
-    if kindof(conditions) != 'object'
+  where: ( @conditions )->
+    if kindof(@conditions) != 'object'
       throw new Error 'conditions must be an object'
     # recursively apply all conditions to sub-parts
-    part.where? conditions for part in @parts
+    part.where? @conditions for part in @parts
     this # chainable
 
 
