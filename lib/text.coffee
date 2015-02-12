@@ -16,7 +16,7 @@ class Text
   # returns a string of this path's regex
   #
   regexString: ->
-    regExpEscape @text
+    @text.replace /[.*+?^${}()|[\]\\]/g, "\\$&"
 
 
   # text.test( string )
@@ -46,17 +46,11 @@ class Text
     @text
 
 
-Text.regex = /[\w\-_\\\/\.]+/
+  @regex = /[\w\-_\\\/\.]+/
 
-Text.parse = ( string )->
-  pattern = new RegExp "^#{ @regex.source }"
+  @parse = ( string )->
+    pattern = new RegExp "^#{ @regex.source }"
 
-  name = pattern.exec(string)[0]
+    name = pattern.exec(string)[0]
 
-  new @ name
-
-
-regExpEscape = do ->
-  specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ]
-  sRE = new RegExp "(\\#{ specials.join '|\\' })", 'g'
-  ( text )-> text.replace sRE, '\\$1'
+    new @ name

@@ -25,7 +25,7 @@ class Router
       method = method.toUpperCase()
 
     # upcase the method
-    if method? && !@methods_regexp().test method
+    if method? && method not in @methods
       throw new Error "method must be one of: #{ @methods.join ', ' }"
 
     route = new Route this, path, method
@@ -207,8 +207,7 @@ class Router
   # returns: Nothing
   #
   remove: ( name )->
-    @routes = @routes.filter (el)->
-      el.route_name != name
+    @routes = (route for route in @routes when route.route_name != name)
 
   # router.defer( testfn() )
   # ------------------------
@@ -240,14 +239,4 @@ class Router
   # renders a textual description of the router for inpection
   #
   toString: ->
-    @routes.map( (rt)->
-      rt.toString()
-    ).join '\n'
-
-  # methods_regexp
-  # --------------
-  #
-  # builds a regexp out of the methods for method validation (used once, remove?)
-  #
-  methods_regexp: ->
-    RegExp "^(#{ @methods.join '|' })$",'i'
+    ( route.toString() for route in @routes ).join '\n'

@@ -7,9 +7,8 @@
 #
 exports.Key =
 class Key
+  regex: /[\w\-\s]+/
   constructor: ( @name, @optional )->
-
-    @regex = /[\w\-\s]+/ # default url-friendly regex
 
     # special defaults for controllers & actions, which will always be function-name-safe
     if @name == 'controller' || @name == 'action'
@@ -23,8 +22,11 @@ class Key
   # returns a string of this keys regex
   #
   regexString: ->
-    ret = String(@regex).replace(/^\//, '').replace /\/[gis]?$/, ''
-    "(#{ret})#{if @optional then '?' else ''}"
+    ret = ['(']
+    ret.push @regex.source
+    ret.push ')'
+    ret.push '?' if @optional
+    ret.join ''
 
 
   # key.test( string )
@@ -34,7 +36,7 @@ class Key
   # returns true/false if the string matches
   #
   test: ( string )-> # this regex test passes for null & undefined :-(
-    new RegExp("^#{@regexString()}$").test(string)
+    new RegExp("^#{@regexString()}$").test string
 
 
   # key.url( string )
@@ -60,13 +62,15 @@ class Key
       @regex = condition #  e.g. /\d+/
 
     if condition instanceof String
-      @regex = new RegExp condition.replace(/^\//, '').replace /\/[gis]?$/, '' #  e.g. "\d+"
+      @regex = new RegExp condition #  e.g. "\d+"
 
     #  an array of allowed values, e.g. ['stop','play','pause']
     if condition instanceof Array
-      @regex = new RegExp condition.map( (cond)->
-        cond.toString().replace(/^\//, '').replace /\/[gis]?$/, ''
-      ).join '|'
+      ret = []
+      for c in condition
+        ret.push c.source if c instanceof RegExp
+        ret.push c if c instanceof String
+      @regex = new RegExp ret.join '|'
 
     this # chainable
 
@@ -79,13 +83,10 @@ class Key
     ":#{@name}"
 
 
-Key.regex = /:([a-zA-Z_][\w\-]*)/
-
-Key.parse = ( string, optional=false )->
-
-  [definition, name] = @regex.exec string
-
-  new @ name, optional
+  @regex = /:([a-zA-Z_][\w\-]*)/
+  @parse = ( string, optional=false )->
+    [ definition, name ] = @regex.exec string
+    new @ name, optional
 
 # new Glob( name, optional )
 # =================================
@@ -96,10 +97,8 @@ Key.parse = ( string, optional=false )->
 #
 exports.Glob =
 class Glob extends Key
+  regex: /[\w\-\/\s]+?/ # default url-friendly regex
   constructor: ( @name, @optional )->
-
-    @regex = /[\w\-\/\s]+?/ # default url-friendly regex
-
     # special defaults for controllers & actions, which will always be function-name-safe
     if @name == 'controller' || @name == 'action'
       @regex = /[a-zA-Z_][\w\-]*/
@@ -111,4 +110,4 @@ class Glob extends Key
   toString: ->
     "*#{@name}"
 
-Glob.regex = /\*([a-zA-Z_][\w\-]*)/
+  @regex = /\*([a-zA-Z_][\w\-]*)/

@@ -38,7 +38,7 @@ class Route
       # get a list of key names in the new segment TODO: globs
       new_keys = []
       new_keys.push ':id' if @collection || @member # force id to be renamed for resources
-      Array::push.apply new_keys, path.match RegExp(Key.regex.source, 'g') # find ALL
+      new_keys.push *path.match RegExp Key.regex.source, 'g' # find ALL
 
       # rename earlier keys
       for key in new_keys
@@ -78,45 +78,11 @@ class Route
   # convenience methods
   # -------------------
 
-  # ### route.get( path )
-  # equivalent to
-  #
-  #     route.match( path, 'GET' )
-  #
-  get: ( path )->
-    @match @router, path, 'GET'
-
-  # ### route.put( path )
-  # equivalent to
-  #
-  #     route.match( path, 'PUT' )
-  #
-  put: ( path )->
-    @match @router, path, 'PUT'
-
-  # ### route.post( path )
-  # equivalent to
-  #
-  #     route.match( path, 'POST' )
-  #
-  post: ( path )->
-    @match @router, path, 'POST'
-
-  # ### route.patch( path )
-  # equivalent to
-  #
-  #     route.match( path, 'PATCH' )
-  #
-  patch: ( path )->
-    @match @router, path, 'PATCH'
-
-  # ### route.del( path )
-  # equivalent to
-  #
-  #     route.match( path, 'DELETE' )
-  #
-  del: ( path )->
-    @match @router, path, 'DELETE'
+  get: ( path )->   @match @router, path, 'GET'
+  put: ( path )->   @match @router, path, 'PUT'
+  post: ( path )->  @match @router, path, 'POST'
+  patch: ( path )-> @match @router, path, 'PATCH'
+  del: ( path )->   @match @router, path, 'DELETE'
 
 
   # route.resource( controller )
@@ -137,12 +103,12 @@ class Route
   # returns a composite regex string of all route parts
   #
   regexString: ->
-    ret = ''
     # a route regex is a composite of its parts' regexe(s|n)
-    for part in @parts
-      ret += part.regexString()
-
-    "(#{ret})#{if @optional then '?' else ''}"
+    ret = ['(']
+    ret.push part.regexString() for part in @parts
+    ret.push ')'
+    ret.push '?' if @optional
+    ret.join ''
 
   # route.test( string )
   # -----------
@@ -174,23 +140,18 @@ class Route
   to: ( endpoint, extra_params )->
 
     if !extra_params && typeof endpoint != 'string'
-      extra_params = endpoint
-      endpoint = undefined
+      [ extra_params, endpoint ] = [ endpoint, undefined ]
 
     # TODO: make endpoint optional, since you can have the
     # controller & action in the URL utself,
     # even though that's a terrible idea...
 
     if endpoint
-      endpoint = endpoint.split '.'
-      if kindof(endpoint) == 'array' && endpoint.length != 2
+      unless 0 < endpoint.indexOf '.'
         throw new Error 'syntax should be in the form: controller.action'
-      @params.controller = endpoint[0]
-      @params.action = endpoint[1]
+      [ @params.controller, @params.action ] = endpoint.split '.'
 
-    extra_params = {} unless kindof(extra_params) == 'object'
-
-    mixin @params, extra_params
+    mixin @params, extra_params || {}
 
     this # chainable
 
@@ -204,8 +165,7 @@ class Route
   #
   # returns: the route for chaining
   #
-  as: ( name )->
-    @route_name = name
+  as: ( @route_name )->
     this # chainable
 
   # alias for as
@@ -244,7 +204,7 @@ class Route
   stringify: ( params )->
     url = [] # urls start life as an array to enable a second pass
     for part in @parts
-      if part instanceof Key || part instanceof Glob
+      if part instanceof Key
         if params[part.name]? && part.regex.test params[part.name]
           # there's a param named this && the param matches the key's regex
           url.push part.url params[part.name] # push it onto the stack
@@ -285,8 +245,7 @@ class Route
   # returns an array of Key and Route objects
   #
   keysAndRoutes: ->
-    @parts.filter (part)->
-      part instanceof Key || part instanceof Glob || part instanceof Route
+    part for part in @parts when part instanceof Key || part instanceof Route
 
   # route.keys()
   # ---------------------
@@ -295,8 +254,7 @@ class Route
   # returns an array of aforementioned Keys
   #
   keys: ->
-    @parts.filter (part)->
-      part instanceof Key || part instanceof Glob
+    part for part in @parts when part instanceof Key
 
 
   # route.parse( url, method )
@@ -318,19 +276,16 @@ class Route
     # let's chop off the QS to make life easier
     url =     require('url').parse urlParam # TODO: fix this
     path =    decodeURI url.pathname
-    params =  { method: method }
+    params =  method: method
 
     mixin params, @params
 
     # route HEAD requests to GET endpoints
-    head = params.method == 'HEAD'
-    if head
+    if is_head_req = params.method == 'HEAD'
       params.method = 'GET' # we'll put it back when we're done
 
     # if the method doesn't match, gtfo immediately
-    if @method? && params.method?
-      if @method != params.method
-        return false
+    return false if @method? && @method != params.method
 
     # assign the route's method if there isn't one
     params.method ?= @method
@@ -341,42 +296,34 @@ class Route
     return false unless @test path
 
     # parse the URL with the regex
-    # slice(2) returns just the array of matches from the regexp object
-    parts = new RegExp("^#{@regexString()}$").exec(path).slice(2)
-    keysAndRoutes = @keysAndRoutes()
+    # first 2 elements are shit, chop 'em
+    parts = new RegExp("^#{@regexString()}$").exec(path)[2..]
     pairings = []
 
     # loop 1 (forwards) - collect the key/route -> part pairings for loop 2
-    `
-    for (var i=0, j=0; i<keysAndRoutes.length; i++, j++) {
-      var part = parts[j]
-        , segm = keysAndRoutes[i]
+    j = 0
+    for segm in @keysAndRoutes()
+      part = parts[j]
 
-      // if this part doesnt match the segment, move on
-      if ( segm.test(part) ) { // !! testing builds a regex if we didn't have one before
-        // stash the pairings for loop 2
-        pairings.push( [ segm, part ] )
-      }
+      # stash the pairings for loop 2 if this part matches segment
+      pairings.push [ segm, part ] if segm.test part
 
-      // routes must advance the part iterator by the number of parts matched in the segment
-      j+= ( segm.regex.exec(part||'').slice(2).length || 1 ) - 1
-    }
-    `
+      # routes must advance the part iterator by the number of parts matched in the segment
+      j+= segm.regex.exec(part||'')[2..].length || 1
+
+
     # loop 2 (backwards) - parse the key/route -> part pairings (backards so later optional matches are preferred)
     # i.e. /path(.:format)/something(.:format) would keep the last format segment, while discarding the first
     # this makes life easier for nesting route definitions
-    for pair in pairings by -1
-      part = pair[1]
-      segm = pair[0]
-
+    for [ segm, part ] in pairings by -1
       # actually mixin the params
-      if segm instanceof Key || segm instanceof Glob
+      if segm instanceof Key
         params[segm.name] = part
       else if segm instanceof Route
-        mixin params, segm.parse(part, method)
+        mixin params, segm.parse part, method
 
     # replace HEAD method?
-    params.method = 'HEAD' if head
+    params.method = 'HEAD' if is_head_req
 
     params
 
@@ -395,53 +342,55 @@ class Route
   # returns the original route definition
   #
   toString: ->
-    defn = @parts.reduce (m='',part)-> m+part.toString()
-    if @optional
-      "(#{ defn })"
-    else
-      # toString() again just in case the callback never fired
-      # see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-      defn.toString()
+    defn = (part.toString() for part in @parts).join ''
+    return "(#{ defn })" if @optional
+    defn
 
-# Route.parse( router, string, method, optional=false )
-# =====================================================
-# parses a route definition into a swiss army bazooka
-#
-#     route = Route.parse(router, '/:controller/:action/:id(.:format)')
-#     route = Route.parse(router, '/:controller/:action(/:id)(.:format)', 'GET')
-#     route = Route.parse(router, '/:controller/:action(/:id)(.:format)',
-#     route = Route.parse(router, '/:controller/:action/:id(.:format)', 'GET')
-#
-# Pretty familiar to anyone who's used Merb/Rails - called by Router.match()
-#
+  # Route.parse( router, string, method, optional=false )
+  # =====================================================
+  # parses a route definition into a swiss army bazooka
+  #
+  #     route = Route.parse(router, '/:controller/:action/:id(.:format)')
+  #     route = Route.parse(router, '/:controller/:action(/:id)(.:format)', 'GET')
+  #     route = Route.parse(router, '/:controller/:action(/:id)(.:format)',
+  #     route = Route.parse(router, '/:controller/:action/:id(.:format)', 'GET')
+  #
+  # Pretty familiar to anyone who's used Merb/Rails - called by Router.match()
+  #
 
-Route.parse = ( router, string, method, optional=false )->
-  parts = []
+  @parse = ( router, string, method, optional=false )->
+    parts = []
 
-  # parse it char by char, baby
-  for char, i in string
+    # parse it char by char, baby
+    i   = 0
+    len = string.length
 
-    # special consideration for Ogrp starts
-    if char == '(' && i==0
-      continue # skip this char, since it's not strictly part of the route definition
+    # for char, i in string
+    while i < len
+      char = string[i]
+      rest = string[i..]
 
-    # the route definition is over, return what we have
-    if char == ')'
-      return parts
+      # special consideration for Ogrp starts
+      if char == '(' && i == 0
+        i++
+        continue # skip this char, since it's not strictly part of the route definition
 
-    if char == ':' && string[i+1] != ':'
-      parts.push Key.parse string[i..]
-    else if char == '*'
-      parts.push Glob.parse string[i..]
-    else if char == '('
-      parts.push new Route router, string[i..], method, true
-    else
-      parts.push Text.parse string[i..]
+      # the route definition is over, return what we have
+      if char == ')'
+        return parts
 
-    if parts[parts.length-1].toString().length
-      _i = i + parts[parts.length-1].toString().length - 1
+      if char == ':' && string[i+1] != ':'
+        parts.push part = Key.parse rest
+      else if char == '*'
+        parts.push part = Glob.parse rest
+      else if char == '('
+        parts.push part = new Route router, rest, method, true
+      else
+        parts.push part = Text.parse rest
 
-  parts
+      i += part.toString().length
+
+    parts
 
 
 # Helper methods
@@ -466,9 +415,3 @@ kindof = ( o )->
     when o.constructor == Date    then "date"
     when o.constructor == RegExp  then "regex"
     else "object"
-
-# escape a string for literal embedding in a regexp
-regExpEscape = do ->
-  specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ]
-  sRE = new RegExp "(\\#{ specials.join '|\\' })", 'g'
-  ( text )-> text.replace sRE, '\\$1'
