@@ -47,6 +47,8 @@ class Route
 
       # create a new route instance
       nested_route = new Route router, prefix+path, method, @optional
+      # add local default params
+      nested_route.default_params = @default_params
       # apply local conditions
       nested_route.where @conditions if @conditions
       # return the new awesomeness
@@ -58,6 +60,7 @@ class Route
 
     # base properties
     @params = {}
+    @default_params = {}
     @parts = []
     @route_name = null
     @path = path
@@ -131,7 +134,7 @@ class Route
 
 
 
-  # route.to( endpoint [, extra_params ] )
+  # route.to( endpoint [, default_params ] )
   # --------------------------------------
   # defines the endpoint & mixes in optional params
   #
@@ -141,10 +144,12 @@ class Route
   #
   # returns the route for chaining
   #
-  to: ( endpoint, extra_params )->
+  to: ( endpoint, default_params )->
 
-    if !extra_params && typeof endpoint != 'string'
-      [ extra_params, endpoint ] = [ endpoint, undefined ]
+    if !default_params && typeof endpoint != 'string'
+      [ default_params, endpoint ] = [ endpoint, undefined ]
+
+    mixin @default_params, default_params
 
     # TODO: make endpoint optional, since you can have the
     # controller & action in the URL utself,
@@ -155,7 +160,7 @@ class Route
         throw new Error 'syntax should be in the form: controller.action'
       [ @params.controller, @params.action ] = endpoint.split '.'
 
-    mixin @params, extra_params || {}
+    mixin @params, @default_params
 
     this # chainable
 
