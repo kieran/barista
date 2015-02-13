@@ -2,10 +2,10 @@ test:
 	@mocha --reporter list --growl --compilers coffee:coffee-script/register tests/mocha.coffee
 
 oldtest:
-	@node tests/barista.test.js
+	@coffee tests/barista.test.coffee
 
 debug_test:
-	@node --debug-brk tests/barista.test.js
+	@coffee --nodejs --debug-brk tests/barista.test.js
 
 autotest:
 	@mocha --watch lib/ --reporter list --growl --compilers coffee:coffee-script/register tests/mocha.coffee
