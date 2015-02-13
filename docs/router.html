@@ -16,33 +16,35 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page">
-            
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
               
-              <a class="source" href="key.html">
-                key.coffee
-              </a>
-            
+                
+                <a class="source" href="key.html">
+                  key.coffee
+                </a>
               
-              <a class="source" href="resource.html">
-                resource.coffee
-              </a>
-            
+                
+                <a class="source" href="resource.html">
+                  resource.coffee
+                </a>
               
-              <a class="source" href="route.html">
-                route.coffee
-              </a>
-            
+                
+                <a class="source" href="route.html">
+                  route.coffee
+                </a>
               
-              <a class="source" href="router.html">
-                router.coffee
-              </a>
-            
+                
+                <a class="source" href="router.html">
+                  router.coffee
+                </a>
               
-              <a class="source" href="text.html">
-                text.coffee
-              </a>
-            
+                
+                <a class="source" href="text.html">
+                  text.coffee
+                </a>
+              
+            </div>
           </div>
         </li>
       </ul>
@@ -66,15 +68,15 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>{ Route }     = require <span class="string">'./route'</span>
-{ Resource }  = require <span class="string">'./resource'</span>
-qstring       = require <span class="string">'querystring'</span>
+            <div class="content"><div class='highlight'><pre>{ Route }     = <span class="hljs-built_in">require</span> <span class="hljs-string">'./route'</span>
+{ Resource }  = <span class="hljs-built_in">require</span> <span class="hljs-string">'./resource'</span>
+qstring       = <span class="hljs-built_in">require</span> <span class="hljs-string">'querystring'</span>
 
 exports.Router =
-<span class="class"><span class="keyword">class</span> <span class="title">Router</span></span>
-  constructor: -&gt;
-    <span class="property">@methods</span> =  [ <span class="string">'GET'</span>, <span class="string">'HEAD'</span>, <span class="string">'POST'</span>, <span class="string">'PUT'</span>, <span class="string">'PATCH'</span>, <span class="string">'DELETE'</span>, <span class="string">'OPTIONS'</span> ]
-    <span class="property">@routes</span> =   []</pre></div></div>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Router</span></span>
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function">-&gt;</span>
+    <span class="hljs-property">@methods</span> =  [ <span class="hljs-string">'GET'</span>, <span class="hljs-string">'HEAD'</span>, <span class="hljs-string">'POST'</span>, <span class="hljs-string">'PUT'</span>, <span class="hljs-string">'PATCH'</span>, <span class="hljs-string">'DELETE'</span>, <span class="hljs-string">'OPTIONS'</span> ]
+    <span class="hljs-property">@routes</span> =   []</pre></div></div>
             
         </li>
         
@@ -82,10 +84,10 @@ exports.Router =
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2>router.match( path [, method] )</h2>
+              <h2 id="router-match-path-method-">router.match( path [, method] )</h2>
 
             </div>
             
@@ -98,15 +100,15 @@ exports.Router =
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <pre><code>router.match(&#39;/:controller/:action(/:id)(.:format)&#39;, &#39;GET&#39;)
- .to(......)</code></pre>
-<p>path is mandatory (duh)
+              <pre><code>router.match(<span class="hljs-string">'/:controller/:action(/:id)(.:format)'</span>, <span class="hljs-string">'GET'</span>)
+ .to(......)
+</code></pre><p>path is mandatory (duh)
 method is optional, routes without a method will apply in all cases</p>
 <p>returns the route (for chaining)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  match: ( path, method )-&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">match</span>: <span class="hljs-function"><span class="hljs-params">( path, method )</span>-&gt;</span></pre></div></div>
             
         </li>
         
@@ -121,7 +123,7 @@ method is optional, routes without a method will apply in all cases</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="keyword">typeof</span>(method) == <span class="string">'string'</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span>(method) == <span class="hljs-string">'string'</span>
       method = method.toUpperCase()</pre></div></div>
             
         </li>
@@ -137,10 +139,10 @@ method is optional, routes without a method will apply in all cases</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> method? &amp;&amp; !<span class="property">@methods_regexp</span>().test method
-      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">"method must be one of: <span class="subst">#{ @methods.join ', ' }</span>"</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> method? &amp;&amp; method <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> <span class="hljs-property">@methods</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">"method must be one of: <span class="hljs-subst">#{ <span class="hljs-property">@methods</span>.join <span class="hljs-string">', '</span> }</span>"</span>
 
-    route = <span class="keyword">new</span> Route <span class="keyword">this</span>, path, method</pre></div></div>
+    route = <span class="hljs-keyword">new</span> Route <span class="hljs-keyword">this</span>, path, method</pre></div></div>
             
         </li>
         
@@ -148,17 +150,17 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h3>router.get( path )</h3>
+              <h3 id="router-get-path-">router.get( path )</h3>
 <p>equivalent to</p>
-<pre><code>router.match( path, &#39;GET&#39; )</code></pre>
-
+<pre><code>router.match( path, <span class="hljs-string">'GET'</span> )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  get: ( path )-&gt;
-    <span class="property">@match</span> path, <span class="string">'GET'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">get</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>
+    <span class="hljs-property">@match</span> path, <span class="hljs-string">'GET'</span></pre></div></div>
             
         </li>
         
@@ -166,17 +168,17 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h3>router.options( path )</h3>
+              <h3 id="router-options-path-">router.options( path )</h3>
 <p>equivalent to</p>
-<pre><code>router.match( path, &#39;OPTIONS&#39; )</code></pre>
-
+<pre><code>router.match( path, <span class="hljs-string">'OPTIONS'</span> )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  options: ( path )-&gt;
-    <span class="property">@match</span> path, <span class="string">'OPTIONS'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">options</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>
+    <span class="hljs-property">@match</span> path, <span class="hljs-string">'OPTIONS'</span></pre></div></div>
             
         </li>
         
@@ -184,17 +186,17 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h3>router.put( path )</h3>
+              <h3 id="router-put-path-">router.put( path )</h3>
 <p>equivalent to</p>
-<pre><code>router.match( path, &#39;PUT&#39; )</code></pre>
-
+<pre><code>router.match( path, <span class="hljs-string">'PUT'</span> )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  put: ( path )-&gt;
-    <span class="property">@match</span> path, <span class="string">'PUT'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">put</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>
+    <span class="hljs-property">@match</span> path, <span class="hljs-string">'PUT'</span></pre></div></div>
             
         </li>
         
@@ -202,17 +204,17 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h3>router.post( path )</h3>
+              <h3 id="router-post-path-">router.post( path )</h3>
 <p>equivalent to</p>
-<pre><code>router.match( path, &#39;POST&#39; )</code></pre>
-
+<pre><code>router.match( path, <span class="hljs-string">'POST'</span> )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  post: ( path )-&gt;
-    <span class="property">@match</span> path, <span class="string">'POST'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">post</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>
+    <span class="hljs-property">@match</span> path, <span class="hljs-string">'POST'</span></pre></div></div>
             
         </li>
         
@@ -220,17 +222,17 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h3>router.patch( path )</h3>
+              <h3 id="router-patch-path-">router.patch( path )</h3>
 <p>equivalent to</p>
-<pre><code>router.match( path, &#39;PATCH&#39; )</code></pre>
-
+<pre><code>router.match( path, <span class="hljs-string">'PATCH'</span> )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  patch: ( path )-&gt;
-    <span class="property">@match</span> path, <span class="string">'PATCH'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">patch</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>
+    <span class="hljs-property">@match</span> path, <span class="hljs-string">'PATCH'</span></pre></div></div>
             
         </li>
         
@@ -238,17 +240,17 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h3>router.del( path )</h3>
+              <h3 id="router-del-path-">router.del( path )</h3>
 <p>equivalent to</p>
-<pre><code>router.match( path, &#39;DEL&#39; )</code></pre>
-
+<pre><code>router.match( path, <span class="hljs-string">'DEL'</span> )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  del: ( path )-&gt;
-    <span class="property">@match</span> path, <span class="string">'DELETE'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">del</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>
+    <span class="hljs-property">@match</span> path, <span class="hljs-string">'DELETE'</span></pre></div></div>
             
         </li>
         
@@ -256,10 +258,10 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h2>router.resource( controller )</h2>
+              <h2 id="router-resource-controller-">router.resource( controller )</h2>
 
             </div>
             
@@ -273,13 +275,13 @@ method is optional, routes without a method will apply in all cases</p>
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <p>generates standard resource routes for a controller name</p>
-<pre><code>router.resource(&#39;products&#39;)</code></pre>
-<p>returns a Resource object</p>
+<pre><code>router.resource(<span class="hljs-string">'products'</span>)
+</code></pre><p>returns a Resource object</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  resource: ( controller )-&gt;
-    <span class="keyword">new</span> Resource <span class="keyword">this</span>, controller</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">resource</span>: <span class="hljs-function"><span class="hljs-params">( controller )</span>-&gt;</span>
+    <span class="hljs-keyword">new</span> Resource <span class="hljs-keyword">this</span>, controller</pre></div></div>
             
         </li>
         
@@ -287,10 +289,10 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2>// router.first( path, method, callback )</h2>
+              <h2 id="-router-first-path-method-callback-">// router.first( path, method, callback )</h2>
 
             </div>
             
@@ -304,18 +306,18 @@ method is optional, routes without a method will apply in all cases</p>
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>find the first route that match the path &amp; method</p>
-<pre><code>router.first(&#39;/products/5&#39;, &#39;GET&#39;)
-=&gt; { controller: &#39;products&#39;, action: &#39;show&#39;, id: 5, method: &#39;GET&#39; }</code></pre>
-<p>find &amp; return a params hash from the first route that matches. If there&#39;s no match, this will return false</p>
+<pre><code>router.first(<span class="hljs-string">'/products/5'</span>, <span class="hljs-string">'GET'</span>)
+=&gt; { <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>, <span class="hljs-attribute">action</span>: <span class="hljs-string">'show'</span>, <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>, <span class="hljs-attribute">method</span>: <span class="hljs-string">'GET'</span> }
+</code></pre><p>find &amp; return a params hash from the first route that matches. If there’s no match, this will return false</p>
 <p>If the options callback function is provided, it will be fired like so:</p>
-<pre><code>callback( error, params )</code></pre>
-
+<pre><code>callback( error, params )
+</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre>  first: ( path, method, cb )-&gt;
-    params = <span class="literal">false</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">first</span>: <span class="hljs-function"><span class="hljs-params">( path, method, cb )</span>-&gt;</span>
+    params = <span class="hljs-literal">false</span>
 
-    <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span></pre></div></div>
+    <span class="hljs-keyword">for</span> route <span class="hljs-keyword">in</span> <span class="hljs-property">@routes</span></pre></div></div>
             
         </li>
         
@@ -332,7 +334,7 @@ method is optional, routes without a method will apply in all cases</p>
             
             <div class="content"><div class='highlight'><pre>      params = route.parse path, method
 
-      <span class="keyword">if</span> params</pre></div></div>
+      <span class="hljs-keyword">if</span> params</pre></div></div>
             
         </li>
         
@@ -347,8 +349,8 @@ method is optional, routes without a method will apply in all cases</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> <span class="keyword">typeof</span> cb == <span class="string">'function'</span>
-          cb <span class="literal">undefined</span>, params</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> cb == <span class="hljs-string">'function'</span>
+          cb <span class="hljs-literal">undefined</span>, params</pre></div></div>
             
         </li>
         
@@ -363,11 +365,11 @@ method is optional, routes without a method will apply in all cases</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> params
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">return</span> params
 
-    <span class="keyword">if</span> <span class="keyword">typeof</span> cb == <span class="string">'function'</span>
-      cb <span class="string">'No matching routes found'</span>
-    <span class="literal">false</span></pre></div></div>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> cb == <span class="hljs-string">'function'</span>
+      cb <span class="hljs-string">'No matching routes found'</span>
+    <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -375,10 +377,10 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h2>router.all( path [, method] )</h2>
+              <h2 id="router-all-path-method-">router.all( path [, method] )</h2>
 
             </div>
             
@@ -392,24 +394,24 @@ method is optional, routes without a method will apply in all cases</p>
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>find &amp; return a params hash from ALL routes that match</p>
-<pre><code>router.all( &#39;/products/5&#39; )
+<pre><code>router.all( <span class="hljs-string">'/products/5'</span> )
 
   =&gt; [
-    { controller: &#39;products&#39;, action: &#39;show&#39;, id: 5, method: &#39;GET&#39; },
-    { controller: &#39;products&#39;, action: &#39;update&#39;, id: 5, method: &#39;PUT&#39; },
-    { controller: &#39;products&#39;, action: &#39;destroy&#39;, id: 5, method: &#39;DELETE&#39; },
-  ]</code></pre>
-<p>if there ares no matches, returns an empty array</p>
+    { <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>, <span class="hljs-attribute">action</span>: <span class="hljs-string">'show'</span>, <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>, <span class="hljs-attribute">method</span>: <span class="hljs-string">'GET'</span> },
+    { <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>, <span class="hljs-attribute">action</span>: <span class="hljs-string">'update'</span>, <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>, <span class="hljs-attribute">method</span>: <span class="hljs-string">'PUT'</span> },
+    { <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>, <span class="hljs-attribute">action</span>: <span class="hljs-string">'destroy'</span>, <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>, <span class="hljs-attribute">method</span>: <span class="hljs-string">'DELETE'</span> },
+  ]
+</code></pre><p>if there ares no matches, returns an empty array</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  all: ( path, method )-&gt;
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">all</span>: <span class="hljs-function"><span class="hljs-params">( path, method )</span>-&gt;</span>
     ret = []
-    params = <span class="literal">false</span>
+    params = <span class="hljs-literal">false</span>
 
-    <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span>
+    <span class="hljs-keyword">for</span> route <span class="hljs-keyword">in</span> <span class="hljs-property">@routes</span>
       params = route.parse.apply route, arguments
-      <span class="keyword">if</span> params
+      <span class="hljs-keyword">if</span> params
         ret.push params
     ret</pre></div></div>
             
@@ -419,10 +421,10 @@ method is optional, routes without a method will apply in all cases</p>
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h2>// router.url( params[, add_querystring=false] )</h2>
+              <h2 id="-router-url-params-add_querystring-false-">// router.url( params[, add_querystring=false] )</h2>
 
             </div>
             
@@ -437,34 +439,34 @@ method is optional, routes without a method will apply in all cases</p>
               </div>
               <p>generates a URL from a params hash</p>
 <pre><code>router.url( {
-  controller: &#39;products&#39;,
-  action: &#39;show&#39;,
-  id: 5
+  <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>,
+  <span class="hljs-attribute">action</span>: <span class="hljs-string">'show'</span>,
+  <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>
 } )
-=&gt; &#39;/products/5&#39;
+=&gt; <span class="hljs-string">'/products/5'</span>
 
 router.url( {
-  controller: &#39;products&#39;,
-  action: &#39;show&#39;,
-  id: 5,
-  format: &#39;json&#39;
+  <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>,
+  <span class="hljs-attribute">action</span>: <span class="hljs-string">'show'</span>,
+  <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attribute">format</span>: <span class="hljs-string">'json'</span>
 } )
-=&gt; &#39;/products/5.json&#39;
+=&gt; <span class="hljs-string">'/products/5.json'</span>
 
 router.url({
-  controller: &#39;products&#39;,
-  action: &#39;show&#39;,
-  id: 5,
-  format: &#39;json&#39;,
-  love: &#39;cheese&#39;
-}, true )
-=&gt; &#39;/products/5.json?love=cheese&#39;</code></pre>
-<p>returns false if there are no suitable routes</p>
+  <span class="hljs-attribute">controller</span>: <span class="hljs-string">'products'</span>,
+  <span class="hljs-attribute">action</span>: <span class="hljs-string">'show'</span>,
+  <span class="hljs-attribute">id</span>: <span class="hljs-number">5</span>,
+  <span class="hljs-attribute">format</span>: <span class="hljs-string">'json'</span>,
+  <span class="hljs-attribute">love</span>: <span class="hljs-string">'cheese'</span>
+}, <span class="hljs-literal">true</span> )
+=&gt; <span class="hljs-string">'/products/5.json?love=cheese'</span>
+</code></pre><p>returns false if there are no suitable routes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  url: ( params, add_querystring )-&gt;
-    url = <span class="literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">url</span>: <span class="hljs-function"><span class="hljs-params">( params, add_querystring )</span>-&gt;</span>
+    url = <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -479,7 +481,7 @@ router.url({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> route <span class="keyword">in</span> <span class="property">@routes</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> route <span class="hljs-keyword">in</span> <span class="hljs-property">@routes</span></pre></div></div>
             
         </li>
         
@@ -494,18 +496,18 @@ router.url({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">continue</span> <span class="keyword">if</span> route.params.controller? &amp;&amp; route.params.controller != params.controller
-      <span class="keyword">continue</span> <span class="keyword">if</span> route.params.action? &amp;&amp; route.params.action != params.action
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">continue</span> <span class="hljs-keyword">if</span> route.params.controller? &amp;&amp; route.params.controller != params.controller
+      <span class="hljs-keyword">continue</span> <span class="hljs-keyword">if</span> route.params.action? &amp;&amp; route.params.action != params.action
 
-      <span class="keyword">break</span> <span class="keyword">if</span> url = route.stringify params
+      <span class="hljs-keyword">break</span> <span class="hljs-keyword">if</span> url = route.stringify params
 
-    <span class="keyword">return</span> <span class="literal">false</span> <span class="keyword">unless</span> url <span class="comment"># no love? return false</span>
-    qs = qstring.stringify url[<span class="number">1</span>] <span class="comment"># build the possibly empty query string</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">unless</span> url <span class="hljs-comment"># no love? return false</span>
+    qs = qstring.stringify url[<span class="hljs-number">1</span>] <span class="hljs-comment"># build the possibly empty query string</span>
 
-    <span class="keyword">if</span> add_querystring &amp;&amp; qs.length &gt; <span class="number">0</span>
-      <span class="keyword">return</span> url[<span class="number">0</span>] + <span class="string">'?'</span> + qs <span class="comment"># if there is a query string...</span>
+    <span class="hljs-keyword">if</span> add_querystring &amp;&amp; qs.length &gt; <span class="hljs-number">0</span>
+      <span class="hljs-keyword">return</span> url[<span class="hljs-number">0</span>] + <span class="hljs-string">'?'</span> + qs <span class="hljs-comment"># if there is a query string...</span>
 
-    url[<span class="number">0</span>] <span class="comment"># just return the url</span></pre></div></div>
+    url[<span class="hljs-number">0</span>] <span class="hljs-comment"># just return the url</span></pre></div></div>
             
         </li>
         
@@ -513,10 +515,10 @@ router.url({
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h2>router.remove( name )</h2>
+              <h2 id="router-remove-name-">router.remove( name )</h2>
 
             </div>
             
@@ -535,9 +537,8 @@ router.url({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  remove: ( name )-&gt;
-    <span class="property">@routes</span> = <span class="property">@routes</span>.filter (el)-&gt;
-      el.route_name != name</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">remove</span>: <span class="hljs-function"><span class="hljs-params">( name )</span>-&gt;</span>
+    <span class="hljs-property">@routes</span> = (route <span class="hljs-keyword">for</span> route <span class="hljs-keyword">in</span> <span class="hljs-property">@routes</span> <span class="hljs-keyword">when</span> route.route_name != name)</pre></div></div>
             
         </li>
         
@@ -545,10 +546,10 @@ router.url({
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h2>router.defer( testfn() )</h2>
+              <h2 id="router-defer-testfn-">router.defer( testfn() )</h2>
 
             </div>
             
@@ -561,23 +562,23 @@ router.url({
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <pre><code>router.defer( test( path, method ) )</code></pre>
-<p>test should be a function that examines non-standard URLs</p>
+              <pre><code>router.defer( test( path, method ) )
+</code></pre><p>test should be a function that examines non-standard URLs</p>
 <p>path and method will be passed in - expects a params hash back OR false on a non-match</p>
-<p>returns: DeferredRoute (for... reference? I dunno.)</p>
+<p>returns: DeferredRoute (for… reference? I dunno.)</p>
 <p><strong>THIS IS CURRENTLY COMPLETELY UNTESTED. IT MIGHT NOT EVEN WORK. SERIOUSLY.</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  defer: ( fn )-&gt;
-    <span class="keyword">if</span> <span class="keyword">typeof</span>(fn) != <span class="string">'function'</span>
-      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'Router.defer requires a function as the only argument'</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">defer</span>: <span class="hljs-function"><span class="hljs-params">( fn )</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span>(fn) != <span class="hljs-string">'function'</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">'Router.defer requires a function as the only argument'</span>
 
-    route = <span class="keyword">new</span> Route <span class="keyword">this</span>, <span class="string">'deferred'</span>
-    route.parse = fn <span class="comment"># add the custom parser</span>
-    <span class="keyword">delete</span> route.test <span class="comment"># = function(){return false};</span>
-    <span class="keyword">delete</span> route.stringify <span class="comment"># = function(){ throw new Error('Deferred routes are NOT generatable')};</span>
-    <span class="property">@routes</span>.push route
+    route = <span class="hljs-keyword">new</span> Route <span class="hljs-keyword">this</span>, <span class="hljs-string">'deferred'</span>
+    route.parse = fn <span class="hljs-comment"># add the custom parser</span>
+    <span class="hljs-keyword">delete</span> route.test <span class="hljs-comment"># = function(){return false};</span>
+    <span class="hljs-keyword">delete</span> route.stringify <span class="hljs-comment"># = function(){ throw new Error('Deferred routes are NOT generatable')};</span>
+    <span class="hljs-property">@routes</span>.push route
     route</pre></div></div>
             
         </li>
@@ -586,10 +587,10 @@ router.url({
         <li id="section-29">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <h2>router.toString</h2>
+              <h2 id="router-tostring">router.toString</h2>
 
             </div>
             
@@ -606,39 +607,8 @@ router.url({
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  toString: -&gt;
-    <span class="property">@routes</span>.map( (rt)-&gt;
-      rt.toString()
-    ).join <span class="string">'\n'</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-31">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-31">&#182;</a>
-              </div>
-              <h2>methods_regexp</h2>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-32">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-32">&#182;</a>
-              </div>
-              <p>builds a regexp out of the methods for method validation (used once, remove?)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  methods_regexp: -&gt;
-    RegExp <span class="string">"^(<span class="subst">#{ @methods.join '|' }</span>)$"</span>,<span class="string">'i'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">toString</span>: <span class="hljs-function">-&gt;</span>
+    ( route.toString() <span class="hljs-keyword">for</span> route <span class="hljs-keyword">in</span> <span class="hljs-property">@routes</span> ).join <span class="hljs-string">'\n'</span></pre></div></div>
             
         </li>
         

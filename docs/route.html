@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>route.coffee</title>
+  <title>new Route( router, path [, method] )</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -16,44 +16,40 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page">
-            
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
               
-              <a class="source" href="key.html">
-                key.coffee
-              </a>
-            
+                
+                <a class="source" href="key.html">
+                  key.coffee
+                </a>
               
-              <a class="source" href="resource.html">
-                resource.coffee
-              </a>
-            
+                
+                <a class="source" href="resource.html">
+                  resource.coffee
+                </a>
               
-              <a class="source" href="route.html">
-                route.coffee
-              </a>
-            
+                
+                <a class="source" href="route.html">
+                  route.coffee
+                </a>
               
-              <a class="source" href="router.html">
-                router.coffee
-              </a>
-            
+                
+                <a class="source" href="router.html">
+                  router.coffee
+                </a>
               
-              <a class="source" href="text.html">
-                text.coffee
-              </a>
-            
+                
+                <a class="source" href="text.html">
+                  text.coffee
+                </a>
+              
+            </div>
           </div>
         </li>
       </ul>
     
     <ul class="sections">
-        
-          <li id="title">
-              <div class="annotation">
-                  <h1>route.coffee</h1>
-              </div>
-          </li>
         
         
         
@@ -66,10 +62,10 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>{ Key, Glob } = require <span class="string">'./key'</span>
-{ Text }      = require <span class="string">'./text'</span>
-{ Resource }  = require <span class="string">'./resource'</span>
-inflection    = require <span class="string">'inflection'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>{ Key, Glob } = <span class="hljs-built_in">require</span> <span class="hljs-string">'./key'</span>
+{ Text }      = <span class="hljs-built_in">require</span> <span class="hljs-string">'./text'</span>
+{ Resource }  = <span class="hljs-built_in">require</span> <span class="hljs-string">'./resource'</span>
+inflection    = <span class="hljs-built_in">require</span> <span class="hljs-string">'inflection'</span></pre></div></div>
             
         </li>
         
@@ -77,10 +73,10 @@ inflection    = require <span class="string">'inflection'</span></pre></div></di
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h1>new Route( router, path [, method] )</h1>
+              <h1 id="new-route-router-path-method-">new Route( router, path [, method] )</h1>
 
             </div>
             
@@ -94,19 +90,19 @@ inflection    = require <span class="string">'inflection'</span></pre></div></di
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>turns strings into magical ponies that come when you call them</p>
-<pre><code>route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;)
-route = new Route(router, &#39;/:controller/:action(/:id)(.:format)&#39;, &#39;GET&#39;)
-route = new Route(router, &#39;/:controller/:action(/:id)(.:format)&#39;,
-route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET&#39;)</code></pre>
-<p>Pretty familiar to anyone who&#39;s used Merb/Rails - called by Router.match()</p>
+<pre><code>route = <span class="hljs-keyword">new</span> Route(router, <span class="hljs-string">'/:controller/:action/:id(.:format)'</span>)
+route = <span class="hljs-keyword">new</span> Route(router, <span class="hljs-string">'/:controller/:action(/:id)(.:format)'</span>, <span class="hljs-string">'GET'</span>)
+route = <span class="hljs-keyword">new</span> Route(router, <span class="hljs-string">'/:controller/:action(/:id)(.:format)'</span>,
+route = <span class="hljs-keyword">new</span> Route(router, <span class="hljs-string">'/:controller/:action/:id(.:format)'</span>, <span class="hljs-string">'GET'</span>)
+</code></pre><p>Pretty familiar to anyone who’s used Merb/Rails - called by Router.match()</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>exports.Route =
-<span class="class"><span class="keyword">class</span> <span class="title">Route</span></span>
-  constructor: ( router, path, method, <span class="property">@optional</span>=<span class="literal">false</span> )-&gt;
-    <span class="keyword">if</span> router &amp;&amp; path
-      <span class="property">@match</span>.apply <span class="keyword">this</span>, arguments</pre></div></div>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Route</span></span>
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">( router, path, method, <span class="hljs-property">@optional</span>=<span class="hljs-literal">false</span> )</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> router &amp;&amp; path
+      <span class="hljs-property">@match</span>.apply <span class="hljs-keyword">this</span>, arguments</pre></div></div>
             
         </li>
         
@@ -114,10 +110,10 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <h2>route.match()</h2>
+              <h2 id="route-match-">route.match()</h2>
 
             </div>
             
@@ -134,10 +130,10 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  match: ( router, path, method, <span class="property">@optional</span>=<span class="literal">false</span> )-&gt;
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">match</span>: <span class="hljs-function"><span class="hljs-params">( router, path, method, <span class="hljs-property">@optional</span>=<span class="hljs-literal">false</span> )</span>-&gt;</span>
 
-    <span class="keyword">if</span> <span class="keyword">typeof</span> path != <span class="string">'string'</span>
-      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'path must be a string'</span></pre></div></div>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> path != <span class="hljs-string">'string'</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">'path must be a string'</span></pre></div></div>
             
         </li>
         
@@ -152,8 +148,8 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="property">@path</span>?
-      prefix = <span class="property">@path</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-property">@path</span>?
+      prefix = <span class="hljs-property">@path</span></pre></div></div>
             
         </li>
         
@@ -169,8 +165,8 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
             </div>
             
             <div class="content"><div class='highlight'><pre>      new_keys = []
-      new_keys.push <span class="string">':id'</span> <span class="keyword">if</span> <span class="property">@collection</span> || <span class="property">@member</span> <span class="comment"># force id to be renamed for resources</span>
-      Array::push.apply new_keys, path.match RegExp(Key.regex.source, <span class="string">'g'</span>) <span class="comment"># find ALL</span></pre></div></div>
+      new_keys.push <span class="hljs-string">':id'</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@collection</span> || <span class="hljs-property">@member</span> <span class="hljs-comment"># force id to be renamed for resources</span>
+      new_keys.push *path.match RegExp Key.regex.source, <span class="hljs-string">'g'</span> <span class="hljs-comment"># find ALL</span></pre></div></div>
             
         </li>
         
@@ -185,9 +181,9 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">for</span> key <span class="keyword">in</span> new_keys
-        replKey = <span class="keyword">new</span> RegExp <span class="string">":(<span class="subst">#{key.substring(<span class="number">1</span>)}</span>/?)"</span>
-        prefix = prefix.replace replKey, <span class="string">":<span class="subst">#{inflection.underscore inflection.singularize @params.controller}</span>_$1"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">for</span> key <span class="hljs-keyword">in</span> new_keys
+        replKey = <span class="hljs-keyword">new</span> RegExp <span class="hljs-string">":(<span class="hljs-subst">#{key.substring(<span class="hljs-number">1</span>)}</span>/?)"</span>
+        prefix = prefix.replace replKey, <span class="hljs-string">":<span class="hljs-subst">#{inflection.underscore inflection.singularize <span class="hljs-property">@params</span>.controller}</span>_$1"</span></pre></div></div>
             
         </li>
         
@@ -198,11 +194,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>return the new awesomeness</p>
+              <p>create a new route instance</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">return</span> <span class="keyword">new</span> Route router, prefix+path, method, <span class="property">@optional</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      nested_route = <span class="hljs-keyword">new</span> Route router, prefix+path, method, <span class="hljs-property">@optional</span></pre></div></div>
             
         </li>
         
@@ -213,12 +209,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>uppercase the method name</p>
+              <p>add local default params</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="keyword">typeof</span>(method) == <span class="string">'string'</span>
-      <span class="property">@method</span> = method.toUpperCase()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      nested_route.default_params = <span class="hljs-property">@default_params</span></pre></div></div>
             
         </li>
         
@@ -229,14 +224,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>base properties</p>
+              <p>apply local conditions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="property">@params</span> = {}
-    <span class="property">@parts</span> = []
-    <span class="property">@route_name</span> = <span class="literal">null</span>
-    <span class="property">@path</span> = path</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      nested_route.where <span class="hljs-property">@conditions</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@conditions</span></pre></div></div>
             
         </li>
         
@@ -247,17 +239,11 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>@router = router</p>
+              <p>return the new awesomeness</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    Object.defineProperty <span class="keyword">this</span>, <span class="string">'router'</span>, <span class="comment"># exclude in enumerables</span>
-      enumerable: <span class="literal">false</span>
-      configurable: <span class="literal">false</span>
-      writable: <span class="literal">false</span>
-      value: router
-
-    <span class="property">@parts</span> = Route.parse router, path, method, <span class="property">@optional</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">return</span> nested_route</pre></div></div>
             
         </li>
         
@@ -268,16 +254,12 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>reset the path to the generated one (chop off any extra )&#39;s )</p>
+              <p>uppercase the method name</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="property">@path</span> = <span class="property">@toString</span>()
-
-    <span class="keyword">unless</span> <span class="property">@optional</span>
-      <span class="property">@router</span>.routes.push <span class="keyword">this</span>
-
-    <span class="keyword">this</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span>(method) == <span class="hljs-string">'string'</span>
+      <span class="hljs-property">@method</span> = method.toUpperCase()</pre></div></div>
             
         </li>
         
@@ -285,12 +267,18 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-14">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <h2>convenience methods</h2>
+              <p>base properties</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@params</span> = {}
+    <span class="hljs-property">@default_params</span> = {}
+    <span class="hljs-property">@parts</span> = []
+    <span class="hljs-property">@route_name</span> = <span class="hljs-literal">null</span>
+    <span class="hljs-property">@path</span> = path</pre></div></div>
             
         </li>
         
@@ -298,17 +286,20 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-15">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h3>route.get( path )</h3>
-<p>equivalent to</p>
-<pre><code>route.match( path, &#39;GET&#39; )</code></pre>
+              <p>@router = router</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  get: ( path )-&gt;
-    <span class="property">@match</span> <span class="property">@router</span>, path, <span class="string">'GET'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    Object.defineProperty <span class="hljs-keyword">this</span>, <span class="hljs-string">'router'</span>, <span class="hljs-comment"># exclude in enumerables</span>
+      <span class="hljs-attribute">enumerable</span>: <span class="hljs-literal">false</span>
+      <span class="hljs-attribute">configurable</span>: <span class="hljs-literal">false</span>
+      <span class="hljs-attribute">writable</span>: <span class="hljs-literal">false</span>
+      <span class="hljs-attribute">value</span>: router
+
+    <span class="hljs-property">@parts</span> = Route.parse router, path, method, <span class="hljs-property">@optional</span></pre></div></div>
             
         </li>
         
@@ -316,17 +307,19 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-16">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <h3>route.put( path )</h3>
-<p>equivalent to</p>
-<pre><code>route.match( path, &#39;PUT&#39; )</code></pre>
+              <p>reset the path to the generated one (chop off any extra )’s )</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  put: ( path )-&gt;
-    <span class="property">@match</span> <span class="property">@router</span>, path, <span class="string">'PUT'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@path</span> = <span class="hljs-property">@toString</span>()
+
+    <span class="hljs-keyword">unless</span> <span class="hljs-property">@optional</span>
+      <span class="hljs-property">@router</span>.routes.push <span class="hljs-keyword">this</span>
+
+    <span class="hljs-keyword">this</span></pre></div></div>
             
         </li>
         
@@ -334,17 +327,12 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-17">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h3>route.post( path )</h3>
-<p>equivalent to</p>
-<pre><code>route.match( path, &#39;POST&#39; )</code></pre>
+              <h2 id="convenience-methods">convenience methods</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  post: ( path )-&gt;
-    <span class="property">@match</span> <span class="property">@router</span>, path, <span class="string">'POST'</span></pre></div></div>
             
         </li>
         
@@ -352,17 +340,18 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-18">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <h3>route.patch( path )</h3>
-<p>equivalent to</p>
-<pre><code>route.match( path, &#39;PATCH&#39; )</code></pre>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>  patch: ( path )-&gt;
-    <span class="property">@match</span> <span class="property">@router</span>, path, <span class="string">'PATCH'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-attribute">get</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>   <span class="hljs-property">@match</span> <span class="hljs-property">@router</span>, path, <span class="hljs-string">'GET'</span>
+  <span class="hljs-attribute">put</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>   <span class="hljs-property">@match</span> <span class="hljs-property">@router</span>, path, <span class="hljs-string">'PUT'</span>
+  <span class="hljs-attribute">post</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>  <span class="hljs-property">@match</span> <span class="hljs-property">@router</span>, path, <span class="hljs-string">'POST'</span>
+  <span class="hljs-attribute">patch</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span> <span class="hljs-property">@match</span> <span class="hljs-property">@router</span>, path, <span class="hljs-string">'PATCH'</span>
+  <span class="hljs-attribute">del</span>: <span class="hljs-function"><span class="hljs-params">( path )</span>-&gt;</span>   <span class="hljs-property">@match</span> <span class="hljs-property">@router</span>, path, <span class="hljs-string">'DELETE'</span></pre></div></div>
             
         </li>
         
@@ -370,17 +359,12 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-19">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <h3>route.del( path )</h3>
-<p>equivalent to</p>
-<pre><code>route.match( path, &#39;DELETE&#39; )</code></pre>
+              <h2 id="route-resource-controller-">route.resource( controller )</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  del: ( path )-&gt;
-    <span class="property">@match</span> <span class="property">@router</span>, path, <span class="string">'DELETE'</span></pre></div></div>
             
         </li>
         
@@ -388,12 +372,17 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-20">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
-              <h2>route.resource( controller )</h2>
+              <p>generates standard resource routes for a controller name</p>
+<pre><code>route.resource(<span class="hljs-string">'products'</span>)
+</code></pre><p>returns a Resource object</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">resource</span>: <span class="hljs-function"><span class="hljs-params">( controller )</span>-&gt;</span>
+    <span class="hljs-keyword">new</span> Resource <span class="hljs-keyword">this</span>, controller</pre></div></div>
             
         </li>
         
@@ -404,14 +393,9 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <p>generates standard resource routes for a controller name</p>
-<pre><code>route.resource(&#39;products&#39;)</code></pre>
-<p>returns a Resource object</p>
+              <h2 id="route-regexstring-">route.regexString()</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  resource: ( controller )-&gt;
-    <span class="keyword">new</span> Resource <span class="keyword">this</span>, controller</pre></div></div>
             
         </li>
         
@@ -419,12 +403,14 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h2>route.regexString()</h2>
+              <p>returns a composite regex string of all route parts</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">regexString</span>: <span class="hljs-function">-&gt;</span></pre></div></div>
             
         </li>
         
@@ -435,12 +421,15 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
-              <p>returns a composite regex string of all route parts</p>
+              <p>a route regex is a composite of its parts’ regexe(s|n)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  regexString: -&gt;
-    ret = <span class="string">''</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    ret = [<span class="hljs-string">'('</span>]
+    ret.push part.regexString() <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> <span class="hljs-property">@parts</span>
+    ret.push <span class="hljs-string">')'</span>
+    ret.push <span class="hljs-string">'?'</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@optional</span>
+    ret.join <span class="hljs-string">''</span></pre></div></div>
             
         </li>
         
@@ -451,14 +440,9 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <p>a route regex is a composite of its parts&#39; regexe(s|n)</p>
+              <h2 id="route-test-string-">route.test( string )</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> part <span class="keyword">in</span> <span class="property">@parts</span>
-      ret += <span class="keyword">if</span> part.regexString <span class="keyword">then</span> part.regexString() <span class="keyword">else</span> regExpEscape part
-
-    <span class="string">"(<span class="subst">#{ret}</span>)<span class="subst">#{<span class="keyword">if</span> @optional <span class="keyword">then</span> '?' <span class="keyword">else</span> ''}</span>"</span></pre></div></div>
             
         </li>
         
@@ -466,12 +450,17 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h2>route.test( string )</h2>
+              <p>builds &amp; tests on a full regex of the entire path</p>
+<pre><code>route.test( <span class="hljs-string">'/products/19/edit'</span> )
+ =&gt; <span class="hljs-literal">true</span>
+</code></pre><p>returns true/false depending on whether the url matches</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">test</span>: <span class="hljs-function"><span class="hljs-params">( string )</span>-&gt;</span></pre></div></div>
             
         </li>
         
@@ -482,14 +471,13 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <p>builds &amp; tests on a full regex of the entire path</p>
-<pre><code>route.test( &#39;/products/19/edit&#39; )
- =&gt; true</code></pre>
-<p>returns true/false depending on whether the url matches</p>
+              <p>cache the regex string</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  test: ( string )-&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@regex</span> ?= RegExp <span class="hljs-string">"^<span class="hljs-subst">#{<span class="hljs-property">@regexString</span>()}</span>(\\\?.*)?$"</span>
+
+    <span class="hljs-property">@regex</span>.test string</pre></div></div>
             
         </li>
         
@@ -500,13 +488,9 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <p>cache the regex string</p>
+              <h2 id="route-to-endpoint-default_params-">route.to( endpoint [, default_params ] )</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="property">@regex</span> ?= RegExp <span class="string">"^<span class="subst">#{@regexString()}</span>(\\\?.*)?$"</span>
-
-    <span class="property">@regex</span>.test string</pre></div></div>
             
         </li>
         
@@ -514,12 +498,23 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h2>route.to( endpoint [, extra_params ] )</h2>
+              <p>defines the endpoint &amp; mixes in optional params</p>
+<pre><code>route.to( <span class="hljs-string">'controller.action'</span> )
+
+route.to( <span class="hljs-string">'controller.action'</span>, {<span class="hljs-attribute">lang</span>:<span class="hljs-string">'en'</span>} )
+</code></pre><p>returns the route for chaining</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">to</span>: <span class="hljs-function"><span class="hljs-params">( endpoint, default_params )</span>-&gt;</span>
+
+    <span class="hljs-keyword">if</span> !default_params &amp;&amp; <span class="hljs-keyword">typeof</span> endpoint != <span class="hljs-string">'string'</span>
+      [ default_params, endpoint ] = [ endpoint, <span class="hljs-literal">undefined</span> ]
+
+    mixin <span class="hljs-property">@default_params</span>, default_params</pre></div></div>
             
         </li>
         
@@ -530,19 +525,21 @@ route = new Route(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
-              <p>defines the endpoint &amp; mixes in optional params</p>
-<pre><code>route.to( &#39;controller.action&#39; )
-
-route.to( &#39;controller.action&#39;, {lang:&#39;en&#39;} )</code></pre>
-<p>returns the route for chaining</p>
+              <p>TODO: make endpoint optional, since you can have the
+controller &amp; action in the URL utself,
+even though that’s a terrible idea…</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  to: ( endpoint, extra_params )-&gt;
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">if</span> endpoint
+      <span class="hljs-keyword">unless</span> <span class="hljs-number">0</span> &lt; endpoint.indexOf <span class="hljs-string">'.'</span>
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">'syntax should be in the form: controller.action'</span>
+      [ <span class="hljs-property">@params</span>.controller, <span class="hljs-property">@params</span>.action ] = endpoint.split <span class="hljs-string">'.'</span>
 
-    <span class="keyword">if</span> !extra_params &amp;&amp; <span class="keyword">typeof</span> endpoint != <span class="string">'string'</span>
-      extra_params = endpoint
-      endpoint = <span class="literal">undefined</span></pre></div></div>
+    mixin <span class="hljs-property">@params</span>, <span class="hljs-property">@default_params</span>
+
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># chainable</span></pre></div></div>
             
         </li>
         
@@ -553,24 +550,9 @@ route.to( &#39;controller.action&#39;, {lang:&#39;en&#39;} )</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <p>TODO: make endpoint optional, since you can have the
-controller &amp; action in the URL utself,
-even though that&#39;s a terrible idea...</p>
+              <h2 id="route-as-name-">route.as( name )</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> endpoint
-      endpoint = endpoint.split <span class="string">'.'</span>
-      <span class="keyword">if</span> kindof(endpoint) == <span class="string">'array'</span> &amp;&amp; endpoint.length != <span class="number">2</span>
-        <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'syntax should be in the form: controller.action'</span>
-      <span class="property">@params</span>.controller = endpoint[<span class="number">0</span>]
-      <span class="property">@params</span>.action = endpoint[<span class="number">1</span>]
-
-    extra_params = {} <span class="keyword">unless</span> kindof(extra_params) == <span class="string">'object'</span>
-
-    mixin <span class="property">@params</span>, extra_params
-
-    <span class="keyword">this</span> <span class="comment"># chainable</span></pre></div></div>
             
         </li>
         
@@ -578,12 +560,18 @@ even though that&#39;s a terrible idea...</p>
         <li id="section-31">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <h2>route.name( name )</h2>
+              <p>sets the route name - NAMED ROUTES ARE NOT CURRENTLY USED</p>
+<pre><code>route.as( <span class="hljs-string">'login'</span> )
+route.as( <span class="hljs-string">'homepage'</span> ) <span class="hljs-comment"># etc...</span>
+</code></pre><p>returns: the route for chaining</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">as</span>: <span class="hljs-function"><span class="hljs-params">( <span class="hljs-property">@route_name</span> )</span>-&gt;</span>
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># chainable</span></pre></div></div>
             
         </li>
         
@@ -594,16 +582,16 @@ even though that&#39;s a terrible idea...</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-32">&#182;</a>
               </div>
-              <p>just sets the route name - NAMED ROUTES ARE NOT CURRENTLY USED</p>
-<pre><code>route.name( &#39;login&#39; )
-route.name( &#39;homepage&#39; ) # etc...</code></pre>
-<p>returns: the route for chaining</p>
+              <p>alias for as</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  name: ( name )-&gt;
-    <span class="property">@route_name</span> = name
-    <span class="keyword">this</span> <span class="comment"># chainable</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">name</span>: <span class="hljs-function"><span class="hljs-params">( name )</span>-&gt;</span>
+    <span class="hljs-built_in">console</span>.log <span class="hljs-string">'''
+      DEPRECATION NOTICE: this method has been renamed "as"
+      and will be removed in a future version of Barista
+    '''</span>
+    <span class="hljs-property">@as</span>.apply <span class="hljs-keyword">this</span>, arguments</pre></div></div>
             
         </li>
         
@@ -611,10 +599,10 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
         <li id="section-33">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-33">&#182;</a>
               </div>
-              <h2>route.where( conditions )</h2>
+              <h2 id="route-where-conditions-">route.where( conditions )</h2>
 
             </div>
             
@@ -628,14 +616,14 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
                 <a class="pilcrow" href="#section-34">&#182;</a>
               </div>
               <p>sets conditions that each url variable must match for the URL to be valid</p>
-<pre><code>route.where( { id:/\d+/, username:/\w+/ } )</code></pre>
-<p>returns: the route for chaining</p>
+<pre><code>route.where( { <span class="hljs-attribute">id</span>:<span class="hljs-regexp">/\d+/</span>, <span class="hljs-attribute">username</span>:<span class="hljs-regexp">/\w+/</span> } )
+</code></pre><p>returns: the route for chaining</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  where: ( conditions )-&gt;
-    <span class="keyword">if</span> kindof(conditions) != <span class="string">'object'</span>
-      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'conditions must be an object'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">where</span>: <span class="hljs-function"><span class="hljs-params">( <span class="hljs-property">@conditions</span> )</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> kindof(<span class="hljs-property">@conditions</span>) != <span class="hljs-string">'object'</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">'conditions must be an object'</span></pre></div></div>
             
         </li>
         
@@ -650,8 +638,8 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    part.where? conditions <span class="keyword">for</span> part <span class="keyword">in</span> <span class="property">@parts</span>
-    <span class="keyword">this</span> <span class="comment"># chainable</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    part.where? <span class="hljs-property">@conditions</span> <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> <span class="hljs-property">@parts</span>
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># chainable</span></pre></div></div>
             
         </li>
         
@@ -659,10 +647,10 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
         <li id="section-36">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-36">&#182;</a>
               </div>
-              <h2>route.stringify( params )</h2>
+              <h2 id="route-stringify-params-">route.stringify( params )</h2>
 
             </div>
             
@@ -676,16 +664,16 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
                 <a class="pilcrow" href="#section-37">&#182;</a>
               </div>
               <p>builds a string url for this Route from a params object</p>
-<p>returns: [ &quot;url&quot;, [leftover params] ]</p>
+<p>returns: [ “url”, [leftover params] ]</p>
 <p><strong>this is meant to be called &amp; modified by router.url()</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  stringify: ( params )-&gt;
-    url = [] <span class="comment"># urls start life as an array to enable a second pass</span>
-    <span class="keyword">for</span> part <span class="keyword">in</span> <span class="property">@parts</span>
-      <span class="keyword">if</span> part <span class="keyword">instanceof</span> Key || part <span class="keyword">instanceof</span> Glob
-        <span class="keyword">if</span> params[part.name]? &amp;&amp; part.regex.test params[part.name]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">stringify</span>: <span class="hljs-function"><span class="hljs-params">( params )</span>-&gt;</span>
+    url = [] <span class="hljs-comment"># urls start life as an array to enable a second pass</span>
+    <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> <span class="hljs-property">@parts</span>
+      <span class="hljs-keyword">if</span> part <span class="hljs-keyword">instanceof</span> Key
+        <span class="hljs-keyword">if</span> params[part.name]? &amp;&amp; part.regex.test params[part.name]</pre></div></div>
             
         </li>
         
@@ -696,12 +684,12 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <p>there&#39;s a param named this &amp;&amp; the param matches the key&#39;s regex</p>
+              <p>there’s a param named this &amp;&amp; the param matches the key’s regex</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          url.push part.url params[part.name] <span class="comment"># push it onto the stack</span>
-          <span class="keyword">delete</span> params[part.name]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          url.push part.url params[part.name] <span class="hljs-comment"># push it onto the stack</span>
+          <span class="hljs-keyword">delete</span> params[part.name]</pre></div></div>
             
         </li>
         
@@ -716,7 +704,7 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">else</span> <span class="keyword">if</span> <span class="property">@optional</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@optional</span></pre></div></div>
             
         </li>
         
@@ -727,12 +715,12 @@ route.name( &#39;homepage&#39; ) # etc...</code></pre>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-40">&#182;</a>
               </div>
-              <p>(sub)route doesn&#39;t match, move on</p>
+              <p>(sub)route doesn’t match, move on</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="keyword">return</span> <span class="literal">false</span>
-      <span class="keyword">else</span> <span class="keyword">if</span> part <span class="keyword">instanceof</span> Route</pre></div></div>
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> part <span class="hljs-keyword">instanceof</span> Route</pre></div></div>
             
         </li>
         
@@ -749,7 +737,7 @@ to avoid leftover param duplication</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        url.push part
-      <span class="keyword">else</span> <span class="comment"># string</span>
+      <span class="hljs-keyword">else</span> <span class="hljs-comment"># string</span>
         url.push part</pre></div></div>
             
         </li>
@@ -761,14 +749,13 @@ to avoid leftover param duplication</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>second pass, resolve optional parts (backwards, so later optionals are resolved first)
-for i=url.length-1; i&gt;=0; i--</p>
+              <p>second pass, resolve optional parts (backwards, so later optionals are resolved first)</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> part, i <span class="keyword">in</span> url <span class="keyword">by</span> -<span class="number">1</span>
-      <span class="keyword">if</span> part <span class="keyword">instanceof</span> Route
-        part = part.stringify params <span class="comment"># recursion is your friend</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> part, i <span class="hljs-keyword">in</span> url <span class="hljs-keyword">by</span> -<span class="hljs-number">1</span>
+      <span class="hljs-keyword">if</span> part <span class="hljs-keyword">instanceof</span> Route
+        part = part.stringify params <span class="hljs-comment"># recursion is your friend</span></pre></div></div>
             
         </li>
         
@@ -783,13 +770,13 @@ for i=url.length-1; i&gt;=0; i--</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> part
-          params = part[<span class="number">1</span>] <span class="comment"># replace leftover params hash with the new, smaller leftover params hash</span>
-          url[i] = part = part[<span class="number">0</span>] <span class="comment"># leave only the string for joining</span>
-        <span class="keyword">else</span>
-          <span class="keyword">delete</span> url[i] <span class="comment"># get rid of these shits</span>
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> part
+          params = part[<span class="hljs-number">1</span>] <span class="hljs-comment"># replace leftover params hash with the new, smaller leftover params hash</span>
+          url[i] = part = part[<span class="hljs-number">0</span>] <span class="hljs-comment"># leave only the string for joining</span>
+        <span class="hljs-keyword">else</span>
+          <span class="hljs-keyword">delete</span> url[i] <span class="hljs-comment"># get rid of these shits</span>
 
-    <span class="keyword">for</span> key, val <span class="keyword">of</span> <span class="property">@params</span></pre></div></div>
+    <span class="hljs-keyword">for</span> key, val <span class="hljs-keyword">of</span> <span class="hljs-property">@params</span></pre></div></div>
             
         </li>
         
@@ -800,13 +787,13 @@ for i=url.length-1; i&gt;=0; i--</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <p>remove from leftovers, they&#39;re implied in the to() portion of the route</p>
+              <p>remove from leftovers, they’re implied in the to() portion of the route</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">delete</span> params[key]
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">delete</span> params[key]
 
-    [ url.join(<span class="string">''</span>), params ]</pre></div></div>
+    [ url.join(<span class="hljs-string">''</span>), params ]</pre></div></div>
             
         </li>
         
@@ -814,10 +801,10 @@ for i=url.length-1; i&gt;=0; i--</p>
         <li id="section-45">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <h2>route.keysAndRoutes()</h2>
+              <h2 id="route-keysandroutes-">route.keysAndRoutes()</h2>
 
             </div>
             
@@ -830,14 +817,13 @@ for i=url.length-1; i&gt;=0; i--</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-46">&#182;</a>
               </div>
-              <p>just the parts that aren&#39;t strings. basically</p>
+              <p>just the parts that aren’t strings. basically</p>
 <p>returns an array of Key and Route objects</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  keysAndRoutes: -&gt;
-    <span class="property">@parts</span>.filter (part)-&gt;
-      part <span class="keyword">instanceof</span> Key || part <span class="keyword">instanceof</span> Glob || part <span class="keyword">instanceof</span> Route</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">keysAndRoutes</span>: <span class="hljs-function">-&gt;</span>
+    part <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> <span class="hljs-property">@parts</span> <span class="hljs-keyword">when</span> part <span class="hljs-keyword">instanceof</span> Key || part <span class="hljs-keyword">instanceof</span> Route</pre></div></div>
             
         </li>
         
@@ -845,10 +831,10 @@ for i=url.length-1; i&gt;=0; i--</p>
         <li id="section-47">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-47">&#182;</a>
               </div>
-              <h2>route.keys()</h2>
+              <h2 id="route-keys-">route.keys()</h2>
 
             </div>
             
@@ -866,9 +852,8 @@ for i=url.length-1; i&gt;=0; i--</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  keys: -&gt;
-    <span class="property">@parts</span>.filter (part)-&gt;
-      part <span class="keyword">instanceof</span> Key || part <span class="keyword">instanceof</span> Glob</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">keys</span>: <span class="hljs-function">-&gt;</span>
+    part <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> <span class="hljs-property">@parts</span> <span class="hljs-keyword">when</span> part <span class="hljs-keyword">instanceof</span> Key</pre></div></div>
             
         </li>
         
@@ -876,10 +861,10 @@ for i=url.length-1; i&gt;=0; i--</p>
         <li id="section-49">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <h2>route.parse( url, method )</h2>
+              <h2 id="route-parse-url-method-">route.parse( url, method )</h2>
 
             </div>
             
@@ -893,14 +878,14 @@ for i=url.length-1; i&gt;=0; i--</p>
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
               <p>parses a URL into a params object</p>
-<pre><code>route.parse( &#39;/products/15/edit&#39;, &#39;GET&#39; )
- =&gt; { controller:&#39;products&#39;, action:&#39;edit&#39;, id:15 }</code></pre>
-<p>returns: a params hash || false (if the route doesn&#39;t match)</p>
+<pre><code>route.parse( <span class="hljs-string">'/products/15/edit'</span>, <span class="hljs-string">'GET'</span> )
+ =&gt; { <span class="hljs-attribute">controller</span>:<span class="hljs-string">'products'</span>, <span class="hljs-attribute">action</span>:<span class="hljs-string">'edit'</span>, <span class="hljs-attribute">id</span>:<span class="hljs-number">15</span> }
+</code></pre><p>returns: a params hash || false (if the route doesn’t match)</p>
 <p><strong>this is meant to be called by Router.first() &amp;&amp; Router.all()</strong></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  parse: ( urlParam, method )-&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">parse</span>: <span class="hljs-function"><span class="hljs-params">( urlParam, method )</span>-&gt;</span></pre></div></div>
             
         </li>
         
@@ -913,15 +898,8 @@ for i=url.length-1; i&gt;=0; i--</p>
               </div>
               <p>parse the URL with the regex &amp; step along with the parts,
 assigning the vals from the url to the names of the keys as we go (potentially stoopid)</p>
-<p>let&#39;s chop off the QS to make life easier</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    url =     require(<span class="string">'url'</span>).parse urlParam <span class="comment"># TODO: fix this</span>
-    path =    decodeURI url.pathname
-    params =  { method: method }
-
-    mixin params, <span class="property">@params</span></pre></div></div>
             
         </li>
         
@@ -932,13 +910,15 @@ assigning the vals from the url to the names of the keys as we go (potentially s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-52">&#182;</a>
               </div>
-              <p>route HEAD requests to GET endpoints</p>
+              <p>let’s chop off the QS to make life easier</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    head = params.method == <span class="string">'HEAD'</span>
-    <span class="keyword">if</span> head
-      params.method = <span class="string">'GET'</span> <span class="comment"># we'll put it back when we're done</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    url =     <span class="hljs-built_in">require</span>(<span class="hljs-string">'url'</span>).parse urlParam <span class="hljs-comment"># TODO: fix this</span>
+    path =    decodeURI url.pathname
+    params =  <span class="hljs-attribute">method</span>: method
+
+    mixin params, <span class="hljs-property">@params</span></pre></div></div>
             
         </li>
         
@@ -949,13 +929,12 @@ assigning the vals from the url to the names of the keys as we go (potentially s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>if the method doesn&#39;t match, gtfo immediately</p>
+              <p>route HEAD requests to GET endpoints</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> <span class="property">@method</span>? &amp;&amp; params.method?
-      <span class="keyword">if</span> <span class="property">@method</span> != params.method
-        <span class="keyword">return</span> <span class="literal">false</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> is_head_req = params.method == <span class="hljs-string">'HEAD'</span>
+      params.method = <span class="hljs-string">'GET'</span> <span class="hljs-comment"># we'll put it back when we're done</span></pre></div></div>
             
         </li>
         
@@ -966,11 +945,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
               </div>
-              <p>assign the route&#39;s method if there isn&#39;t one</p>
+              <p>if the method doesn’t match, gtfo immediately</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    params.method ?= <span class="property">@method</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@method</span>? &amp;&amp; <span class="hljs-property">@method</span> != params.method</pre></div></div>
             
         </li>
         
@@ -981,12 +960,11 @@ assigning the vals from the url to the names of the keys as we go (potentially s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
-              <p>TODO: implement substring checks for possible performance boost</p>
-<p>if the route doesn&#39;t match the regex, gtfo</p>
+              <p>assign the route’s method if there isn’t one</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> <span class="literal">false</span> <span class="keyword">unless</span> <span class="property">@test</span> path</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    params.method ?= <span class="hljs-property">@method</span></pre></div></div>
             
         </li>
         
@@ -997,14 +975,9 @@ assigning the vals from the url to the names of the keys as we go (potentially s
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <p>parse the URL with the regex
-slice(2) returns just the array of matches from the regexp object</p>
+              <p>TODO: implement substring checks for possible performance boost</p>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    parts = <span class="keyword">new</span> RegExp(<span class="string">"^<span class="subst">#{@regexString()}</span>$"</span>).exec(path).slice(<span class="number">2</span>)
-    keysAndRoutes = <span class="property">@keysAndRoutes</span>()
-    pairings = []</pre></div></div>
             
         </li>
         
@@ -1015,25 +988,11 @@ slice(2) returns just the array of matches from the regexp object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
-              <p>loop 1 (forwards) - collect the key/route -&gt; part pairings for loop 2</p>
+              <p>if the route doesn’t match the regex, gtfo</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    `<span class="javascript">
-    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>, j=<span class="number">0</span>; i&lt;keysAndRoutes.length; i++, j++) {
-      <span class="keyword">var</span> part = parts[j]
-        , segm = keysAndRoutes[i]
-
-      <span class="comment">// if this part doesnt match the segment, move on</span>
-      <span class="keyword">if</span> ( segm.test(part) ) { <span class="comment">// !! testing builds a regex if we didn't have one before</span>
-        <span class="comment">// stash the pairings for loop 2</span>
-        pairings.push( [ segm, part ] )
-      }
-
-      <span class="comment">// routes must advance the part iterator by the number of parts matched in the segment</span>
-      j+= ( segm.regex.exec(part||<span class="string">''</span>).slice(<span class="number">2</span>).length || <span class="number">1</span> ) - <span class="number">1</span>
-    }
-    </span>`</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">unless</span> <span class="hljs-property">@test</span> path</pre></div></div>
             
         </li>
         
@@ -1044,15 +1003,13 @@ slice(2) returns just the array of matches from the regexp object</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
-              <p>loop 2 (backwards) - parse the key/route -&gt; part pairings (backards so later optional matches are preferred)
-i.e. /path(.:format)/something(.:format) would keep the last format segment, while discarding the first
-this makes life easier for nesting route definitions</p>
+              <p>parse the URL with the regex
+first 2 elements are shit, chop ‘em</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">for</span> pair <span class="keyword">in</span> pairings <span class="keyword">by</span> -<span class="number">1</span>
-      part = pair[<span class="number">1</span>]
-      segm = pair[<span class="number">0</span>]</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    parts = <span class="hljs-keyword">new</span> RegExp(<span class="hljs-string">"^<span class="hljs-subst">#{<span class="hljs-property">@regexString</span>()}</span>$"</span>).exec(path)[<span class="hljs-number">2.</span>.]
+    pairings = []</pre></div></div>
             
         </li>
         
@@ -1063,14 +1020,13 @@ this makes life easier for nesting route definitions</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
-              <p>actually mixin the params</p>
+              <p>loop 1 (forwards) - collect the key/route -&gt; part pairings for loop 2</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> segm <span class="keyword">instanceof</span> Key || segm <span class="keyword">instanceof</span> Glob
-        params[segm.name] = part
-      <span class="keyword">else</span> <span class="keyword">if</span> segm <span class="keyword">instanceof</span> Route
-        mixin params, segm.parse(part, method)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    j = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> segm <span class="hljs-keyword">in</span> <span class="hljs-property">@keysAndRoutes</span>()
+      part = parts[j]</pre></div></div>
             
         </li>
         
@@ -1081,21 +1037,11 @@ this makes life easier for nesting route definitions</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
-              <p>replace HEAD method?</p>
+              <p>stash the pairings for loop 2 if this part matches segment</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    params.method = <span class="string">'HEAD'</span> <span class="keyword">if</span> head
-
-    params
-
-
-
-  nest: ( cb )-&gt;
-    <span class="keyword">unless</span> <span class="keyword">typeof</span> cb == <span class="string">'function'</span>
-      <span class="keyword">throw</span> <span class="keyword">new</span> Error <span class="string">'route.nest() requires a callback function'</span>
-    cb.call <span class="keyword">this</span>
-    <span class="keyword">this</span> <span class="comment"># for chaining</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      pairings.push [ segm, part ] <span class="hljs-keyword">if</span> segm.test part</pre></div></div>
             
         </li>
         
@@ -1103,12 +1049,14 @@ this makes life easier for nesting route definitions</p>
         <li id="section-61">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <h2>route.toString()</h2>
+              <p>routes must advance the part iterator by the number of parts matched in the segment</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>      j+= segm.regex.exec(part||<span class="hljs-string">''</span>)[<span class="hljs-number">2.</span>.].length || <span class="hljs-number">1</span></pre></div></div>
             
         </li>
         
@@ -1119,15 +1067,13 @@ this makes life easier for nesting route definitions</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
-              <p>returns the original route definition</p>
+              <p>loop 2 (backwards) - parse the key/route -&gt; part pairings (backards so later optional matches are preferred)
+i.e. /path(.:format)/something(.:format) would keep the last format segment, while discarding the first
+this makes life easier for nesting route definitions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  toString: -&gt;
-    defn = <span class="property">@parts</span>.reduce (m=<span class="string">''</span>,part)-&gt; m+part.toString()
-    <span class="keyword">if</span> <span class="property">@optional</span>
-      <span class="string">"(<span class="subst">#{ defn }</span>)"</span>
-    <span class="keyword">else</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">for</span> [ segm, part ] <span class="hljs-keyword">in</span> pairings <span class="hljs-keyword">by</span> -<span class="hljs-number">1</span></pre></div></div>
             
         </li>
         
@@ -1138,12 +1084,14 @@ this makes life easier for nesting route definitions</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
-              <p>toString() again just in case the callback never fired
-see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce</a></p>
+              <p>actually mixin the params</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      defn.toString()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> segm <span class="hljs-keyword">instanceof</span> Key
+        params[segm.name] = part
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> segm <span class="hljs-keyword">instanceof</span> Route
+        mixin params, segm.parse part, method</pre></div></div>
             
         </li>
         
@@ -1151,12 +1099,24 @@ see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/G
         <li id="section-64">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <h1>Route.parse( router, string, method, optional=false )</h1>
+              <p>replace HEAD method?</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    params.method = <span class="hljs-string">'HEAD'</span> <span class="hljs-keyword">if</span> is_head_req
+
+    params
+
+
+
+  <span class="hljs-attribute">nest</span>: <span class="hljs-function"><span class="hljs-params">( cb )</span>-&gt;</span>
+    <span class="hljs-keyword">unless</span> <span class="hljs-keyword">typeof</span> cb == <span class="hljs-string">'function'</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">'route.nest() requires a callback function'</span>
+    cb.call <span class="hljs-keyword">this</span>
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># for chaining</span></pre></div></div>
             
         </li>
         
@@ -1167,17 +1127,9 @@ see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
-              <p>parses a route definition into a swiss army bazooka</p>
-<pre><code>route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;)
-route = Route.parse(router, &#39;/:controller/:action(/:id)(.:format)&#39;, &#39;GET&#39;)
-route = Route.parse(router, &#39;/:controller/:action(/:id)(.:format)&#39;,
-route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;GET&#39;)</code></pre>
-<p>Pretty familiar to anyone who&#39;s used Merb/Rails - called by Router.match()</p>
+              <h2 id="route-tostring-">route.toString()</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>Route.<span class="function"><span class="title">parse</span></span> = ( router, string, method, optional=<span class="literal">false</span> )-&gt;
-  parts = []</pre></div></div>
             
         </li>
         
@@ -1188,11 +1140,14 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
-              <p>parse it char by char, baby</p>
+              <p>returns the original route definition</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">for</span> char, i <span class="keyword">in</span> string</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">toString</span>: <span class="hljs-function">-&gt;</span>
+    defn = (part.toString() <span class="hljs-keyword">for</span> part <span class="hljs-keyword">in</span> <span class="hljs-property">@parts</span>).join <span class="hljs-string">''</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">"(<span class="hljs-subst">#{ defn }</span>)"</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@optional</span>
+    defn</pre></div></div>
             
         </li>
         
@@ -1203,12 +1158,9 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
-              <p>special consideration for Ogrp starts</p>
+              <h1 id="route-parse-router-string-method-optional-false-">Route.parse( router, string, method, optional=false )</h1>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> char == <span class="string">'('</span> &amp;&amp; i==<span class="number">0</span>
-      <span class="keyword">continue</span> <span class="comment"># skip this char, since it's not strictly part of the route definition</span></pre></div></div>
             
         </li>
         
@@ -1219,26 +1171,18 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
-              <p>the route definition is over, return what we have</p>
+              <p>parses a route definition into a swiss army bazooka</p>
+<pre><code>route = Route.parse(router, <span class="hljs-string">'/:controller/:action/:id(.:format)'</span>)
+route = Route.parse(router, <span class="hljs-string">'/:controller/:action(/:id)(.:format)'</span>, <span class="hljs-string">'GET'</span>)
+route = Route.parse(router, <span class="hljs-string">'/:controller/:action(/:id)(.:format)'</span>,
+route = Route.parse(router, <span class="hljs-string">'/:controller/:action/:id(.:format)'</span>, <span class="hljs-string">'GET'</span>)
+</code></pre><p>Pretty familiar to anyone who’s used Merb/Rails - called by Router.match()</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> char == <span class="string">')'</span>
-      <span class="keyword">return</span> parts
-
-    <span class="keyword">if</span> char == <span class="string">':'</span> &amp;&amp; string[i+<span class="number">1</span>] != <span class="string">':'</span>
-      parts.push Key.parse string[i..]
-    <span class="keyword">else</span> <span class="keyword">if</span> char == <span class="string">'*'</span>
-      parts.push Glob.parse string[i..]
-    <span class="keyword">else</span> <span class="keyword">if</span> char == <span class="string">'('</span>
-      parts.push <span class="keyword">new</span> Route router, string[i..], method, <span class="literal">true</span>
-    <span class="keyword">else</span>
-      parts.push Text.parse string[i..]
-
-    <span class="keyword">if</span> parts[parts.length-<span class="number">1</span>].toString().length
-      _i = i + parts[parts.length-<span class="number">1</span>].toString().length - <span class="number">1</span>
-
-  parts</pre></div></div>
+            <div class="content"><div class='highlight'><pre>
+  <span class="hljs-property">@parse</span> = <span class="hljs-function"><span class="hljs-params">( router, string, method, optional=<span class="hljs-literal">false</span> )</span>-&gt;</span>
+    parts = []</pre></div></div>
             
         </li>
         
@@ -1246,12 +1190,15 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
         <li id="section-69">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
-              <h1>Helper methods</h1>
+              <p>parse it char by char, baby</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    i   = <span class="hljs-number">0</span>
+    len = string.length</pre></div></div>
             
         </li>
         
@@ -1262,18 +1209,13 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
-              <p>deep object mixer</p>
+              <p>for char, i in string</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">mixin</span></span> = ( ret, mixins... )-&gt;
-  <span class="keyword">for</span> obj <span class="keyword">in</span> mixins
-    <span class="keyword">for</span> own key, val <span class="keyword">of</span> obj
-      <span class="keyword">if</span> kindof(val) == <span class="string">'object'</span>
-        ret[key] = mixin {}, val
-      <span class="keyword">else</span>
-        ret[key] = val
-  ret</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">while</span> i &lt; len
+      char = string[i]
+      rest = string[i..]</pre></div></div>
             
         </li>
         
@@ -1284,18 +1226,13 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
-              <p>better than typeof</p>
+              <p>special consideration for Ogrp starts</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">kindof</span></span> = ( o )-&gt;
-  <span class="keyword">switch</span>
-    <span class="keyword">when</span> <span class="keyword">typeof</span> o != <span class="string">"object"</span>     <span class="keyword">then</span> <span class="keyword">typeof</span> o
-    <span class="keyword">when</span> o == <span class="literal">null</span>                <span class="keyword">then</span> <span class="string">"null"</span>
-    <span class="keyword">when</span> o.constructor == Array   <span class="keyword">then</span> <span class="string">"array"</span>
-    <span class="keyword">when</span> o.constructor == Date    <span class="keyword">then</span> <span class="string">"date"</span>
-    <span class="keyword">when</span> o.constructor == RegExp  <span class="keyword">then</span> <span class="string">"regex"</span>
-    <span class="keyword">else</span> <span class="string">"object"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> char == <span class="hljs-string">'('</span> &amp;&amp; i == <span class="hljs-number">0</span>
+        i++
+        <span class="hljs-keyword">continue</span> <span class="hljs-comment"># skip this char, since it's not strictly part of the route definition</span></pre></div></div>
             
         </li>
         
@@ -1306,14 +1243,94 @@ route = Route.parse(router, &#39;/:controller/:action/:id(.:format)&#39;, &#39;G
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
-              <p>escape a string for literal embedding in a regexp</p>
+              <p>the route definition is over, return what we have</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>regExpEscape = <span class="keyword">do</span> -&gt;
-  specials = [ <span class="string">'/'</span>, <span class="string">'.'</span>, <span class="string">'*'</span>, <span class="string">'+'</span>, <span class="string">'?'</span>, <span class="string">'|'</span>, <span class="string">'('</span>, <span class="string">')'</span>, <span class="string">'['</span>, <span class="string">']'</span>, <span class="string">'{'</span>, <span class="string">'}'</span>, <span class="string">'\\'</span> ]
-  sRE = <span class="keyword">new</span> RegExp <span class="string">"(\\<span class="subst">#{ specials.join '|\\' }</span>)"</span>, <span class="string">'g'</span>
-  ( text )-&gt; text.replace sRE, <span class="string">'\\$1'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> char == <span class="hljs-string">')'</span>
+        <span class="hljs-keyword">return</span> parts
+
+      <span class="hljs-keyword">if</span> char == <span class="hljs-string">':'</span> &amp;&amp; string[i+<span class="hljs-number">1</span>] != <span class="hljs-string">':'</span>
+        parts.push part = Key.parse rest
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> char == <span class="hljs-string">'*'</span>
+        parts.push part = Glob.parse rest
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> char == <span class="hljs-string">'('</span>
+        parts.push part = <span class="hljs-keyword">new</span> Route router, rest, method, <span class="hljs-literal">true</span>
+      <span class="hljs-keyword">else</span>
+        parts.push part = Text.parse rest
+
+      i += part.toString().length
+
+    parts</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <h1 id="helper-methods">Helper methods</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>deep object mixer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">mixin</span> = <span class="hljs-params">( ret, mixins... )</span>-&gt;</span>
+  <span class="hljs-keyword">for</span> obj <span class="hljs-keyword">in</span> mixins
+    <span class="hljs-keyword">for</span> own key, val <span class="hljs-keyword">of</span> obj
+      <span class="hljs-keyword">if</span> kindof(val) == <span class="hljs-string">'object'</span>
+        ret[key] = mixin {}, val
+      <span class="hljs-keyword">else</span>
+        ret[key] = val
+  ret</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>better than typeof</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">kindof</span> = <span class="hljs-params">( o )</span>-&gt;</span>
+  <span class="hljs-keyword">switch</span>
+    <span class="hljs-keyword">when</span> <span class="hljs-keyword">typeof</span> o != <span class="hljs-string">"object"</span>     <span class="hljs-keyword">then</span> <span class="hljs-keyword">typeof</span> o
+    <span class="hljs-keyword">when</span> o == <span class="hljs-literal">null</span>                <span class="hljs-keyword">then</span> <span class="hljs-string">"null"</span>
+    <span class="hljs-keyword">when</span> o.constructor == Array   <span class="hljs-keyword">then</span> <span class="hljs-string">"array"</span>
+    <span class="hljs-keyword">when</span> o.constructor == Date    <span class="hljs-keyword">then</span> <span class="hljs-string">"date"</span>
+    <span class="hljs-keyword">when</span> o.constructor == RegExp  <span class="hljs-keyword">then</span> <span class="hljs-string">"regex"</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-string">"object"</span></pre></div></div>
             
         </li>
         

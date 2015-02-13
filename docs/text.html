@@ -16,33 +16,35 @@
           <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
           <a class="small" href="javascript:void(0);">+</a>
           <div id="jump_wrapper">
-          <div id="jump_page">
-            
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
               
-              <a class="source" href="key.html">
-                key.coffee
-              </a>
-            
+                
+                <a class="source" href="key.html">
+                  key.coffee
+                </a>
               
-              <a class="source" href="resource.html">
-                resource.coffee
-              </a>
-            
+                
+                <a class="source" href="resource.html">
+                  resource.coffee
+                </a>
               
-              <a class="source" href="route.html">
-                route.coffee
-              </a>
-            
+                
+                <a class="source" href="route.html">
+                  route.coffee
+                </a>
               
-              <a class="source" href="router.html">
-                router.coffee
-              </a>
-            
+                
+                <a class="source" href="router.html">
+                  router.coffee
+                </a>
               
-              <a class="source" href="text.html">
-                text.coffee
-              </a>
-            
+                
+                <a class="source" href="text.html">
+                  text.coffee
+                </a>
+              
+            </div>
           </div>
         </li>
       </ul>
@@ -54,10 +56,10 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap for-h1">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1>new Text( name, optional )</h1>
+              <h1 id="new-text-name-optional-">new Text( name, optional )</h1>
 
             </div>
             
@@ -71,13 +73,13 @@
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
               <p>those variable thingies</p>
-<pre><code>text = new Static(&#39;text&#39;)</code></pre>
-
+<pre><code>text = <span class="hljs-keyword">new</span> Static(<span class="hljs-string">'text'</span>)
+</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>exports.Text =
-<span class="class"><span class="keyword">class</span> <span class="title">Text</span></span>
-  constructor: ( <span class="property">@text</span> )-&gt;</pre></div></div>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Text</span></span>
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">( <span class="hljs-property">@text</span> )</span>-&gt;</span></pre></div></div>
             
         </li>
         
@@ -89,7 +91,6 @@
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>no-op</p>
-<h2>text.regexString()</h2>
 
             </div>
             
@@ -102,13 +103,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>makes a regex string of the text path - used by text.test()</p>
-<p>returns a string of this path&#39;s regex</p>
+              <h2 id="text-regexstring-">text.regexString()</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  regexString: -&gt;
-    regExpEscape <span class="property">@text</span></pre></div></div>
             
         </li>
         
@@ -116,12 +113,16 @@
         <li id="section-5">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2>text.test( string )</h2>
+              <p>makes a regex string of the text path - used by text.test()</p>
+<p>returns a string of this path’s regex</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">regexString</span>: <span class="hljs-function">-&gt;</span>
+    <span class="hljs-property">@text</span>.replace <span class="hljs-regexp">/[.*+?^${}()|[\]\\]/g</span>, <span class="hljs-string">"\\$&amp;"</span></pre></div></div>
             
         </li>
         
@@ -132,13 +133,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>validates a string using the key&#39;s regex pattern</p>
-<p>returns true/false if the string matches</p>
+              <h2 id="text-test-string-">text.test( string )</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  test: ( string )-&gt;
-    <span class="property">@text</span> == string</pre></div></div>
             
         </li>
         
@@ -146,12 +143,16 @@
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <h2>text.url( string )</h2>
+              <p>validates a string using the key’s regex pattern</p>
+<p>returns true/false if the string matches</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">test</span>: <span class="hljs-function"><span class="hljs-params">( string )</span>-&gt;</span>
+    <span class="hljs-property">@text</span> == string</pre></div></div>
             
         </li>
         
@@ -162,13 +163,9 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>returns a string for building the url
-if it matches the key conditions</p>
+              <h2 id="text-url-string-">text.url( string )</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  url: ( string )-&gt;
-    <span class="keyword">if</span> <span class="property">@test</span>(string) <span class="keyword">then</span> string <span class="keyword">else</span> <span class="literal">false</span></pre></div></div>
             
         </li>
         
@@ -176,12 +173,16 @@ if it matches the key conditions</p>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap for-h2">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h2>text.toString()</h2>
+              <p>returns a string for building the url
+if it matches the key conditions</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">url</span>: <span class="hljs-function"><span class="hljs-params">( string )</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@test</span>(string) <span class="hljs-keyword">then</span> string <span class="hljs-keyword">else</span> <span class="hljs-literal">false</span></pre></div></div>
             
         </li>
         
@@ -192,28 +193,35 @@ if it matches the key conditions</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
+              <h2 id="text-tostring-">text.toString()</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
               <p>returns a unique id that can be compared to other parts</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  toString: -&gt;
-    <span class="property">@text</span>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-attribute">toString</span>: <span class="hljs-function">-&gt;</span>
+    <span class="hljs-property">@text</span>
 
 
-Text.regex = <span class="regexp">/[\w\-_\\\/\.]+/</span>
+  <span class="hljs-property">@regex</span> = <span class="hljs-regexp">/[\w\-_\\\/\.]+/</span>
 
-Text.<span class="function"><span class="title">parse</span></span> = ( string )-&gt;
-  pattern = <span class="keyword">new</span> RegExp <span class="string">"^<span class="subst">#{ @regex.source }</span>"</span>
+  <span class="hljs-property">@parse</span> = <span class="hljs-function"><span class="hljs-params">( string )</span>-&gt;</span>
+    pattern = <span class="hljs-keyword">new</span> RegExp <span class="hljs-string">"^<span class="hljs-subst">#{ <span class="hljs-property">@regex</span>.source }</span>"</span>
 
-  name = pattern.exec(string)[<span class="number">0</span>]
+    name = pattern.exec(string)[<span class="hljs-number">0</span>]
 
-  <span class="keyword">new</span> @ name
-
-
-regExpEscape = <span class="keyword">do</span> -&gt;
-  specials = [ <span class="string">'/'</span>, <span class="string">'.'</span>, <span class="string">'*'</span>, <span class="string">'+'</span>, <span class="string">'?'</span>, <span class="string">'|'</span>, <span class="string">'('</span>, <span class="string">')'</span>, <span class="string">'['</span>, <span class="string">']'</span>, <span class="string">'{'</span>, <span class="string">'}'</span>, <span class="string">'\\'</span> ]
-  sRE = <span class="keyword">new</span> RegExp <span class="string">"(\\<span class="subst">#{ specials.join '|\\' }</span>)"</span>, <span class="string">'g'</span>
-  ( text )-&gt; text.replace sRE, <span class="string">'\\$1'</span></pre></div></div>
+    <span class="hljs-keyword">new</span> @ name</pre></div></div>
             
         </li>
         
