@@ -294,7 +294,7 @@ class Route
       params.method = 'GET' # we'll put it back when we're done
 
     # if the method doesn't match, gtfo immediately
-    return false if @method? && @method != params.method
+    return false if @method? && params.method? && @method != params.method
 
     # assign the route's method if there isn't one
     params.method ?= @method
