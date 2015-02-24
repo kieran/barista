@@ -421,7 +421,7 @@ exports.Route = Route = (function() {
     if (is_head_req = params.method === 'HEAD') {
       params.method = 'GET';
     }
-    if ((this.method != null) && this.method !== params.method) {
+    if ((this.method != null) && (params.method != null) && this.method !== params.method) {
       return false;
     }
     if (params.method == null) {
