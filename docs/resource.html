@@ -20,6 +20,11 @@
             <div id="jump_page">
               
                 
+                <a class="source" href="helpers.html">
+                  helpers.coffee
+                </a>
+              
+                
                 <a class="source" href="key.html">
                   key.coffee
                 </a>
@@ -68,7 +73,8 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>inflection    = <span class="hljs-built_in">require</span> <span class="hljs-string">'inflection'</span>
+            <div class="content"><div class='highlight'><pre>{ kindof, mixin } = <span class="hljs-built_in">require</span> <span class="hljs-string">'./helpers'</span>
+inflection        = <span class="hljs-built_in">require</span> <span class="hljs-string">'inflection'</span>
 
 exports.Resource =
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Resource</span></span>

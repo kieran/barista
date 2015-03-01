@@ -1,10 +1,58 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 window.Barista = require('./lib/router').Router;
 
-},{"./lib/router":5}],2:[function(require,module,exports){
-var Glob, Key,
+},{"./lib/router":6}],2:[function(require,module,exports){
+var kindof, mixin,
+  __slice = [].slice,
+  __hasProp = {}.hasOwnProperty;
+
+mixin = function() {
+  var key, mixins, obj, ret, val, _i, _len;
+  ret = arguments[0], mixins = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+  for (_i = 0, _len = mixins.length; _i < _len; _i++) {
+    obj = mixins[_i];
+    for (key in obj) {
+      if (!__hasProp.call(obj, key)) continue;
+      val = obj[key];
+      if (kindof(val) === 'object') {
+        ret[key] = mixin({}, val);
+      } else {
+        ret[key] = val;
+      }
+    }
+  }
+  return ret;
+};
+
+kindof = function(o) {
+  switch (false) {
+    case typeof o === "object":
+      return typeof o;
+    case o !== null:
+      return "null";
+    case o.constructor !== Array:
+      return "array";
+    case o.constructor !== Date:
+      return "date";
+    case o.constructor !== RegExp:
+      return "regex";
+    default:
+      return "object";
+  }
+};
+
+module.exports = {
+  kindof: kindof,
+  mixin: mixin
+};
+
+
+},{}],3:[function(require,module,exports){
+var Glob, Key, kindof, mixin, _ref,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+_ref = require('./helpers'), kindof = _ref.kindof, mixin = _ref.mixin;
 
 exports.Key = Key = (function() {
   Key.prototype.regex = /[\w\-\s]+/;
@@ -53,10 +101,10 @@ exports.Key = Key = (function() {
       ret = [];
       for (_i = 0, _len = condition.length; _i < _len; _i++) {
         c = condition[_i];
-        if (c instanceof RegExp) {
+        if ('regex' === kindof(c)) {
           ret.push(c.source);
         }
-        if (c instanceof String) {
+        if ('string' === kindof(c)) {
           ret.push(c);
         }
       }
@@ -72,11 +120,11 @@ exports.Key = Key = (function() {
   Key.regex = /:([a-zA-Z_][\w\-]*)/;
 
   Key.parse = function(string, optional) {
-    var definition, name, _ref;
+    var definition, name, _ref1;
     if (optional == null) {
       optional = false;
     }
-    _ref = this.regex.exec(string), definition = _ref[0], name = _ref[1];
+    _ref1 = this.regex.exec(string), definition = _ref1[0], name = _ref1[1];
     return new this(name, optional);
   };
 
@@ -108,8 +156,10 @@ exports.Glob = Glob = (function(_super) {
 })(Key);
 
 
-},{}],3:[function(require,module,exports){
-var Resource, inflection, kindof, nomenclate;
+},{"./helpers":2}],4:[function(require,module,exports){
+var Resource, inflection, kindof, mixin, nomenclate, _ref;
+
+_ref = require('./helpers'), kindof = _ref.kindof, mixin = _ref.mixin;
 
 inflection = require('inflection');
 
@@ -127,13 +177,13 @@ exports.Resource = Resource = (function() {
   }
 
   Resource.prototype.where = function(conditions) {
-    var route, _i, _len, _ref;
+    var route, _i, _len, _ref1;
     if (kindof(conditions) !== 'object') {
       throw new Error('conditions must be an object');
     }
-    _ref = this.routes;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      route = _ref[_i];
+    _ref1 = this.routes;
+    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+      route = _ref1[_i];
       if (typeof route.where === "function") {
         route.where(conditions);
       }
@@ -189,16 +239,16 @@ nomenclate = function() {
 };
 
 
-},{"inflection":7}],4:[function(require,module,exports){
-var Glob, Key, Resource, Route, Text, inflection, kindof, mixin, _ref,
-  __slice = [].slice,
-  __hasProp = {}.hasOwnProperty;
+},{"./helpers":2,"inflection":8}],5:[function(require,module,exports){
+var Glob, Key, Resource, Route, Text, inflection, kindof, mixin, _ref, _ref1;
 
 _ref = require('./key'), Key = _ref.Key, Glob = _ref.Glob;
 
 Text = require('./text').Text;
 
 Resource = require('./resource').Resource;
+
+_ref1 = require('./helpers'), kindof = _ref1.kindof, mixin = _ref1.mixin;
 
 inflection = require('inflection');
 
@@ -282,11 +332,11 @@ exports.Route = Route = (function() {
   };
 
   Route.prototype.regexString = function() {
-    var part, ret, _i, _len, _ref1;
+    var part, ret, _i, _len, _ref2;
     ret = ['('];
-    _ref1 = this.parts;
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      part = _ref1[_i];
+    _ref2 = this.parts;
+    for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+      part = _ref2[_i];
       ret.push(part.regexString());
     }
     ret.push(')');
@@ -304,16 +354,16 @@ exports.Route = Route = (function() {
   };
 
   Route.prototype.to = function(endpoint, default_params) {
-    var _ref1, _ref2;
+    var _ref2, _ref3;
     if (!default_params && typeof endpoint !== 'string') {
-      _ref1 = [endpoint, void 0], default_params = _ref1[0], endpoint = _ref1[1];
+      _ref2 = [endpoint, void 0], default_params = _ref2[0], endpoint = _ref2[1];
     }
     mixin(this.default_params, default_params);
     if (endpoint) {
       if (!(0 < endpoint.indexOf('.'))) {
         throw new Error('syntax should be in the form: controller.action');
       }
-      _ref2 = endpoint.split('.'), this.params.controller = _ref2[0], this.params.action = _ref2[1];
+      _ref3 = endpoint.split('.'), this.params.controller = _ref3[0], this.params.action = _ref3[1];
     }
     mixin(this.params, this.default_params);
     return this;
@@ -330,14 +380,14 @@ exports.Route = Route = (function() {
   };
 
   Route.prototype.where = function(conditions) {
-    var part, _i, _len, _ref1;
+    var part, _i, _len, _ref2;
     this.conditions = conditions;
     if (kindof(this.conditions) !== 'object') {
       throw new Error('conditions must be an object');
     }
-    _ref1 = this.parts;
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      part = _ref1[_i];
+    _ref2 = this.parts;
+    for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+      part = _ref2[_i];
       if (typeof part.where === "function") {
         part.where(this.conditions);
       }
@@ -346,11 +396,11 @@ exports.Route = Route = (function() {
   };
 
   Route.prototype.stringify = function(params) {
-    var i, key, part, url, val, _i, _j, _len, _ref1, _ref2;
+    var i, key, part, url, val, _i, _j, _len, _ref2, _ref3;
     url = [];
-    _ref1 = this.parts;
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      part = _ref1[_i];
+    _ref2 = this.parts;
+    for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+      part = _ref2[_i];
       if (part instanceof Key) {
         if ((params[part.name] != null) && part.regex.test(params[part.name])) {
           url.push(part.url(params[part.name]));
@@ -376,20 +426,20 @@ exports.Route = Route = (function() {
         }
       }
     }
-    _ref2 = this.params;
-    for (key in _ref2) {
-      val = _ref2[key];
+    _ref3 = this.params;
+    for (key in _ref3) {
+      val = _ref3[key];
       delete params[key];
     }
     return [url.join(''), params];
   };
 
   Route.prototype.keysAndRoutes = function() {
-    var part, _i, _len, _ref1, _results;
-    _ref1 = this.parts;
+    var part, _i, _len, _ref2, _results;
+    _ref2 = this.parts;
     _results = [];
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      part = _ref1[_i];
+    for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+      part = _ref2[_i];
       if (part instanceof Key || part instanceof Route) {
         _results.push(part);
       }
@@ -398,11 +448,11 @@ exports.Route = Route = (function() {
   };
 
   Route.prototype.keys = function() {
-    var part, _i, _len, _ref1, _results;
-    _ref1 = this.parts;
+    var part, _i, _len, _ref2, _results;
+    _ref2 = this.parts;
     _results = [];
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      part = _ref1[_i];
+    for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+      part = _ref2[_i];
       if (part instanceof Key) {
         _results.push(part);
       }
@@ -411,7 +461,7 @@ exports.Route = Route = (function() {
   };
 
   Route.prototype.parse = function(urlParam, method) {
-    var is_head_req, j, pairings, params, part, parts, path, segm, url, _i, _j, _len, _ref1, _ref2;
+    var is_head_req, j, pairings, params, part, parts, path, segm, url, _i, _j, _len, _ref2, _ref3;
     url = require('url').parse(urlParam);
     path = decodeURI(url.pathname);
     params = {
@@ -433,9 +483,9 @@ exports.Route = Route = (function() {
     parts = new RegExp("^" + (this.regexString()) + "$").exec(path).slice(2);
     pairings = [];
     j = 0;
-    _ref1 = this.keysAndRoutes();
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      segm = _ref1[_i];
+    _ref2 = this.keysAndRoutes();
+    for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+      segm = _ref2[_i];
       part = parts[j];
       if (segm.test(part)) {
         pairings.push([segm, part]);
@@ -443,7 +493,7 @@ exports.Route = Route = (function() {
       j += segm.regex.exec(part || '').slice(2).length || 1;
     }
     for (_j = pairings.length - 1; _j >= 0; _j += -1) {
-      _ref2 = pairings[_j], segm = _ref2[0], part = _ref2[1];
+      _ref3 = pairings[_j], segm = _ref3[0], part = _ref3[1];
       if (segm instanceof Key) {
         params[segm.name] = part;
       } else if (segm instanceof Route) {
@@ -467,11 +517,11 @@ exports.Route = Route = (function() {
   Route.prototype.toString = function() {
     var defn, part;
     defn = ((function() {
-      var _i, _len, _ref1, _results;
-      _ref1 = this.parts;
+      var _i, _len, _ref2, _results;
+      _ref2 = this.parts;
       _results = [];
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        part = _ref1[_i];
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        part = _ref2[_i];
         _results.push(part.toString());
       }
       return _results;
@@ -518,43 +568,8 @@ exports.Route = Route = (function() {
 
 })();
 
-mixin = function() {
-  var key, mixins, obj, ret, val, _i, _len;
-  ret = arguments[0], mixins = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-  for (_i = 0, _len = mixins.length; _i < _len; _i++) {
-    obj = mixins[_i];
-    for (key in obj) {
-      if (!__hasProp.call(obj, key)) continue;
-      val = obj[key];
-      if (kindof(val) === 'object') {
-        ret[key] = mixin({}, val);
-      } else {
-        ret[key] = val;
-      }
-    }
-  }
-  return ret;
-};
 
-kindof = function(o) {
-  switch (false) {
-    case typeof o === "object":
-      return typeof o;
-    case o !== null:
-      return "null";
-    case o.constructor !== Array:
-      return "array";
-    case o.constructor !== Date:
-      return "date";
-    case o.constructor !== RegExp:
-      return "regex";
-    default:
-      return "object";
-  }
-};
-
-
-},{"./key":2,"./resource":3,"./text":6,"inflection":7,"url":12}],5:[function(require,module,exports){
+},{"./helpers":2,"./key":3,"./resource":4,"./text":7,"inflection":8,"url":13}],6:[function(require,module,exports){
 var Resource, Route, Router, qstring,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -718,7 +733,7 @@ exports.Router = Router = (function() {
 })();
 
 
-},{"./resource":3,"./route":4,"querystring":11}],6:[function(require,module,exports){
+},{"./resource":4,"./route":5,"querystring":12}],7:[function(require,module,exports){
 var Text;
 
 exports.Text = Text = (function() {
@@ -760,7 +775,7 @@ exports.Text = Text = (function() {
 })();
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*!
  * inflection
  * Copyright(c) 2011 Ben Lin <ben@dreamerslab.com>
@@ -1400,7 +1415,7 @@ exports.Text = Text = (function() {
   return inflector;
 }));
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /*! http://mths.be/punycode v1.2.4 by @mathias */
 ;(function(root) {
@@ -1911,7 +1926,7 @@ exports.Text = Text = (function() {
 }(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -1997,7 +2012,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2084,13 +2099,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":9,"./encode":10}],12:[function(require,module,exports){
+},{"./decode":10,"./encode":11}],13:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2799,4 +2814,4 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":8,"querystring":11}]},{},[1])
+},{"punycode":9,"querystring":12}]},{},[1])

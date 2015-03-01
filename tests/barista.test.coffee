@@ -171,6 +171,26 @@ RouterTests =
     bench ->
       router.first '/products/show/1', 'GET'
 
+  'test Simple Route resolves with an array of mixed conditions': ->
+    route = router.match('/:controller/:action/:id').where(id: [
+      'one'
+      'two'
+      /\d{1}/
+    ])
+    params = router.first('/products/show/1', 'GET')
+    assert.ok params, @fail
+    assert.equal params.controller, 'products', @fail
+    assert.equal params.action, 'show', @fail
+    assert.equal params.id, 1, @fail
+    assert.equal params.method, 'GET', @fail
+
+    params = router.first('/products/show/one', 'GET')
+    assert.ok params, @fail
+    assert.equal params.id, 'one', @fail
+
+    bench ->
+      router.first '/products/show/1', 'GET'
+
 
   'test Simple Route fails to Parse with bad conditions': ->
     route = router.match('/:controller/:action/:id').where(id: /\d+/)

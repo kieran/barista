@@ -1,6 +1,6 @@
-{ Route }     = require './route'
-{ Resource }  = require './resource'
-qstring       = require 'querystring'
+{ Route }         = require './route'
+{ Resource }      = require './resource'
+qstring           = require 'querystring'
 
 exports.Router =
 class Router

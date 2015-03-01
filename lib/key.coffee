@@ -1,3 +1,5 @@
+{ kindof, mixin } = require './helpers'
+
 # new Key( name, optional )
 # =================================
 # those variable thingies
@@ -68,8 +70,8 @@ class Key
     if condition instanceof Array
       ret = []
       for c in condition
-        ret.push c.source if c instanceof RegExp
-        ret.push c if c instanceof String
+        ret.push c.source if 'regex' == kindof c
+        ret.push c if 'string' == kindof c
       @regex = new RegExp ret.join '|'
 
     this # chainable

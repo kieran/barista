@@ -1,4 +1,5 @@
-inflection    = require 'inflection'
+{ kindof, mixin } = require './helpers'
+inflection        = require 'inflection'
 
 exports.Resource =
 class Resource

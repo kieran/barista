@@ -20,6 +20,11 @@
             <div id="jump_page">
               
                 
+                <a class="source" href="helpers.html">
+                  helpers.coffee
+                </a>
+              
+                
                 <a class="source" href="key.html">
                   key.coffee
                 </a>
@@ -62,10 +67,11 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>{ Key, Glob } = <span class="hljs-built_in">require</span> <span class="hljs-string">'./key'</span>
-{ Text }      = <span class="hljs-built_in">require</span> <span class="hljs-string">'./text'</span>
-{ Resource }  = <span class="hljs-built_in">require</span> <span class="hljs-string">'./resource'</span>
-inflection    = <span class="hljs-built_in">require</span> <span class="hljs-string">'inflection'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>{ Key, Glob }     = <span class="hljs-built_in">require</span> <span class="hljs-string">'./key'</span>
+{ Text }          = <span class="hljs-built_in">require</span> <span class="hljs-string">'./text'</span>
+{ Resource }      = <span class="hljs-built_in">require</span> <span class="hljs-string">'./resource'</span>
+{ kindof, mixin } = <span class="hljs-built_in">require</span> <span class="hljs-string">'./helpers'</span>
+inflection        = <span class="hljs-built_in">require</span> <span class="hljs-string">'inflection'</span></pre></div></div>
             
         </li>
         
@@ -949,7 +955,7 @@ assigning the vals from the url to the names of the keys as we go (potentially s
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@method</span>? &amp;&amp; <span class="hljs-property">@method</span> != params.method</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@method</span>? &amp;&amp; params.method? &amp;&amp; <span class="hljs-property">@method</span> != params.method</pre></div></div>
             
         </li>
         
@@ -1262,75 +1268,6 @@ route = Route.parse(router, <span class="hljs-string">'/:controller/:action/:id(
       i += part.toString().length
 
     parts</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-73">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
-              </div>
-              <h1 id="helper-methods">Helper methods</h1>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-74">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
-              </div>
-              
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-75">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
-              </div>
-              <p>deep object mixer</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">mixin</span> = <span class="hljs-params">( ret, mixins... )</span>-&gt;</span>
-  <span class="hljs-keyword">for</span> obj <span class="hljs-keyword">in</span> mixins
-    <span class="hljs-keyword">for</span> own key, val <span class="hljs-keyword">of</span> obj
-      <span class="hljs-keyword">if</span> kindof(val) == <span class="hljs-string">'object'</span>
-        ret[key] = mixin {}, val
-      <span class="hljs-keyword">else</span>
-        ret[key] = val
-  ret</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-76">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
-              </div>
-              <p>better than typeof</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">kindof</span> = <span class="hljs-params">( o )</span>-&gt;</span>
-  <span class="hljs-keyword">switch</span>
-    <span class="hljs-keyword">when</span> <span class="hljs-keyword">typeof</span> o != <span class="hljs-string">"object"</span>     <span class="hljs-keyword">then</span> <span class="hljs-keyword">typeof</span> o
-    <span class="hljs-keyword">when</span> o == <span class="hljs-literal">null</span>                <span class="hljs-keyword">then</span> <span class="hljs-string">"null"</span>
-    <span class="hljs-keyword">when</span> o.constructor == Array   <span class="hljs-keyword">then</span> <span class="hljs-string">"array"</span>
-    <span class="hljs-keyword">when</span> o.constructor == Date    <span class="hljs-keyword">then</span> <span class="hljs-string">"date"</span>
-    <span class="hljs-keyword">when</span> o.constructor == RegExp  <span class="hljs-keyword">then</span> <span class="hljs-string">"regex"</span>
-    <span class="hljs-keyword">else</span> <span class="hljs-string">"object"</span></pre></div></div>
             
         </li>
         
