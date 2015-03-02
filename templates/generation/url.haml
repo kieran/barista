@@ -1,0 +1,47 @@
+#router-url
+  %h3
+    %code router.url
+  %p
+    This essentially does the reverse of
+    %code router.first
+    , that is, it generates URLs from params objects.
+  %p
+    An optional second boolean params will add query params for any un-resolved keys.
+
+  %ul.nav.nav-tabs{role:"tablist"}
+    %li.active
+      %a{href:"#url-basic",role:"tab",'data-toggle'=>"tab"} Basic usage
+    %li
+      %a{href:"#url-query-params",role:"tab",'data-toggle'=>"tab"} Query params
+
+  .tab-content
+    #url-basic.tab-pane.active
+      %pre.language-javascript
+        %code
+          :preserve
+            #{File.read 'templates/generation/url1.js'}
+        %code.output
+          :preserve
+            #{File.read 'templates/generation/url1out.js'}
+      %pre.language-coffeescript
+        %code
+          :preserve
+            #{File.read 'templates/generation/url1.coffee'}
+        %code.output
+          :preserve
+            #{File.read 'templates/generation/url1out.coffee'}
+    #url-query-params.tab-pane
+      %pre.language-javascript
+        %code
+          :preserve
+            #{File.read 'templates/generation/url2.js'}
+        %code.output
+          :preserve
+            #{File.read 'templates/generation/url2out.js'}
+      %pre.language-coffeescript
+        %code
+          :preserve
+            #{File.read 'templates/generation/url2.coffee'}
+        %code.output
+          :preserve
+            #{File.read 'templates/generation/url2out.coffee'}

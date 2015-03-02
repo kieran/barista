@@ -1,0 +1,31 @@
+#match-conditions
+  %h3 Match conditions
+  %pre.language-javascript
+    %a.btn.btn-default{href:'#try'} try it
+    %code{ 'data-url'=>'/coffee/near/90210', 'data-method'=>'GET' }
+      :preserve
+        router.get( '/:beverage/near/:zipcode' )
+              .to( 'beverage.byZipCode' )
+              .where({
+                // an array of options
+                beverage: [ 'coffee', 'tea', 'beer', 'warm_sake' ],
+                // a regex pattern
+                zipcode: /\d{5}(-\d{4})?/
+              })
+  %pre.language-coffeescript
+    %a.btn.btn-default{href:'#try'} try it
+    %code{ 'data-url'=>'/coffee/near/90210', 'data-method'=>'GET' }
+      :preserve
+        router
+        .get '/:beverage/near/:zipcode'
+        .to 'beverage.byZipCode'
+        .where
+          # an array of options
+          beverage: [
+            'coffee'
+            'tea'
+            'beer'
+            'warm_sake'
+          ]
+          # a regex pattern
+          zipcode: /\d{5}(-\d{4})?/

@@ -1,0 +1,76 @@
+#side-nav.side-menu{"data-offset-bottom" => "200", "data-offset-top" => "450", "data-spy" => "affix"}
+  %ul.nav
+    %li
+      %a{href: "#overview"} Overview
+    %li
+      %a{href: "#install"} Installation
+      %ul.nav
+        %li
+          %a{href: "#install-node"} Node JS
+        %li
+          %a{href: "#install-browser"} Browser
+    %li
+      %a{href: "#routes"} Routes
+      %ul.nav
+        %li
+          %a{href: "#keys"} Keys
+        %li
+          %a{href: "#globs"} Globs
+        %li
+          %a{href: "#convenience-methods"} Convenience methods
+        %li
+          %a{href: "#match-conditions"} Match conditions
+        %li
+          %a{href: "#default-params"} Default params
+        %li
+          %a{href: "#route-names"} Route names
+        %li
+          %a{href: "#nested-routes"} Nested Routes
+    %li
+      %a{href: "#resources"} Resources
+      %ul.nav
+        %li
+          %a{href: "#nested-resources"} Nesting resources
+        %li
+          %a{href: "#key-collisions"} Key collisions
+    %li
+      %a{href: "#resolution"} Parsing URLs
+      %ul.nav
+        %li
+          %a{href: "#router-first"}
+            %code router.first
+        %li
+          %a{href: "#router-all"}
+            %code router.all
+
+    %li
+      %a{href: "#generation"} Generating URLs
+      %ul.nav
+        %li
+          %a{href: "#router-url"}
+            %code router.url
+        %li
+          %a{href: "#named-generators"} Named generators
+    %li
+      %a{href: "#other"} Everything else
+    %li
+      %a{href: "./docs/router.html"} Annotated source
+      %ul.nav
+        %li
+          %a{href: "./docs/router.html"}
+            Router
+        %li
+          %a{href: "./docs/route.html"}
+            Route
+        %li
+          %a{href: "./docs/resource.html"}
+            Route
+        %li
+          %a{href: "./docs/key.html"}
+            Key / Glob
+        %li
+          %a{href: "./docs/text.html"}
+            Text
+        %li
+          %a{href: "./docs/helpers.html"}
+            Helpers

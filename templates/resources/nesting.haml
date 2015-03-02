@@ -1,0 +1,60 @@
+#nested-resources
+  %h3 Resource nesting
+  %p A resource is simply collection of routes, and as such can be defined at the root or nested under any other route. Nesting within a resource is a little less straight-forward, but makes sense when you think about what you're doing.
+  %p
+    The two reasonably nestable routes in a resource are the
+    %em collection route
+    (i.e.
+    %code '/posts'
+    )
+    and the
+    %em member route
+    (i.e.
+    %code '/posts/123'
+    ).
+  %p This should be made clear by the examples below.
+
+  %ul.nav.nav-tabs{role:"tablist"}
+    %li.active
+      %a{href:"#resources-collection",role:"tab",'data-toggle'=>"tab"} Collection route
+    %li
+      %a{href:"#resources-member",role:"tab",'data-toggle'=>"tab"} Member route
+    %li
+      %a{href:"#resources-resources",role:"tab",'data-toggle'=>"tab"} Resources in resources
+
+  .tab-content
+    #resources-collection.tab-pane.active
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/posts/recent','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/resources/collection1.js'}
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/posts/recent','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/resources/collection1.coffee'}
+
+    #resources-member.tab-pane
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/posts/123/like','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/resources/member1.js'}
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/posts/123/like','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/resources/member1.coffee'}
+
+    #resources-resources.tab-pane
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/posts/123/comments','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/resources/turtles1.js'}
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/posts/123/comments','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/resources/turtles1.coffee'}

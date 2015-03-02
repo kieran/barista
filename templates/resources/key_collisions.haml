@@ -1,0 +1,18 @@
+#key-collisions
+  %h3 Handling key collisions
+  .alert.alert-warning
+    %p
+      %i.fa.fa-exclamation-triangle
+      %strong TODO: Document this properly
+    %p
+      Basically, Barista automatically renames previous keys when identical nested keys are likely.
+    %p
+      For example, whe you nest resources like this:
+      %code Posts > Comments
+      the post resource's id will be renamed to
+      %code :post_id
+      to avoid a collision with the comment resource's
+      %code :id
+      attribute. Check out the "Resources in resources" tab in the above example to see what I'm talking about.
+    %p
+      I'm not 100% satisfied with the current implementation and plan to give it another pass before v1.0.0

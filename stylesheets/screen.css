@@ -1,0 +1,234 @@
+body {
+  height: 100%;
+  font-family: "Open Sans"; }
+
+.navbar-fixed-top {
+  background: transparent;
+  border: 0; }
+  .navbar-fixed-top .navbar-brand, .navbar-fixed-top ul.nav > li > a {
+    color: rgba(255, 255, 255, 0.8); }
+  .navbar-fixed-top .navbar-brand, .navbar-fixed-top ul.nav > li > a:hover, .navbar-fixed-top .navbar-brand {
+    color: white !important; }
+  .navbar-fixed-top ul.nav > li > a:focus {
+    color: white !important; }
+  .navbar-fixed-top ul.nav > li.open {
+    background: transparent !important;
+    color: white !important; }
+    .navbar-fixed-top ul.nav > li.open > a {
+      background: transparent !important;
+      color: white !important; }
+
+h1 {
+  font-weight: normal; }
+
+.side-menu.affix {
+  position: fixed;
+  top: 100px; }
+
+.nav a {
+  cursor: pointer;
+  color: #444444; }
+.nav li .nav {
+  padding-left: 1em;
+  font-size: 0.9em; }
+  .nav li .nav li {
+    line-height: 1em;
+    padding: 0;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.33s; }
+.nav li.active > a, .nav li:hover > a {
+  color: green !important; }
+.nav li.active .nav li, .nav li:hover .nav li {
+  height: 2.5em;
+  opacity: 1; }
+
+.jumbotron.affix {
+  position: fixed;
+  top: -450px; }
+
+#docs {
+  margin-top: 550px;
+  padding-bottom: 100px; }
+  #docs div[id] {
+    padding-top: 50px;
+    margin-top: -50px; }
+  #docs h2, #docs h3, #docs h4 {
+    margin-top: 1.5em;
+    font-family: "Open Sans"; }
+  #docs #overview h2 {
+    padding-top: 1em;
+    margin-top: 0; }
+
+.jumbotron {
+  position: absolute;
+  height: 500px;
+  width: 100%;
+  z-index: 1;
+  padding-top: 140px;
+  background: black top center repeat;
+  background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 100%), url(wood.jpg);
+  background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 100%), url(wood.jpg);
+  background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 100%), url(wood.jpg);
+  color: white;
+  box-shadow: 0 0 20px 20px white; }
+  .jumbotron > .container {
+    padding-left: 300px; }
+
+h1, .navbar-brand {
+  font-family: "Swanky and Moo Moo";
+  font-size: 1.8em; }
+
+h1 {
+  font-size: 80px !important; }
+
+.dropdown-menu a {
+  color: #333333; }
+
+.jumbotron .btn {
+  background: transparent;
+  border-color: #888888;
+  color: #dddddd; }
+  .jumbotron .btn:hover {
+    border-color: #aaaaaa;
+    color: #eeeeee; }
+
+body[data-lang='coffeescript'] pre.language-coffeescript, body[data-lang='javascript'] pre.language-javascript {
+  display: block !important; }
+
+span.barista_key, span.barista_glob {
+  color: orange !important; }
+
+@-webkit-keyframes pulse {
+  50% {
+    color: red;
+    background: #ffff88; } }
+@-moz-keyframes pulse {
+  50% {
+    color: red;
+    background: #ffff88; } }
+@-ms-keyframes pulse {
+  50% {
+    color: red;
+    background: #ffff88; } }
+@keyframes pulse {
+  50% {
+    color: red;
+    background: #ffff88; } }
+pre:hover span.highlight {
+  animation-name: pulse;
+  animation-duration: 0.5s;
+  animation-iteration-count: 3;
+  -webkit-animation-name: pulse;
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-iteration-count: 3;
+  -moz-animation-name: pulse;
+  -moz-animation-duration: 0.5s;
+  -moz-animation-iteration-count: 3; }
+
+pre[class*=language-] {
+  position: relative;
+  font-size: 0px;
+  white-space: normal !important;
+  padding: 0 !important;
+  margin: 0 0 1em 0;
+  background: white;
+  border: 0;
+  font-size: 15px;
+  border-left: 4px solid #f4f4f4;
+  border-radius: 0; }
+  pre[class*=language-].language-coffeescript, pre[class*=language-].language-javascript {
+    display: none !important; }
+  pre[class*=language-] > code {
+    display: block;
+    white-space: pre !important;
+    margin: 0;
+    padding: 1em; }
+    pre[class*=language-] > code.output {
+      background: #f8f8f8;
+      position: relative; }
+      pre[class*=language-] > code.output:before {
+        content: "output";
+        display: block;
+        position: absolute;
+        top: 0.5em;
+        right: 1em;
+        color: #bbbbbb;
+        font-family: "Open Sans";
+        text-transform: uppercase;
+        font-size: 0.8em;
+        font-weight: bold; }
+  pre[class*=language-] a[href='#try'] {
+    font-size: 15px;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    color: green;
+    font-family: "Open Sans";
+    text-transform: capitalize;
+    font-size: 0.8em; }
+
+#demo {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 2;
+  overflow: hidden;
+  transition: all 0.33s ease-in-out; }
+
+body.demo {
+  overflow: hidden; }
+  body.demo #demo {
+    padding-top: 1em;
+    height: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.33); }
+    body.demo #demo > div {
+      overflow: auto;
+      max-height: 90%; }
+  body.demo .navbar .nav a[href$=try] {
+    background: rgba(255, 255, 255, 0.95);
+    color: green;
+    z-index: 2; }
+    body.demo .navbar .nav a[href$=try]:hover {
+      color: green !important;
+      z-index: 3; }
+
+#routeFile {
+  height: 100%;
+  font-size: 1.1em; }
+
+table tr {
+  transition: all 0.33s; }
+
+table.with-matches tr {
+  opacity: 0.5; }
+
+table.with-matches tr.success {
+  opacity: 1; }
+
+table.with-matches tr.success .params {
+  white-space: pre; }
+
+table.with-matches tr.success ~ tr.success {
+  opacity: 0.5; }
+
+table.with-matches tr.success ~ tr.success .params {
+  white-space: normal; }
+
+table {
+  margin-top: 1em; }
+
+table td.method {
+  width: 66px; }
+
+table td.params {
+  font-family: monospace; }
+
+.ace_gutter-layer {
+  width: 18px !important; }
+  .ace_gutter-layer .ace_gutter-cell.ace_error {
+    background-position: 0px; }

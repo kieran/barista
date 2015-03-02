@@ -1,436 +1,806 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset='utf-8'>
-
-  <title>Barista</title>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="sh_main.min.js"></script>
-  <script src="sh_javascript.min.js"></script>
-
-  <link href='http://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo' rel='stylesheet' type='text/css'>
-
-  <link rel="stylesheet" title="Default" href="twilight.css" type='text/css'>
-  <link rel="stylesheet" title="Default" href="screen.css" type='text/css'>
-
-
-  <script>
-  $(function(){
-    sh_highlightDocument();
-
-    $('pre span.sh_string').each(function(id,el){
-      $(el).html(
-        $(el).text()
-          .replace(/(:\w+)/g,'<span class="barista_key">$1</span>')
-          .replace(/(\*\w+)/g,'<span class="barista_glob">$1</span>')
-      )
-    })
-
-    $('#convenience_methods span.sh_function').each(function(id,el){
-      var t = $(el).text()
-      if ( t == 'get' ||  t == 'put' || t == 'post' || t == 'del' ) $(el).addClass('highlight')
-    })
-
-    $('#variables span.barista_key').addClass('highlight')
-    $('#globs span.barista_glob').addClass('highlight')
-
-    $('#resources span.sh_function').each(function(id,el){
-      if ( $(el).text() == 'resource' ) $(el).addClass('highlight')
-    })
-
-    $('#conditions span.sh_function').each(function(id,el){
-      if ( $(el).text() == 'where' ) $(el).addClass('highlight')
-    })
-
-    $('#generation span.sh_function, #generation span.sh_keyword').each(function(id,el){
-      if ( $(el).text() == 'url' || $(el).text() == 'true' ) $(el).addClass('highlight')
-    })
-
-    $('#resolution span.sh_function').each(function(id,el){
-      if ( $(el).text() == 'first' || $(el).text() == 'all' ) $(el).addClass('highlight')
-    })
-
-  })
-
-
-  </script>
-</head>
-
-<body>
-  <a href="https://github.com/kieran/barista"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-
-  <img id='title' src="barista.png" />
-
-  <section>
-    <header>
-      <h2>The Skinny</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-// define a route
-router.get( '/:beverage/near/:location(.:format)' )
-      .to( 'beverage.byLocation' )
-
-// convert a URL to a params object
-router.first( '/coffee/near/90210', 'GET' )
-
-// =>
-{
-  controller: 'beverage',
-  action: 'byLocation',
-  beverage: 'coffee',
-  location: 90210,
-  method: 'GET'
-}
-
-
-// generate a URL from a params object
-router.url({
-  controller: 'beverage',
-  action: 'byLocation',
-  beverage: 'coffee',
-  location: 90210,
-  format: 'json'
-})
-
-// => '/coffee/near/90210.json'
-</pre>
+  <head>
+    <meta charset='utf-8'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'>
+    <title>Barista</title>
+    <script src='//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script charset='utf-8' src='//cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js' type='text/javascript'></script>
+    <script src='prism.js'></script>
+    <script src='./bower_components/barista/dist/barista.js'></script>
+    <script src='./bower_components/coffeescript/extras/coffee-script.js'></script>
+    <script src='./bower_components/jquery-cookie/jquery.cookie.js'></script>
+    <link href='prism.css' rel='stylesheet' title='Default' type='text/css'>
+    <script type='text/coffeescript'>
+      $ ->
+        $tbl = $ '#demo table'
+        # window.$ta = $textarea = $ '<textarea/>'
+        $input = $ '#demo input:first'
+        $select = $ '#demo select:first'
+      
+        $('#routeFile').text $('#routeFile').text().replace /^\s+/, ''
+      
+        window.editor = editor = ace.edit "routeFile"
+        editor.setTheme "ace/theme/chrome"
+        editor.getSession().setMode "ace/mode/coffee"
+        editor.getSession().setTabSize 2
+        editor.getSession().setUseSoftTabs true
+        editor.setHighlightActiveLine false
+        # editor.renderer.setShowGutter false
+        editor.setOptions maxLines: Infinity, minLines: 20
+      
+        editor.getSession().on 'change', -> recalcRoutes()
+      
+        $('body').on 'setlang', (evt, l)->
+          modes =
+            coffeescript: 'coffee'
+            javascript: 'javascript'
+          editor.getSession().setMode "ace/mode/#{modes[l.toLowerCase()]}"
+          editor.resize()
+      
+      
+        # $textarea.val(editor.getValue()).trigger('change')
+      
+        $input.on 'keyup change', -> recalcRoutes()
+        $select.on 'keyup change', -> recalcRoutes()
+      
+        router = undefined
+        curRouter = undefined
+      
+        recalcRoutes = (code)->
+          code ?= editor.getValue()
+      
+          try
+            code = CoffeeScript.compile code, bare: on
+      
+          curRouter ?= new Barista
+      
+          try
+            router = (new Function('router', "#{code};return router"))(new Barista)
+      
+          return unless router && curRouter = router
+      
+          window.lol = router
+      
+          method = $select.val() || undefined
+          url = $input.val()
+      
+          firstMatchParams = curRouter.first( url, method ) || undefined
+      
+          $('#demo table').replaceWith $tbl = $ "<table class='table table-condensed #{'with-matches' if firstMatchParams}'/>"
+      
+          for route in curRouter.routes
+            console.log route
+            params = route.parse.call route, url, method
+            $tbl.append $ """
+              <tr class="#{if params then 'success'}">
+                <td class="method">
+                  #{route.method || ''}
+                </td>
+                <td class="route">
+                  #{route}
+                </td>
+                <td class="params">#{if params then JSON.stringify(params, null, '  ') else ''}</td>
+                <td class="name">
+                  #{route.route_name || ''}
+                </td>
+              </tr>
+            """
+        recalcRoutes()
+    </script>
+    <script type='text/coffeescript'>
+      $ ->
+        $('body').on 'setlang', (evt, l)->
+          $('body').attr 'data-lang', l.toLowerCase()
+          $.cookie 'lang', l, expires: 365
+          $('#lang-select').closest('.dropdown').find('span.lang').text l
+      
+        # set the default example language
+        $('body').trigger 'setlang', $.cookie('lang') || 'Coffeescript' || 'Javascript'
+      
+        # set up lang switcher
+        $('#lang-select li a').on 'click', (evt)->
+          $('body').trigger 'setlang', $(@).text()
+      
+        setTimeout ->
+          $('code span.token.string').each (id,el)->
+            $(el).html(
+              $(el).text()
+              .replace(/(:\w+)/g,'<span class="barista_key">$1</span>')
+              .replace(/(\*\w+)/g,'<span class="barista_glob">$1</span>')
+            )
+          $('#keys span.barista_key').addClass 'highlight'
+          $('#globs span.barista_glob').addClass 'highlight'
+      
+        , 100
+      
+        $('a[href=#try]').on 'click', (evt, el=evt.target)->
+          evt.preventDefault()
+          $('body').toggleClass 'demo'
+          $code = $(el).parent().find('code:first')
+          if $code.length
+            $('#demo input:first').val $code.data('url') || '/'
+            window.editor.setValue $code.text().replace(/^\s+|\s+$/,''), -1
+    </script>
+    <link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css' rel='stylesheet'>
+    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js'></script>
+    <link href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet'>
+    <link href='//fonts.googleapis.com/css?family=Swanky+and+Moo+Moo' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='stylesheets/screen.css' rel='stylesheet' title='Default' type='text/css'>
+  </head>
+  <body data-lang='javascript' data-offset='100' data-spy='scroll' data-target='#side-nav'>
+    <div id='demo'>
+      <div class='col-md-4'>
+        <div id='routeFile'>
+          router.get '/'&#x000A;.to 'Main.index'&#x000A;.as 'home'&#x000A;&#x000A;router.resource 'Posts'&#x000A;.where&#x000A;  id: /\d+/&#x000A;.member ->&#x000A;  @resource 'Comments'&#x000A;    .where id:/[abc]+/&#x000A;  .collection ->&#x000A;    @get '/popular(.:format)'&#x000A;    .to&#x000A;      controller: 'Comments'&#x000A;      action: 'popular'&#x000A;    .as 'popular_comments'&#x000A;
+        </div>
+      </div>
+      <div class='col-md-8'>
+        <form class='form-inline' role='form'>
+          <select class='form-control'>
+            <option value=''>(any)</option>
+            <option value='GET'>GET</option>
+            <option value='POST'>POST</option>
+            <option value='PUT'>PUT</option>
+            <option value='PATCH'>PATCH</option>
+            <option value='DELETE'>DELETE</option>
+            <option value='OPTIONS'>OPTIONS</option>
+            <option value='HEAD'>HEAD</option>
+          </select>
+          <input class='form-control' style='width: 500px;' type='text' value='/'>
+        </form>
+        <table></table>
+      </div>
     </div>
-  </section>
-
-
-  <h1>Installation</h1>
-
-  <section id="installation">
-    <header>
-      <h2>Install via npm</h2>
-    </header>
-    <div class='code'>
-<pre>
-npm install barista
-</pre>
+    <nav class='navbar navbar-default navbar-fixed-top' role='navigation'>
+      <div class='container'>
+        <div class='navbar-header'>
+          <button class='navbar-toggle' data-target='#bs-example-navbar-collapse-1' data-toggle='collapse' type='button'>
+            <span class='sr-only'>Toggle navigation</span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+          </button>
+          <a class='navbar-brand' href='/'>Barista</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
+          <ul class='nav navbar-nav navbar-right'>
+            <li>
+              <a href='#try'>Try it</a>
+            </li>
+            <li>
+              <a href='https://github.com/kieran/barista'>Github</a>
+            </li>
+            <li class='dropdown'>
+              <a class='dropdown-toggle' data-toggle='dropdown'>
+                <span class='lang'>Javascript</span>
+                <span class='caret'></span>
+              </a>
+              <ul class='dropdown-menu' id='lang-select' role='menu'>
+                <li>
+                  <a data-lang='javascript'>Javascript</a>
+                </li>
+                <li>
+                  <a data-lang='coffeescript'>Coffeescript</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class='jumbotron' data-offset-top='450' data-spy='affix'>
+      <div class='container'>
+        <h1>Barista</h1>
+        <p>
+          A simple, powerful router<br>for node.js and the browser
+        </p>
+        <p>
+          <a class='btn btn-default' href='https://github.com/kieran/barista' role='button'>Github</a>
+          <a class='btn btn-default' href='https://www.npmjs.org/package/barista' role='button'>Npm</a>
+        </p>
+      </div>
     </div>
-  </section>
-
-  <section>
-    <header>
-      <h2>Use it in your app</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-var Router = require('barista').Router
-  , router = new Router
-</pre>
+    <div class='container'>
+      <div class='row' id='docs'>
+        <div class='col-md-9'>
+          <div id='overview'>
+            <h2>Overview</h2>
+            <p>Barista is a URL router &amp; generator, designed to help you decouple routing from your framework's application logic. Its function can be roughly split into two parts: parsing URLs into actionable parameters, and generating URLs from parameters.</p>
+            <p>Barista is not concerned with dispatching requests, nor does it have any built-in concept of 404s - although it's trivial to wire up appropriate actions in each case.</p>
+            <p>You can find it in the wild as the primary Geddy router.</p>
+          </div>
+          <div id='install'>
+            <h2>Install</h2>
+            You can use Barista in either node JS or in the browser.
+            <div id='install-node'>
+              <h3>Node JS</h3>
+              <p>Install via npm, thusly:</p>
+              <pre class='language-bash'><code>npm install --save barista</code></pre>
+              <p>Then require &amp; instantiate like so:</p>
+              <pre class='language-javascript'><code>var Router = require('barista').Router&#x000A;  , router = new Router;</code></pre>
+              <pre class='language-coffeescript'><code>{ Router } = require 'barista'&#x000A;router = new Router</code></pre>
+            </div>
+            <div id='install-browser'>
+              <h3>Use it in the browser</h3>
+              <p>Install via bower, thusly:</p>
+              <pre class='language-bash'><code>bower install --save barista</code></pre>
+              <p>Instantiate a router like so, then use it as you normally would!</p>
+              <pre class='language-javascript'><code>var router = new Barista;</code></pre>
+              <pre class='language-coffeescript'><code>router = new Barista</code></pre>
+            </div>
+          </div>
+          <div id='routes'>
+            <h2>Defining Routes</h2>
+            <p></p>
+            <h3>A simple example</h3>
+            <pre class='language-javascript'><code>// a GET request to '/products'&#x000A;router.match( '/products', 'GET' )&#x000A;      .to( 'Products.index' )</code>
+            <code class='output'>// =>&#x000A;{&#x000A;  controller: 'Products',&#x000A;  action: 'index',&#x000A;  method: 'GET'&#x000A;}</code></pre>
+            <pre class='language-coffeescript'><code># a GET request to '/products'&#x000A;router&#x000A;.match '/products', 'GET'&#x000A;.to 'Products.index'</code>
+            <code class='output'># =>&#x000A;{&#x000A;  controller: 'Products'&#x000A;  action: 'index'&#x000A;  method: 'GET'&#x000A;}&#x000A;</code></pre>
+            <div id='keys'>
+              <h3>Route keys</h3>
+              <pre class='language-javascript'><code>router.match( '/products/:id', 'GET' )&#x000A;      .to( 'Products.show' )&#x000A;&#x000A;router.match( '/profiles/:username', 'GET' )&#x000A;      .to( 'Users.show' )&#x000A;&#x000A;// things enclosed in parens are optional&#x000A;router.match( '/products/:id(.:format)', 'GET' )&#x000A;      .to( 'Products.show' )&#x000A;</code></pre>
+              <pre class='language-coffeescript'><code>router&#x000A;.match '/products/:id', 'GET'&#x000A;.to 'Products.show'&#x000A;&#x000A;router&#x000A;.match '/profiles/:username', 'GET'&#x000A;.to 'Users.show'&#x000A;&#x000A;# things enclosed in parens are optional&#x000A;router&#x000A;.match '/products/:id(.:format)', 'GET'&#x000A;.to 'Products.show'&#x000A;</code></pre>
+            </div>
+            <div id='globs'>
+              <h3>Globs</h3>
+              <p>Globs are identical to keys, with the exception that they also capture slashes. This can be useful for capturing values like timezone strings or setting up a catch-all route.</p>
+              <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'>
+                  <a data-toggle='tab' href='#glob-timezone' role='tab'>Timezone selection</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#glob-404' role='tab'>A catch-all route</a>
+                </li>
+              </ul>
+              <div class='tab-content'>
+                <div class='tab-pane active' id='glob-timezone'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/timezones/America/Toronto'>router.match( '/timezones/*tzname', 'GET')&#x000A;      .to( 'Timezones.select' )&#x000A;</code>
+                  <code class='output'>router.first( '/timezones/America/Toronto', 'GET' )&#x000A;&#x000A;// =>&#x000A;{&#x000A;  controller: 'Timezones',&#x000A;  action: 'select',&#x000A;  tzname: 'America/Toronto',&#x000A;  method: 'GET'&#x000A;}&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/timezones/America/Toronto'>router&#x000A;.match '/timezones/*tzname', 'GET'&#x000A;.to 'Timezones.select'&#x000A;</code>
+                  <code class='output'>router.first '/timezones/America/Toronto', 'GET'&#x000A;&#x000A;# =>&#x000A;{&#x000A;  controller: 'Timezones'&#x000A;  action: 'select'&#x000A;  tzname: 'America/Toronto'&#x000A;  method: 'GET'&#x000A;}&#x000A;</code></pre>
+                </div>
+                <div class='tab-pane' id='glob-404'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/somewhere/that/404s.html'>router.match( '*path(.:format)' )&#x000A;      .to( 'Errors.notFound' );&#x000A;</code>
+                  <code class='output'>router.first( '/somewhere/that/404s.html', 'GET' );&#x000A;&#x000A;// =>&#x000A;{&#x000A;  controller: 'Errors',&#x000A;  action: 'notFound',&#x000A;  path: '/somewhere/that/404s',&#x000A;  method: 'GET',&#x000A;  format: 'html'&#x000A;}&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/somewhere/that/404s.html'>router&#x000A;.match '*path(.:format)'&#x000A;.to 'Errors.notFound'&#x000A;</code>
+                  <code class='output'>router.first '/somewhere/that/404s.html', 'GET'&#x000A;&#x000A;# =>&#x000A;{&#x000A;  controller: 'Errors'&#x000A;  action: 'notFound'&#x000A;  path: '/somewhere/that/404s'&#x000A;  method: 'GET'&#x000A;  format: 'html'&#x000A;}&#x000A;</code></pre>
+                </div>
+              </div>
+            </div>
+            <div id='convenience-methods'>
+              <h3>Convenience methods</h3>
+              <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'>
+                  <a data-toggle='tab' href='#method-get' role='tab'>.get</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#method-post' role='tab'>.post</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#method-put' role='tab'>.put</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#method-patch' role='tab'>.patch</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#method-del' role='tab'>.del</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#method-options' role='tab'>.options</a>
+                </li>
+              </ul>
+              <div class='tab-content'>
+                <div class='active tab-pane' id='method-get'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/users/123'>// equivalent to router.match( '/users/:id', 'GET' )&#x000A;router.get( '/users/:id' )&#x000A;      .to( 'Users.show' )</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/users/123'>router&#x000A;# equivalent to .match '/users/:id', 'GET'&#x000A;.get '/users/:id'&#x000A;.to 'Users.show'</code></pre>
+                </div>
+                <div class='tab-pane' id='method-post'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='POST' data-url='/users/123'>// equivalent to router.match( '/users/:id', 'POST' )&#x000A;router.post( '/users/:id' )&#x000A;      .to( 'Users.create' )</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='POST' data-url='/users/123'>router&#x000A;# equivalent to .match '/users/:id', 'POST'&#x000A;.post '/users/:id'&#x000A;.to 'Users.create'</code></pre>
+                </div>
+                <div class='tab-pane' id='method-put'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='PUT' data-url='/users/123'>// equivalent to router.match( '/users/:id', 'PUT' )&#x000A;router.put( '/users/:id' )&#x000A;      .to( 'Users.update' )</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='PUT' data-url='/users/123'>router&#x000A;# equivalent to .match '/users/:id', 'PUT'&#x000A;.put '/users/:id'&#x000A;.to 'Users.update'</code></pre>
+                </div>
+                <div class='tab-pane' id='method-patch'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='PATCH' data-url='/users/123'>// equivalent to router.match( '/users/:id', 'PATCH' )&#x000A;router.patch( '/users/:id' )&#x000A;      .to( 'Users.update' )</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='PATCH' data-url='/users/123'>router&#x000A;# equivalent to .match '/users/:id', 'PATCH'&#x000A;.patch '/users/:id'&#x000A;.to 'Users.update'</code></pre>
+                </div>
+                <div class='tab-pane' id='method-del'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='DELETE' data-url='/users/123'>// equivalent to router.match( '/users/:id', 'DELETE' )&#x000A;router.del( '/users/:id' )&#x000A;      .to( 'Users.destroy' )</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='DELETE' data-url='/users/123'>router&#x000A;# equivalent to .match '/users/:id', 'DELETE'&#x000A;.del '/users/:id'&#x000A;.to 'Users.destroy'</code></pre>
+                </div>
+                <div class='tab-pane' id='method-options'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='OPTIONS' data-url='/users/123'>// equivalent to router.match( '/users/:id', 'OPTIONS' )&#x000A;router.options( '/users/:id' )&#x000A;      .to( 'Users.options' )</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='OPTIONS' data-url='/users/123'>router&#x000A;# equivalent to .match '/users/:id', 'OPTIONS'&#x000A;.options '/users/:id'&#x000A;.to 'Users.options'</code></pre>
+                </div>
+              </div>
+            </div>
+            <div id='match-conditions'>
+              <h3>Match conditions</h3>
+              <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+              <code data-method='GET' data-url='/coffee/near/90210'>router.get( '/:beverage/near/:zipcode' )&#x000A;      .to( 'beverage.byZipCode' )&#x000A;      .where({&#x000A;        // an array of options&#x000A;        beverage: [ 'coffee', 'tea', 'beer', 'warm_sake' ],&#x000A;        // a regex pattern&#x000A;        zipcode: /\d{5}(-\d{4})?/&#x000A;      })</code></pre>
+              <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+              <code data-method='GET' data-url='/coffee/near/90210'>router&#x000A;.get '/:beverage/near/:zipcode'&#x000A;.to 'beverage.byZipCode'&#x000A;.where&#x000A;  # an array of options&#x000A;  beverage: [&#x000A;    'coffee'&#x000A;    'tea'&#x000A;    'beer'&#x000A;    'warm_sake'&#x000A;  ]&#x000A;  # a regex pattern&#x000A;  zipcode: /\d{5}(-\d{4})?/</code></pre>
+            </div>
+            <div id='default-params'>
+              <h3>Default parameters</h3>
+              <p>You can attach arbitrary default params to a route by passing a hash of defaults to the <code>.to</code> method (as a second argument).</p>
+              <p>Anything defined in your default params will be present in the output params. In the even you have a key in your route definition with the same name, the default param will be overridden by the one in the URL.</p>
+              <p>Default params are useful for providing fallback values for optional keys (<code>:format</code>, for instance), or for inferring implicit values based on a static part of the route (often used for language-specific routes).</p>
+              <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'>
+                  <a data-toggle='tab' href='#defaults-format' role='tab'>Defaults for existing keys</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#defaults-lang' role='tab'>Implicit params</a>
+                </li>
+              </ul>
+              <div class='tab-content'>
+                <div class='tab-pane active' id='defaults-format'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/comments/5'>router.get('/comments/:id(.:format)')&#x000A;      .to('comments.show', { format: 'pdf' } )</code>
+                  <code class='output'>router.first('/comments/5','GET')&#x000A;&#x000A;// =>&#x000A;{&#x000A;  controller: 'comments',&#x000A;  action: 'show',&#x000A;  id: 5,&#x000A;  format: 'pdf'&#x000A;}&#x000A;&#x000A;router.first('/comments/5.html','GET')&#x000A;&#x000A;// =>&#x000A;{&#x000A;  controller: 'comments',&#x000A;  action: 'show',&#x000A;  id: 5,&#x000A;  format: 'html'&#x000A;}</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/comments/5'>router&#x000A;.get '/comments/:id(.:format)'&#x000A;.to 'comments.show', format: 'pdf'</code>
+                  <code class='output'>router.first '/comments/5','GET'&#x000A;&#x000A;# =>&#x000A;{&#x000A;  controller: 'comments'&#x000A;  action: 'show'&#x000A;  id: 5&#x000A;  format: 'pdf'&#x000A;}&#x000A;&#x000A;router.first '/comments/5.html', 'GET'&#x000A;&#x000A;# =>&#x000A;{&#x000A;  controller: 'comments'&#x000A;  action: 'show'&#x000A;  id: 5&#x000A;  format: 'html'&#x000A;}</code></pre>
+                </div>
+                <div class='tab-pane' id='defaults-lang'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/comments/5'>// english&#x000A;router.get('/comments/:id')&#x000A;      .to('comments.show', { lang: 'en' } )&#x000A;&#x000A;// français&#x000A;router.get('/commentaires/:id')&#x000A;      .to('comments.show', { lang: 'fr' } )</code>
+                  <code class='output'>// english&#x000A;router.first('/comments/5', 'GET')&#x000A;&#x000A;// =>&#x000A;{&#x000A;  controller: 'comments',&#x000A;  action: 'show',&#x000A;  id: 5,&#x000A;  lang: 'en'&#x000A;}&#x000A;&#x000A;// français&#x000A;router.first('/commentaires/5', 'GET')&#x000A;&#x000A;// =>&#x000A;{&#x000A;  controller: 'comments',&#x000A;  action: 'show',&#x000A;  id: 5,&#x000A;  lang: 'fr'&#x000A;}</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/comments/5'># english&#x000A;router&#x000A;.get '/comments/:id'&#x000A;.to 'comments.show', lang: 'en'&#x000A;&#x000A;# français&#x000A;router&#x000A;.get '/commentaires/:id'&#x000A;.to 'comments.show', lang: 'fr'</code>
+                  <code class='output'># english&#x000A;router.first '/comments/5', 'GET'&#x000A;&#x000A;# =>&#x000A;{&#x000A;  controller: 'comments'&#x000A;  action: 'show'&#x000A;  id: 5&#x000A;  lang: 'en'&#x000A;}&#x000A;&#x000A;# français&#x000A;router.first '/commentaires/5', 'GET'&#x000A;&#x000A;# =>&#x000A;{&#x000A;  controller: 'comments'&#x000A;  action: 'show'&#x000A;  id: 5&#x000A;  lang: 'fr'&#x000A;}</code></pre>
+                </div>
+              </div>
+            </div>
+            <div id='route-names'>
+              <h3>Route names</h3>
+              <div class='alert alert-warning'>
+                <p>
+                  <i class='fa fa-exclamation-triangle'></i>
+                  <strong>TODO: Document this properly</strong>
+                </p>
+                <p>
+                  Basically, there's a
+                  <code>.as 'name'</code>
+                  method that names the route. This is currently only useful for inspecting or deleting routes at runtime, but will make sense in the context of named generators, which are coming in v0.6.0
+                </p>
+                <p>
+                  Feel free to prod me via
+                  <a class='alert-link' href='https://github.com/kieran/barista/issues/27'>this issue on GH</a>
+                  if this is a feature you need sooner rather than later.
+                </p>
+              </div>
+            </div>
+            <div id='nested-routes'>
+              <h3>Nested routes</h3>
+              <p>
+                Routes can be nested under other routes or resources (more on resources below).
+              </p>
+              <p>
+                Nested routes are indentical to non-nested routes with two exceptions: They build off the URL of the parent, and they also inherit upstream default params and match conditions.
+              </p>
+              <p>
+                Nesting under a route is accomplished by calling
+                <code>.nest( router )</code>
+                The router argument is optional, since the route being nested is aliased to
+                <code>this</code>
+              </p>
+              <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+              <code data-method='GET' data-url='/posts/123/comments'>router.get( '/posts' )&#x000A;      .to( 'Posts.index' )&#x000A;      .nest( function(){&#x000A;        this.get( '/:id' )&#x000A;            .to( 'Posts.show' )&#x000A;            .nest( function(){&#x000A;              this.get( '/comments' )&#x000A;                  .to( 'Comments.index' )&#x000A;            })&#x000A;      })&#x000A;</code></pre>
+              <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+              <code data-method='GET' data-url='/posts/123/comments'>router&#x000A;.get '/posts'&#x000A;.to 'Posts.index'&#x000A;.nest ->&#x000A;  @get '/:id'&#x000A;  .to 'Posts.show'&#x000A;  .nest ->&#x000A;    @get '/comments'&#x000A;    .to 'Comments.index'&#x000A;&#x000A;</code></pre>
+              <p>
+                As mentioned earlier, nested routes inherit upstream default params and match conditions. In most cases this is the desired outcome, but you can override these inherited peoperties by re-defining them on the nested route. Changes you make at this level will not affect the parent route or any sibling routes, but will be inherited in turn by any routes nested underneath.
+              </p>
+              <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'>
+                  <a data-toggle='tab' href='#nested-defaults' role='tab'>Nested default params</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#nested-conditions' role='tab'>Nested conditions</a>
+                </li>
+              </ul>
+              <div class='tab-content'>
+                <div class='tab-pane active' id='nested-defaults'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/comments'>router.get( '/products/:id' )&#x000A;      .to( 'Products.show', { display: 'main' } )&#x000A;      .nest( function(){&#x000A;        this.get( '/reviews' )&#x000A;            .to( 'Reviews.index', { display: 'alt' } )&#x000A;      })&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/comments'>router&#x000A;.get '/posts/:id'&#x000A;.to 'Posts.show', display: 'main'&#x000A;.nest ->&#x000A;  @get '/comments'&#x000A;  .to 'Comments.index', display: 'alt'&#x000A;</code></pre>
+                </div>
+                <div class='tab-pane' id='nested-conditions'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/comments.json'>router.get( '/posts/:id(.:format)' )&#x000A;      .to( 'Posts.show' )&#x000A;      .where({ // these conditions will apply to all sub-routes as well&#x000A;        format: [&#x000A;          'html',&#x000A;          'pdf',&#x000A;          'json'&#x000A;        ]&#x000A;      })&#x000A;      .nest( function(){&#x000A;        this.get( '/comments(.:format)' )&#x000A;            .to( 'Comments.index' )&#x000A;      })&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/comments.json'>router&#x000A;.get '/posts/:id(.:format)'&#x000A;.to 'Posts.show'&#x000A;.where # these conditions will apply to all sub-routes as well&#x000A;  format: [&#x000A;    'html'&#x000A;    'pdf'&#x000A;    'json'&#x000A;  ]&#x000A;.nest ->&#x000A;  @get '/comments(.:format)'&#x000A;  .to 'Comments.index'&#x000A;</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id='resources'>
+            <h2>Defining Resources</h2>
+            <p>Resources are a convenient shorthand for describing REST-ful endpoints.</p>
+            <h3>A simple example</h3>
+            <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+            <code>// a Posts resource&#x000A;router.resource( 'Posts' )&#x000A;</code>
+            <code class='output'>// is equivalent to&#x000A;router.get( '/posts(.:format)' )&#x000A;      .to( 'Posts.index' )&#x000A;&#x000A;router.get( '/posts/add(.:format)' )&#x000A;      .to( 'Posts.add' )&#x000A;&#x000A;router.get( '/posts/:id(.:format)' )&#x000A;      .to( 'Posts.show' )&#x000A;&#x000A;router.get( '/posts/:id/edit(.:format)' )&#x000A;      .to( 'Posts.edit' )&#x000A;&#x000A;router.post( '/posts(.:format)' )&#x000A;      .to( 'Posts.create' )&#x000A;&#x000A;router.put( '/posts/:id(.:format)' )&#x000A;      .to( 'Posts.update' )&#x000A;&#x000A;router.del( '/posts/:id(.:format)' )&#x000A;      .to( 'Posts.destroy' )&#x000A;</code></pre>
+            <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+            <code># a Posts resource&#x000A;router.resource 'Posts'&#x000A;</code>
+            <code class='output'># is equivalent to&#x000A;router&#x000A;.get  '/posts(.:format)'&#x000A;.to 'Posts.index'&#x000A;&#x000A;router&#x000A;.get  '/posts/add(.:format)'&#x000A;.to 'Posts.add'&#x000A;&#x000A;router&#x000A;.get  '/posts/:id(.:format)'&#x000A;.to 'Posts.show'&#x000A;&#x000A;router&#x000A;.get  '/posts/:id/edit(.:format)'&#x000A;.to 'Posts.edit'&#x000A;&#x000A;router&#x000A;.post '/posts(.:format)'&#x000A;.to 'Posts.create'&#x000A;&#x000A;router&#x000A;.put  '/posts/:id(.:format)'&#x000A;.to 'Posts.update'&#x000A;&#x000A;router&#x000A;.del  '/posts/:id(.:format)'&#x000A;.to 'Posts.destroy'&#x000A;&#x000A;</code></pre>
+            <div id='nested-resources'>
+              <h3>Resource nesting</h3>
+              <p>A resource is simply collection of routes, and as such can be defined at the root or nested under any other route. Nesting within a resource is a little less straight-forward, but makes sense when you think about what you're doing.</p>
+              <p>
+                The two reasonably nestable routes in a resource are the
+                <em>collection route</em>
+                (i.e.
+                <code>'/posts'</code>
+                )
+                and the
+                <em>member route</em>
+                (i.e.
+                <code>'/posts/123'</code>
+                ).
+              </p>
+              <p>This should be made clear by the examples below.</p>
+              <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'>
+                  <a data-toggle='tab' href='#resources-collection' role='tab'>Collection route</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#resources-member' role='tab'>Member route</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#resources-resources' role='tab'>Resources in resources</a>
+                </li>
+              </ul>
+              <div class='tab-content'>
+                <div class='tab-pane active' id='resources-collection'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/recent'>router.resource( 'Posts' )&#x000A;      .where({&#x000A;        id: /\d+/&#x000A;      })&#x000A;      // nest on the collection route&#x000A;      .collection( function(){&#x000A;        this.get( '/recent(.:format)' )&#x000A;        .to( 'Posts.recent' )&#x000A;      })&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/recent'>router.resource 'Posts'&#x000A;      .where&#x000A;        id: /\d+/&#x000A;      # nest on the collection route&#x000A;      .collection ->&#x000A;        @get '/recent(.:format)'&#x000A;        .to 'Posts.recent'&#x000A;&#x000A;</code></pre>
+                </div>
+                <div class='tab-pane' id='resources-member'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/like'>router.resource( 'Posts' )&#x000A;      .where({&#x000A;        id: /\d+/&#x000A;      })&#x000A;      // nest on the member route&#x000A;      .collection( function(){&#x000A;        this.get( '/like(.:format)' )&#x000A;        .to( 'Posts.like' )&#x000A;      })&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/like'>router.resource 'Posts'&#x000A;      .where&#x000A;        id: /\d+/&#x000A;      # nest on the member route&#x000A;      .member ->&#x000A;        @get '/like(.:format)'&#x000A;        .to 'Posts.like'&#x000A;&#x000A;</code></pre>
+                </div>
+                <div class='tab-pane' id='resources-resources'>
+                  <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/comments'>router.resource( 'Posts' )&#x000A;      .where({&#x000A;        id: /\d+/&#x000A;      })&#x000A;      // nest on the member route&#x000A;      .member( function(){&#x000A;        this.resource( 'Comments' )&#x000A;      })&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+                  <code data-method='GET' data-url='/posts/123/comments'>router.resource 'Posts'&#x000A;      .where&#x000A;        id: /\d+/&#x000A;      # nest on the member route&#x000A;      .member ->&#x000A;        @resource 'Comments'&#x000A;</code></pre>
+                </div>
+              </div>
+            </div>
+            <div id='key-collisions'>
+              <h3>Handling key collisions</h3>
+              <div class='alert alert-warning'>
+                <p>
+                  <i class='fa fa-exclamation-triangle'></i>
+                  <strong>TODO: Document this properly</strong>
+                </p>
+                <p>
+                  Basically, Barista automatically renames previous keys when identical nested keys are likely.
+                </p>
+                <p>
+                  For example, whe you nest resources like this:
+                  <code>Posts > Comments</code>
+                  the post resource's id will be renamed to
+                  <code>:post_id</code>
+                  to avoid a collision with the comment resource's
+                  <code>:id</code>
+                  attribute. Check out the "Resources in resources" tab in the above example to see what I'm talking about.
+                </p>
+                <p>
+                  I'm not 100% satisfied with the current implementation and plan to give it another pass before v1.0.0
+                </p>
+              </div>
+            </div>
+          </div>
+          <div id='resolution'>
+            <h2>Parsing URLs</h2>
+            <p>
+              If you're using Barista in your framework or "off-grid" in a custom project, you'll need to parse URLs at some point in rder to route and dispatch requests. There are two methods for doing this:
+              <code>router.first</code>
+              and
+              <code>router.all</code>
+              , though you'll almost always use the former.
+            </p>
+            <div id='router-first'>
+              <h3>
+                <code>router.first</code>
+              </h3>
+              <p>
+                This method takes a URL and an optional HTTP method, returning the resolved params if there's a matching route.
+              </p>
+              <p>
+                Check
+                <a href='/docs/router.html#-router-first-path-method-callback-'>the annotated source</a>
+                for more info.
+              </p>
+              <pre class='language-javascript'><code>// assuming the following route definition:&#x000A;router.resource( 'Posts' )&#x000A;&#x000A;// then the URL resolves like so:&#x000A;router.first( '/posts/123.json', 'GET' )&#x000A;</code>
+              <code class='output'>{&#x000A;  method:     "GET",&#x000A;  controller: "Posts",&#x000A;  action:     "show",&#x000A;  id:         "123",&#x000A;  format:     "json"&#x000A;}&#x000A;</code></pre>
+              <pre class='language-coffeescript'><code># assuming the following route definition:&#x000A;router.resource 'Posts'&#x000A;&#x000A;# then the URL resolves like so:&#x000A;router.first '/posts/123.json', 'GET'&#x000A;</code>
+              <code class='output'>{&#x000A;  method:     "GET"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;}&#x000A;</code></pre>
+            </div>
+            <div id='router-all'>
+              <h3>
+                <code>router.all</code>
+              </h3>
+              <p>
+                This method is almost identical to
+                <code>router.first</code>
+                , with the exception that it returns an array of all possible matches.
+              </p>
+              <p>
+                It's almost never useful IRL, but I've used it.
+              </p>
+              <pre class='language-javascript'><code>// assuming the following route definition:&#x000A;router.resource( 'Posts' )&#x000A;&#x000A;// this URL (without a method) could match the following params:&#x000A;router.all( '/posts/123.json' )&#x000A;</code>
+              <code class='output'>[&#x000A;  {&#x000A;    method:     "GET",&#x000A;    controller: "Posts",&#x000A;    action:     "show",&#x000A;    id:         "123",&#x000A;    format:     "json"&#x000A;  },&#x000A;  {&#x000A;    method:     "PUT",&#x000A;    controller: "Posts",&#x000A;    action:     "show",&#x000A;    id:         "123",&#x000A;    format:     "json"&#x000A;  },&#x000A;  {&#x000A;    method:     "DELETE",&#x000A;    controller: "Posts",&#x000A;    action:     "show",&#x000A;    id:         "123",&#x000A;    format:     "json"&#x000A;  }&#x000A;]&#x000A;</code></pre>
+              <pre class='language-coffeescript'><code># assuming the following route definition:&#x000A;router.resource 'Posts'&#x000A;&#x000A;# this URL (without a method) could match the following params:&#x000A;router.all '/posts/123.json'&#x000A;</code>
+              <code class='output'>[&#x000A;  method:     "GET"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;,&#x000A;  method:     "PUT"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;,&#x000A;  method:     "DELETE"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;]&#x000A;</code></pre>
+            </div>
+          </div>
+          <div id='generation'>
+            <h2>Generating URLs</h2>
+            <p>
+              URLs can be generated using the
+              <code>.url( params )</code>
+              method
+            </p>
+            <div id='router-url'>
+              <h3>
+                <code>router.url</code>
+              </h3>
+              <p>
+                This essentially does the reverse of
+                <code>router.first</code>
+                , that is, it generates URLs from params objects.
+              </p>
+              <p>
+                An optional second boolean params will add query params for any un-resolved keys.
+              </p>
+              <ul class='nav nav-tabs' role='tablist'>
+                <li class='active'>
+                  <a data-toggle='tab' href='#url-basic' role='tab'>Basic usage</a>
+                </li>
+                <li>
+                  <a data-toggle='tab' href='#url-query-params' role='tab'>Query params</a>
+                </li>
+              </ul>
+              <div class='tab-content'>
+                <div class='tab-pane active' id='url-basic'>
+                  <pre class='language-javascript'><code>// assuming the following route definition:&#x000A;router.resource( 'Posts' )&#x000A;&#x000A;// then generate the URL thusly:&#x000A;router.url({&#x000A;  method:     "GET"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;})&#x000A;</code>
+                  <code class='output'>"/posts/123.json"&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><code># assuming the following route definition:&#x000A;router.resource 'Posts'&#x000A;&#x000A;# then generate the URL thusly:&#x000A;router.url&#x000A;  method:     "GET"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;</code>
+                  <code class='output'>"/posts/123.json"&#x000A;</code></pre>
+                </div>
+                <div class='tab-pane' id='url-query-params'>
+                  <pre class='language-javascript'><code>// assuming the following route definition:&#x000A;router.resource 'Posts'&#x000A;&#x000A;// then generate the URL thusly:&#x000A;params = {&#x000A;  method:     "GET",&#x000A;  controller: "Posts",&#x000A;  action:     "show",&#x000A;  id:         "123",&#x000A;  format:     "json",&#x000A;  love:       "cheese"&#x000A;}&#x000A;&#x000A;router.url( params, true )&#x000A;</code>
+                  <code class='output'>"/posts/123.json?love=cheese"&#x000A;</code></pre>
+                  <pre class='language-coffeescript'><code># assuming the following route definition:&#x000A;router.resource 'Posts'&#x000A;&#x000A;# then generate the URL thusly:&#x000A;params =&#x000A;  method:     "GET"&#x000A;  controller: "Posts"&#x000A;  action:     "show"&#x000A;  id:         "123"&#x000A;  format:     "json"&#x000A;  love:       "cheese"&#x000A;&#x000A;router.url params, true&#x000A;</code>
+                  <code class='output'>"/posts/123.json?love=cheese"&#x000A;</code></pre>
+                </div>
+              </div>
+            </div>
+            <div id='named-generators'>
+              <h3>Named generators</h3>
+              <div class='alert alert-warning'>
+                <p>
+                  <i class='fa fa-exclamation-triangle'></i>
+                  <strong>TODO: Finish this feature</strong>
+                </p>
+                <p>
+                  This feature is due to drop in v0.6.0
+                </p>
+                <p>
+                  The curren plan is to make named URL generators available that have default params for the controller, action, method, and any other route defaults. Only missing attributes like
+                  <code>:id</code>
+                  (etc) will need to be passed in, allowing POJO models objects to be provided un-molested.
+                  <a class='alert-link' href='https://github.com/kieran/barista/issues/27'>this issue on GH</a>
+                  if this is a feature you need sooner rather than later.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div id='other'>
+            <h2>TODOs</h2>
+            <ul>
+              <li>
+                <a href='https://github.com/kieran/barista/issues/22'>
+                  Add namespace support
+                </a>
+              </li>
+              <li>
+                <a href='https://github.com/kieran/barista/issues/27'>
+                  Add support for named generators
+                </a>
+              </li>
+              <li>
+                <a href='https://github.com/kieran/barista/issues/24'>
+                  Customizable resources
+                </a>
+              </li>
+            </ul>
+            <h2>Things I forgot...</h2>
+            <ul>
+              <li>
+                ...might be
+                <a href='./docs/router.html'>
+                  in the /docs folder...
+                </a>
+              </li>
+              <li>
+                ...or might not exist at all.
+              </li>
+            </ul>
+            <h2>Shit's broken!</h2>
+            <p>Shit happens.</p>
+            <p>
+              Write a test that fails and add it to the tests folder,
+              <a href='https://github.com/kieran/barista/issues'>then create an issue!</a>
+            </p>
+            <p>
+              Patches welcome :-)
+            </p>
+            <h2>Who tf are you?</h2>
+            <p>
+              I'm
+              <a href='http://kieran.ca'>Kieran Huggins</a>
+              in
+              <a href='http://i.imgur.com/r0iZXmC.png'>Toronto, Canada.</a>
+            </p>
+          </div>
+        </div>
+        <div class='col-md-3'>
+          <div class='side-menu' data-offset-bottom='200' data-offset-top='450' data-spy='affix' id='side-nav'>
+            <ul class='nav'>
+              <li>
+                <a href='#overview'>Overview</a>
+              </li>
+              <li>
+                <a href='#install'>Installation</a>
+                <ul class='nav'>
+                  <li>
+                    <a href='#install-node'>Node JS</a>
+                  </li>
+                  <li>
+                    <a href='#install-browser'>Browser</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href='#routes'>Routes</a>
+                <ul class='nav'>
+                  <li>
+                    <a href='#keys'>Keys</a>
+                  </li>
+                  <li>
+                    <a href='#globs'>Globs</a>
+                  </li>
+                  <li>
+                    <a href='#convenience-methods'>Convenience methods</a>
+                  </li>
+                  <li>
+                    <a href='#match-conditions'>Match conditions</a>
+                  </li>
+                  <li>
+                    <a href='#default-params'>Default params</a>
+                  </li>
+                  <li>
+                    <a href='#route-names'>Route names</a>
+                  </li>
+                  <li>
+                    <a href='#nested-routes'>Nested Routes</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href='#resources'>Resources</a>
+                <ul class='nav'>
+                  <li>
+                    <a href='#nested-resources'>Nesting resources</a>
+                  </li>
+                  <li>
+                    <a href='#key-collisions'>Key collisions</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href='#resolution'>Parsing URLs</a>
+                <ul class='nav'>
+                  <li>
+                    <a href='#router-first'>
+                      <code>router.first</code>
+                    </a>
+                  </li>
+                  <li>
+                    <a href='#router-all'>
+                      <code>router.all</code>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href='#generation'>Generating URLs</a>
+                <ul class='nav'>
+                  <li>
+                    <a href='#router-url'>
+                      <code>router.url</code>
+                    </a>
+                  </li>
+                  <li>
+                    <a href='#named-generators'>Named generators</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href='#other'>Everything else</a>
+              </li>
+              <li>
+                <a href='./docs/router.html'>Annotated source</a>
+                <ul class='nav'>
+                  <li>
+                    <a href='./docs/router.html'>
+                      Router
+                    </a>
+                  </li>
+                  <li>
+                    <a href='./docs/route.html'>
+                      Route
+                    </a>
+                  </li>
+                  <li>
+                    <a href='./docs/resource.html'>
+                      Route
+                    </a>
+                  </li>
+                  <li>
+                    <a href='./docs/key.html'>
+                      Key / Glob
+                    </a>
+                  </li>
+                  <li>
+                    <a href='./docs/text.html'>
+                      Text
+                    </a>
+                  </li>
+                  <li>
+                    <a href='./docs/helpers.html'>
+                      Helpers
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
-
-
-  <h1>Defining routes</h1>
-
-  <section>
-    <header>
-      <h2>A simple example</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-// a GET request to '/products'
-router.match( '/products', 'GET' )
-      .to( 'products.index' )
-
-// =>
-{
-  controller: 'products',
-  action: 'index',
-  method: 'GET'
-}
-</pre>
-    </div>
-  </section>
-
-  <section id='variables'>
-    <header>
-      <h2>Rails-esque variable names</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-router.match( '/products/:id', 'GET' )
-      .to( 'Products.show' )
-
-router.match( '/profiles/:username', 'GET' )
-      .to( 'Users.show' )
-
-// things enclosed in parens are optional
-router.match( '/products/:id(.:format)', 'GET' )
-      .to( 'Products.show' )
-</pre>
-    </div>
-  </section>
-
-
-  <section id='convenience_methods'>
-    <header>
-      <h2>Convenience methods</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-router.get( '/products/:id(.:format)' )
-      .to( 'Products.show' )
-
-router.put( '/products/:id(.:format)' )
-      .to( 'Products.update' )
-
-router.post( '/products' )
-      .to( 'Products.create' )
-
-router.del( '/products' )
-      .to( 'Products.destroy' )
-</pre>
-    </div>
-  </section>
-
-
-  <section id='globs'>
-    <header>
-      <h2>Route globbing</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-router.get('/timezones/*tzname')
-      .to( 'Timezones.select' )
-
-router.first( '/timezones/America/Toronto', 'GET' )
-
-// =>
-{
-  controller: 'Timezones',
-  action: 'select',
-  tzname: 'America/Toronto',
-  method: 'GET'
-}
-</pre>
-<br/>
-<pre class="sh_javascript">
-// a "catch-all" route:
-router.match( '/*path(.:format)' )
-      .to( 'Errors.notFound' )
-
-
-router.first( '/somewhere/that/four-oh-fours.json', 'GET' )
-
-// =>
-{
-  controller: 'Errors',
-  action: 'notFound',
-  path: 'somewhere/that/four-oh-fours',
-  format: 'json',
-  method: 'GET'
-}
-</pre>
-    </div>
-  </section>
-
-
-  <h1>Resolution &amp; dispatching</h1>
-  <section id='resolution'>
-    <header>
-      <h2>router.first</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-// get the first route that matches
-
-params = router.first( '/products/15', 'GET' )
-
-// returns a params object, or false if nothing matches
-</pre>
-<br/>
-<pre class="sh_javascript">
-// go all callback on this shit
-
-router.first( '/products/15', 'GET', function(params){
-  // passes a params object in
-  // this has not been well thought out.
-})
-</pre>
-<br/>
-<header>
-  <h2>router.all</h2>
-</header>
-<pre class="sh_javascript">
-// if you want all matching routes...
-
-params_array = router.all( '/products/15', 'GET' )
-
-// => [ params, params, params... ]
-</pre>
-    </div>
-  </section>
-
-
-  <h1>Resources</h1>
-  <section id='resources'>
-    <header>
-      <h2>REST resources</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-router.resource( 'BlogPosts' )
-
-// is equivalent to:
-
-router.get( '/blog_posts(.:format)' )
-      .to( 'BlogPosts.index' )
-
-router.get( '/blog_posts/add(.:format)' )
-      .to( 'BlogPosts.add' )
-
-router.get( '/blog_posts/:id(.:format)' )
-      .to('BlogPosts.show' )
-
-router.get('/blog_posts/:id/edit(.:format)' )
-      .to( 'BlogPosts.edit' )
-
-router.post('/blog_posts(.:format)' )
-      .to( 'BlogPosts.create' )
-
-router.put('/blog_posts/:id(.:format)' )
-      .to( 'BlogPosts.update' )
-
-router.del('/blog_posts/:id(.:format)' )
-      .to( 'BlogPosts.destroy' )
-</pre>
-    </div>
-
-    <header>
-      <h2>Nested routes &amp; resources</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-// resources can nest both routes and deeper resources
-router.resource( 'BlogPosts' )
-      // nest on the collection
-      .collection(function(){
-        this.get( 'print(.:format)' )
-            .to('BlogPosts.print')
-      })
-      // nest on the member
-      .member(function(){
-        this.resource( 'Comments' )
-      })
-
-
-router.first( '/blog_posts/5/comments' )
-
-// =>
-{
-  controller: 'Comments',
-  action: 'index',
-  blog_posts_id: 5,
-  method: 'GET'
-}
-
-
-router.first( '/blog_posts/print.pdf' )
-
-// =>
-{
-  controller: 'BlogPosts',
-  action: 'print',
-  format: 'pdf',
-  method: 'GET'
-}
-</pre>
-    </div>
-  </section>
-
-
-  <h1>Conditions</h1>
-  <section id='conditions'>
-    <header>
-      <h2>Match conditions</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-router.get( '/:beverage/near/:zipcode' )
-      .to( 'beverage.byZipCode' )
-      .where({
-        // an array of options
-        beverage: [ 'coffee', 'tea', 'beer', 'warm_sake' ],
-        // a regex pattern
-        zipcode: /^\d{5}(-\d{4})?$/
-      })
-</pre>
-<br/>
-<header>
-  <h2>Mixing conditions</h2>
-</header>
-<pre class="sh_javascript">
-router.get( '/:beverage/near/:location' )
-      .to( 'beverage.byLocation' )
-      .where({
-        location: [
-          // could be a zip code
-          /^\d{5}(-\d{4})?$/,
-          // OR a postal code
-          /^[A-Z]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/,
-          // OR the word 'me'
-          'me'
-        ]
-      })
-</pre>
-    </div>
-  </section>
-
-
-  <h1>URL generation</h1>
-  <section id='generation'>
-    <header>
-      <h2>Turn a params object into a URL</h2>
-    </header>
-    <div class='code'>
-<pre class="sh_javascript">
-// assuming:
-router.resource( 'products' )
-
-// then
-router.url( {
-  controller: 'products',
-  action: 'show',
-  id: 5
-} )
-
-// => '/products/5'
-</pre>
-<br/>
-<pre class="sh_javascript">
-router.url( {
-  controller: 'products',
-  action: 'show',
-  id: 5,
-  format: 'json'
-} )
-
-// => '/products/5.json'
-</pre>
-<br/>
-<header>
-  <h2>Extra params</h2>
-</header>
-<pre class="sh_javascript">
-// you can optionally include extra params as a query string
-router.url({
-  controller: 'products',
-  action: 'show',
-  id: 5,
-  format: 'json',
-  love: 'cheese' // <--------
-}, true )
-
-// => '/products/5.json?love=cheese'
-</pre>
-    </div>
-  </section>
-
-</body>
+  </body>
 </html>

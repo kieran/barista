@@ -1,0 +1,32 @@
+-def partial(path); Haml::Engine.new(File.read(path)).render; end
+#generation
+  %h2 Generating URLs
+  %p
+    URLs can be generated using the
+    %code .url( params )
+    method
+
+  = partial 'templates/generation/url.haml'
+  = partial 'templates/generation/named_generators.haml'
+
+-#
+  %h3 A simple example
+  %pre.language-javascript
+    %a.btn.btn-default{href:'#try'} try it
+    %code
+      :preserve
+        #{File.read 'templates/generation/simple1.js'}
+    %code.output
+      :preserve
+        #{File.read 'templates/generation/simple1out.js'}
+  %pre.language-coffeescript
+    %a.btn.btn-default{href:'#try'} try it
+    %code
+      :preserve
+        #{File.read 'templates/generation/simple1.coffee'}
+    %code.output
+      :preserve
+        #{File.read 'templates/generation/simple1out.coffee'}
+
+  = partial 'templates/generation/nesting.haml'
+  = partial 'templates/generation/key_collisions.haml'

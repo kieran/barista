@@ -1,0 +1,15 @@
+{
+  "name": "barista",
+  "homepage": "https://github.com/kieran/barista",
+  "version": "0.5.3",
+  "_release": "0.5.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.3",
+    "commit": "02a411d24a94113bc1264d08d1706c9c3be01aac"
+  },
+  "_source": "git://github.com/kieran/barista.git",
+  "_target": "~0.5.3",
+  "_originalSource": "barista",
+  "_direct": true
+}

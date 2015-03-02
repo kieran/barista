@@ -1,0 +1,64 @@
+#demo
+  position: fixed
+  top: 50px
+  left: 0
+  width: 100%
+  height: 0
+  background: rgba(255,255,255,0.95)
+  z-index: 2
+  overflow: hidden
+  transition: all 0.33s ease-in-out
+body.demo
+  overflow: hidden
+  #demo
+    padding-top: 1em
+    height: 100%
+    box-shadow: 0 0 5px rgba(0,0,0,0.33)
+    > div
+      overflow: auto
+      max-height: 90%
+
+  .navbar .nav a[href$=try]
+    background: rgba(255,255,255,0.95)
+    color: green
+    z-index: 2
+    &:hover
+      color: green !important
+      z-index: 3
+
+
+#routeFile
+  height: 100%
+  font-size: 1.1em
+
+table tr
+  transition: all 0.33s
+
+table.with-matches tr
+  opacity: 0.5
+
+table.with-matches tr.success
+  opacity: 1
+
+table.with-matches tr.success .params
+  white-space: pre
+
+table.with-matches tr.success ~ tr.success
+  opacity: 0.5
+
+table.with-matches tr.success ~ tr.success .params
+  white-space: normal
+
+table
+  margin-top: 1em
+
+table td.method
+  width: 66px
+
+table td.params
+  font-family: monospace
+
+.ace_gutter-layer
+  width: 18px !important
+  .ace_gutter-cell.ace_error
+    background-position: 0px

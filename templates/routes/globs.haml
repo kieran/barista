@@ -1,0 +1,45 @@
+#globs
+  %h3 Globs
+  %p Globs are identical to keys, with the exception that they also capture slashes. This can be useful for capturing values like timezone strings or setting up a catch-all route.
+
+  %ul.nav.nav-tabs{role:"tablist"}
+    %li.active
+      %a{href:"#glob-timezone",role:"tab",'data-toggle'=>"tab"} Timezone selection
+    %li
+      %a{href:"#glob-404",role:"tab",'data-toggle'=>"tab"} A catch-all route
+
+  .tab-content
+    #glob-timezone.tab-pane.active
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/timezones/America/Toronto','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/routes/globs1.js'}
+        %code.output
+          :preserve
+            #{File.read 'templates/routes/globs1out.js'}
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/timezones/America/Toronto','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/routes/globs1.coffee'}
+        %code.output
+          :preserve
+            #{File.read 'templates/routes/globs1out.coffee'}
+    #glob-404.tab-pane
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/somewhere/that/404s.html','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/routes/globs2.js'}
+        %code.output
+          :preserve
+            #{File.read 'templates/routes/globs2out.js'}
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/somewhere/that/404s.html','data-method'=>'GET'}
+          :preserve
+            #{File.read 'templates/routes/globs2.coffee'}
+        %code.output
+          :preserve
+            #{File.read 'templates/routes/globs2out.coffee'}

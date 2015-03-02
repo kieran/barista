@@ -1,0 +1,25 @@
+#router-all
+  %h3
+    %code router.all
+  %p
+    This method is almost identical to
+    %code router.first
+    , with the exception that it returns an array of all possible matches.
+  %p
+    It's almost never useful IRL, but I've used it.
+
+  %pre.language-javascript
+    %code
+      :preserve
+        #{File.read 'templates/resolution/all.js'}
+    %code.output
+      :preserve
+        #{File.read 'templates/resolution/allout.js'}
+  %pre.language-coffeescript
+    %code
+      :preserve
+        #{File.read 'templates/resolution/all.coffee'}
+    %code.output
+      :preserve
+        #{File.read 'templates/resolution/allout.coffee'}
+

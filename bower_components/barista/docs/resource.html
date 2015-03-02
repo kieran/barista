@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>resource.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="helpers.html">
+                  helpers.coffee
+                </a>
+              
+                
+                <a class="source" href="key.html">
+                  key.coffee
+                </a>
+              
+                
+                <a class="source" href="resource.html">
+                  resource.coffee
+                </a>
+              
+                
+                <a class="source" href="route.html">
+                  route.coffee
+                </a>
+              
+                
+                <a class="source" href="router.html">
+                  router.coffee
+                </a>
+              
+                
+                <a class="source" href="text.html">
+                  text.coffee
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>resource.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>{ kindof, mixin } = <span class="hljs-built_in">require</span> <span class="hljs-string">'./helpers'</span>
+inflection        = <span class="hljs-built_in">require</span> <span class="hljs-string">'inflection'</span>
+
+exports.Resource =
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Resource</span></span>
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">( base, controller )</span>-&gt;</span>
+
+    plural = inflection.underscore inflection.pluralize controller
+    singular = inflection.underscore inflection.singularize controller</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>set up the actual routes for the resource</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-property">@routes</span> = [
+      base.get(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.index"</span>)
+      .as(
+        <span class="hljs-keyword">if</span> base.collection || base.member
+          nomenclate base.route_name, plural
+        <span class="hljs-keyword">else</span>
+          nomenclate plural
+      )
+
+      base.post(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.create"</span>)
+
+      base.get(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>/add(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.add"</span>)
+      .as(
+        <span class="hljs-keyword">if</span> base.collection || base.member
+          nomenclate <span class="hljs-string">'add'</span>, base.route_name, singular
+        <span class="hljs-keyword">else</span>
+          nomenclate <span class="hljs-string">'add'</span>, singular
+      )
+
+      base.get(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>/:id(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.show"</span>)
+      .as(
+        <span class="hljs-keyword">if</span> base.collection || base.member
+          nomenclate base.route_name, singular
+        <span class="hljs-keyword">else</span>
+          nomenclate singular
+      )
+
+      base.get(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>/:id/edit(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.edit"</span>)
+      .as(
+        <span class="hljs-keyword">if</span> base.collection || base.member
+          nomenclate <span class="hljs-string">'edit'</span>, base.route_name, singular
+        <span class="hljs-keyword">else</span>
+          nomenclate <span class="hljs-string">'edit'</span>, singular
+      )
+
+      base.put(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>/:id(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.update"</span>)
+
+      base.del(<span class="hljs-string">"/<span class="hljs-subst">#{plural}</span>/:id(.:format)"</span>)
+      .to(<span class="hljs-string">"<span class="hljs-subst">#{controller}</span>.destroy"</span>)
+    ]
+
+    <span class="hljs-property">@collection_route</span> = <span class="hljs-property">@routes</span>[<span class="hljs-number">0</span>]
+    <span class="hljs-property">@member_route</span> = <span class="hljs-property">@routes</span>[<span class="hljs-number">3</span>]
+
+    <span class="hljs-property">@collection_route</span>.collection = <span class="hljs-literal">true</span>
+    <span class="hljs-property">@member_route</span>.member = <span class="hljs-literal">true</span>
+    <span class="hljs-keyword">this</span>
+
+  <span class="hljs-attribute">where</span>: <span class="hljs-function"><span class="hljs-params">( conditions )</span>-&gt;</span>
+    <span class="hljs-keyword">if</span> kindof(conditions) != <span class="hljs-string">'object'</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error <span class="hljs-string">'conditions must be an object'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>recursively apply all conditions to sub-parts</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    route.where? conditions <span class="hljs-keyword">for</span> route <span class="hljs-keyword">in</span> <span class="hljs-property">@routes</span>
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># chainable</span>
+
+  <span class="hljs-attribute">collection</span>: <span class="hljs-function"><span class="hljs-params">( cb )</span>-&gt;</span>
+    <span class="hljs-property">@collection_route</span>.nest cb
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># for chaining</span>
+
+  <span class="hljs-attribute">member</span>: <span class="hljs-function"><span class="hljs-params">( cb )</span>-&gt;</span>
+    <span class="hljs-property">@member_route</span>.nest cb
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># for chaining</span>
+
+  <span class="hljs-attribute">nest</span>: <span class="hljs-function"><span class="hljs-params">( cb )</span>-&gt;</span>
+    <span class="hljs-property">@member_route</span>.nest cb
+    <span class="hljs-property">@collection_route</span>.nest cb
+    <span class="hljs-keyword">this</span> <span class="hljs-comment"># for chaining</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h1 id="helper-methods">Helper methods</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>better than typeof</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">kindof</span> = <span class="hljs-params">( o )</span>-&gt;</span>
+  <span class="hljs-keyword">switch</span>
+    <span class="hljs-keyword">when</span> <span class="hljs-keyword">typeof</span> o != <span class="hljs-string">"object"</span>     <span class="hljs-keyword">then</span> <span class="hljs-keyword">typeof</span> o
+    <span class="hljs-keyword">when</span> o == <span class="hljs-literal">null</span>                <span class="hljs-keyword">then</span> <span class="hljs-string">"null"</span>
+    <span class="hljs-keyword">when</span> o.constructor == Array   <span class="hljs-keyword">then</span> <span class="hljs-string">"array"</span>
+    <span class="hljs-keyword">when</span> o.constructor == Date    <span class="hljs-keyword">then</span> <span class="hljs-string">"date"</span>
+    <span class="hljs-keyword">when</span> o.constructor == RegExp  <span class="hljs-keyword">then</span> <span class="hljs-string">"regex"</span>
+    <span class="hljs-keyword">else</span> <span class="hljs-string">"object"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>builds route names
+TODO: clean this up</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-title">nomenclate</span> = -&gt;</span>
+  args = <span class="hljs-attribute">Array</span>::slice.call arguments
+  args.join(<span class="hljs-string">'_'</span>) <span class="hljs-keyword">unless</span> args.filter(<span class="hljs-function"><span class="hljs-params">(a)</span>-&gt;</span>!a?).length</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

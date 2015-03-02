@@ -1,0 +1,33 @@
+-http_methods = { get:'GET', post:'POST', put:'PUT', patch:'PATCH', del:'DELETE', options:'OPTIONS' }
+#demo
+
+  .col-md-4
+    #routeFile
+      :preserve
+        router.get '/'
+        .to 'Main.index'
+        .as 'home'
+
+        router.resource 'Posts'
+        .where
+          id: /\d+/
+        .member ->
+          @resource 'Comments'
+            .where id:/[abc]+/
+          .collection ->
+            @get '/popular(.:format)'
+            .to
+              controller: 'Comments'
+              action: 'popular'
+            .as 'popular_comments'
+
+  .col-md-8
+
+    %form.form-inline{role:"form"}
+      %select.form-control
+        %option{value:""} (any)
+        -http_methods.each_pair do |method, verb|
+          %option{value:verb}= verb
+        %option{value:"HEAD"} HEAD
+      %input.form-control{type:"text",value:"/",style:"width: 500px;"}
+    %table

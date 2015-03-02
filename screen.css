@@ -1,70 +1,136 @@
 body {
-  margin: 0;
-  padding: 0;
-  background: #000 top center repeat;
-  background-image: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -webkit-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.12), rgba(255,255,255,0)), url(wood.jpg);
-  background-image:      -o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -o-radial-gradient(center 250px, 750px 750px, rgba(255,255,255,0.1), rgba(255,255,255,0)), url(wood.jpg);
-  background-image:    -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100% ), -moz-radial-gradient(center 250px, circle closest-corner, rgba(255,255,255,0.1), rgba(255,255,255,0)), url(wood.jpg);
-/*  background-attachment: fixed;*/
+  height: 100%;
+  font-family: 'Open Sans';
 }
 
-#title {
-  display: block;
-  margin: 0 auto;
-  height: 500px;
+.navbar-fixed-top {
+  background: transparent;
+  border: 0;
 }
 
-section {
-  width: 575px;
-  display: block;
-  margin: 0 auto 4em auto;
+.navbar-fixed-top .navbar-brand, .navbar-fixed-top ul.nav > li > a {
+  color: rgba(255,255,255,0.8);
 }
-
-section header {
-  font-family: 'Swanky and Moo Moo', cursive;
-  color: rgba(255,255,255,0.5);
-  padding-left: 0.5em;
-  margin-bottom: -1em;
-  text-shadow: 2px 2px 2px rgba(0,0,0,0.8);
+.navbar-fixed-top .navbar-brand, .navbar-fixed-top ul.nav > li > a:hover, .navbar-fixed-top .navbar-brand, .navbar-fixed-top ul.nav > li > a:focus {
+  color: rgba(255,255,255,1) !important;
 }
-
-section pre {
-  background: rgba(0,0,0,0.55);
-  border-radius: 5px;
-  font-size: 11pt;
-  color: rgba(255,255,255,0.9);
-  margin: 0;
-  padding: 1em 1.3em;
+.navbar-fixed-top ul.nav > li.open, .navbar-fixed-top ul.nav > li.open > a {
+  background: transparent !important;
+  color: white !important;
 }
 
 h1 {
+  font-weight: normal;
+}
+
+.side-menu.affix {
+  position: fixed;
+  top: 100px;
+}
+.nav a {
+  cursor: pointer;
+}
+.nav .doprdown.open a, .nav a:focus, .nav a:active {
+  color: blue !important;
+}
+.nav li .nav {
+  display: none;
+  padding-left: 1em;
+  font-size: 0.9em;
+}
+.nav li.active {
+  font-weight: bold !important;
+}
+.nav li.active .nav {
   display: block;
   font-weight: normal;
-  text-align: center;
-  font-family: 'Swanky and Moo Moo', cursive;
-  color: rgba(255,255,255,0.8);
-  text-shadow: 2px 2px 2px rgba(0,0,0,0.8);
-  margin: 1em auto 0.5em auto;
+}
+
+.jumbotron.affix {
+  position: fixed;
+  top: -450px;
 }
 
 
-@-webkit-keyframes pulse {
-  from { opacity: auto; }
-  50% { opacity: 0.5; }
-  to { opacity: auto; }
+#docs {
+  margin-top: 550px;
+  padding-bottom: 100px;
 }
 
-@-moz-keyframes pulse {
-  from { opacity: auto; }
-  50% { opacity: 0.5; }
-  to { opacity: auto; }
+#docs div[id] {
+  padding-top: 50px;
+  margin-top: -50px;
 }
 
-pre:hover span.highlight {
-  -webkit-animation-name: pulse;
-  -webkit-animation-duration: 0.5s;
-  -webkit-animation-iteration-count: 3;
-  -moz-animation-name: pulse;
-  -moz-animation-duration: 0.5s;
-  -moz-animation-iteration-count: 3;
+#docs h2, #docs h3, #docs h4 {
+  font-family: 'Open Sans';
 }
+
+.jumbotron {
+  position: absolute;
+  height: 500px;
+  width: 100%;
+  z-index: 1;
+  padding-top: 140px;
+  /*height: 100% !important;*/
+  background: #000 top center repeat;
+  background-image: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.14) 40%, rgba(255,255,255,0) 100% ), url(wood.jpg);
+  background-image:      -o-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.14) 40%, rgba(255,255,255,0) 100% ), url(wood.jpg);
+  background-image:    -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.14) 40%, rgba(255,255,255,0) 100% ), url(wood.jpg);
+/*  background-attachment: fixed;*/
+  color: white;
+  box-shadow: 0 0 20px 20px white;
+}
+
+.jumbotron > .container {
+  padding-left: 300px;
+}
+
+h1, .navbar-brand {
+  font-family: 'Swanky and Moo Moo';
+  font-size: 1.8em;
+}
+h1 {
+  font-size: 80px !important;
+}
+
+/*.dropdown.open > a, .dropdown-menu {
+  background: rgba(0,0,0,0.8) !important;
+}
+*/
+
+.dropdown-menu a {
+  color: #333;
+}
+
+.jumbotron .btn {
+  background: transparent;
+  border-color: #888;
+  color: #ddd;
+}
+.jumbotron .btn:hover {
+  border-color: #aaa;
+  color: #eee;
+}
+
+pre[class*="language-"] {
+  background: white;
+  border: 0;
+  font-size: 15px;
+  border-left: 4px solid #f4f4f4;
+  border-radius: 0;
+}
+
+pre.language-coffeescript, pre.language-javascript {
+  display: none !important;
+}
+body[data-lang='coffeescript'] pre.language-coffeescript {
+  display: block !important;
+}
+
+body[data-lang='javascript'] pre.language-javascript {
+  display: block !important;
+}
+
+
+

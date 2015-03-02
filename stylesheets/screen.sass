@@ -1,0 +1,110 @@
+body
+  height: 100%
+  font-family: 'Open Sans'
+
+.navbar-fixed-top
+  background: transparent
+  border: 0
+  .navbar-brand, ul.nav > li > a
+    color: rgba(255, 255, 255, 0.8)
+  .navbar-brand, ul.nav > li > a:hover, .navbar-brand
+    color: rgba(255, 255, 255, 1) !important
+  ul.nav > li
+    > a:focus
+      color: rgba(255, 255, 255, 1) !important
+    &.open
+      background: transparent !important
+      color: white !important
+      > a
+        background: transparent !important
+        color: white !important
+
+h1
+  font-weight: normal
+
+.side-menu.affix
+  position: fixed
+  top: 100px
+
+.nav
+  a
+    cursor: pointer
+    color: #444
+  li
+    .nav
+      padding-left: 1em
+      font-size: 0.9em
+      li
+        line-height: 1em
+        padding: 0
+        height: 0
+        opacity: 0
+        overflow: hidden
+        transition: all 0.33s
+
+
+    &.active, &:hover
+      > a
+        color: green !important
+      .nav li
+        height: 2.5em
+        opacity: 1
+
+.jumbotron.affix
+  position: fixed
+  top: -450px
+
+#docs
+  margin-top: 550px
+  padding-bottom: 100px
+  div[id]
+    padding-top: 50px
+    margin-top: -50px
+  h2, h3, h4
+    margin-top: 1.5em
+    font-family: 'Open Sans'
+  #overview h2
+    padding-top: 1em
+    margin-top: 0
+
+.jumbotron
+  position: absolute
+  height: 500px
+  width: 100%
+  z-index: 1
+  padding-top: 140px
+  background: #000 top center repeat
+  background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 100%), url(wood.jpg)
+  background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 100%), url(wood.jpg)
+  background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.14) 40%, rgba(255, 255, 255, 0) 100%), url(wood.jpg)
+  color: white
+  box-shadow: 0 0 20px 20px white
+  > .container
+    padding-left: 300px
+
+h1, .navbar-brand
+  font-family: 'Swanky and Moo Moo'
+  font-size: 1.8em
+
+h1
+  font-size: 80px !important
+
+.dropdown-menu a
+  color: #333
+
+.jumbotron .btn
+  background: transparent
+  border-color: #888
+  color: #ddd
+  &:hover
+    border-color: #aaa
+    color: #eee
+
+
+
+body
+  &[data-lang='coffeescript'] pre.language-coffeescript, &[data-lang='javascript'] pre.language-javascript
+    display: block !important
+
+@import code
+@import demo

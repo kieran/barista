@@ -1,0 +1,114 @@
+-def partial(path); Haml::Engine.new(File.read(path)).render; end
+#routes
+  %h2 Defining Routes
+  %p
+  %h3 A simple example
+  %pre.language-javascript
+    %code
+      :preserve
+        // a GET request to '/products'
+        router.match( '/products', 'GET' )
+              .to( 'Products.index' )
+    %code.output
+      :preserve
+        // =>
+        {
+          controller: 'Products',
+          action: 'index',
+          method: 'GET'
+        }
+  %pre.language-coffeescript
+    %code
+      :preserve
+        # a GET request to '/products'
+        router
+        .match '/products', 'GET'
+        .to 'Products.index'
+    %code.output
+      :preserve
+        # =>
+        {
+          controller: 'Products'
+          action: 'index'
+          method: 'GET'
+        }
+
+  = partial 'templates/routes/keys.haml'
+  = partial 'templates/routes/globs.haml'
+  = partial 'templates/routes/convenience.haml'
+  = partial 'templates/routes/conditions.haml'
+  = partial 'templates/routes/defaults.haml'
+
+  #route-names
+    %h3 Route names
+    .alert.alert-warning
+      %p
+        %i.fa.fa-exclamation-triangle
+        %strong TODO: Document this properly
+      %p
+        Basically, there's a
+        %code .as 'name'
+        method that names the route. This is currently only useful for inspecting or deleting routes at runtime, but will make sense in the context of named generators, which are coming in v0.6.0
+      %p
+        Feel free to prod me via
+        %a.alert-link{href: 'https://github.com/kieran/barista/issues/27'} this issue on GH
+        if this is a feature you need sooner rather than later.
+
+
+
+  #nested-routes
+    %h3 Nested routes
+    %p
+      Routes can be nested under other routes or resources (more on resources below).
+    %p
+      Nested routes are indentical to non-nested routes with two exceptions: They build off the URL of the parent, and they also inherit upstream default params and match conditions.
+    %p
+      Nesting under a route is accomplished by calling
+      %code .nest( router )
+      The router argument is optional, since the route being nested is aliased to
+      %code this
+
+    %pre.language-javascript
+      %a.btn.btn-default{href:'#try'} try it
+      %code{'data-url'=>'/posts/123/comments','data-method'=>'GET'}
+        :preserve
+          #{File.read 'templates/routes/nested1.js'}
+    %pre.language-coffeescript
+      %a.btn.btn-default{href:'#try'} try it
+      %code{'data-url'=>'/posts/123/comments','data-method'=>'GET'}
+        :preserve
+          #{File.read 'templates/routes/nested1.coffee'}
+
+    %p
+      As mentioned earlier, nested routes inherit upstream default params and match conditions. In most cases this is the desired outcome, but you can override these inherited peoperties by re-defining them on the nested route. Changes you make at this level will not affect the parent route or any sibling routes, but will be inherited in turn by any routes nested underneath.
+
+    %ul.nav.nav-tabs{role:"tablist"}
+      %li.active
+        %a{href:"#nested-defaults",role:"tab",'data-toggle'=>"tab"} Nested default params
+      %li
+        %a{href:"#nested-conditions",role:"tab",'data-toggle'=>"tab"} Nested conditions
+
+    .tab-content
+      #nested-defaults.tab-pane.active
+        %pre.language-javascript
+          %a.btn.btn-default{href:'#try'} try it
+          %code{'data-url'=>'/posts/123/comments','data-method'=>'GET'}
+            :preserve
+              #{File.read 'templates/routes/nested2.js'}
+        %pre.language-coffeescript
+          %a.btn.btn-default{href:'#try'} try it
+          %code{'data-url'=>'/posts/123/comments','data-method'=>'GET'}
+            :preserve
+              #{File.read 'templates/routes/nested2.coffee'}
+      #nested-conditions.tab-pane
+        %pre.language-javascript
+          %a.btn.btn-default{href:'#try'} try it
+          %code{'data-url'=>'/posts/123/comments.json','data-method'=>'GET'}
+            :preserve
+              #{File.read 'templates/routes/nested3.js'}
+        %pre.language-coffeescript
+          %a.btn.btn-default{href:'#try'} try it
+          %code{'data-url'=>'/posts/123/comments.json','data-method'=>'GET'}
+            :preserve
+              #{File.read 'templates/routes/nested3.coffee'}
+

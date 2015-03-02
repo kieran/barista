@@ -1,0 +1,35 @@
+#install
+  %h2 Install
+  You can use Barista in either node JS or in the browser.
+  #install-node
+    %h3 Node JS
+    %p Install via npm, thusly:
+    %pre.language-bash
+      %code
+        npm install --save barista
+    %p Then require &amp; instantiate like so:
+    %pre.language-javascript
+      %code
+        :preserve
+          var Router = require('barista').Router
+            , router = new Router;
+    %pre.language-coffeescript
+      %code
+        :preserve
+          { Router } = require 'barista'
+          router = new Router
+  #install-browser
+    %h3 Use it in the browser
+    %p Install via bower, thusly:
+    %pre.language-bash
+      %code
+        bower install --save barista
+    %p Instantiate a router like so, then use it as you normally would!
+    %pre.language-javascript
+      %code
+        :preserve
+          var router = new Barista;
+    %pre.language-coffeescript
+      %code
+        :preserve
+          router = new Barista

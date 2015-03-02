@@ -1,0 +1,24 @@
+-def partial(path); Haml::Engine.new(File.read(path)).render; end
+#resources
+  %h2 Defining Resources
+  %p Resources are a convenient shorthand for describing REST-ful endpoints.
+  %h3 A simple example
+  %pre.language-javascript
+    %a.btn.btn-default{href:'#try'} try it
+    %code
+      :preserve
+        #{File.read 'templates/resources/simple1.js'}
+    %code.output
+      :preserve
+        #{File.read 'templates/resources/simple1out.js'}
+  %pre.language-coffeescript
+    %a.btn.btn-default{href:'#try'} try it
+    %code
+      :preserve
+        #{File.read 'templates/resources/simple1.coffee'}
+    %code.output
+      :preserve
+        #{File.read 'templates/resources/simple1out.coffee'}
+
+  = partial 'templates/resources/nesting.haml'
+  = partial 'templates/resources/key_collisions.haml'

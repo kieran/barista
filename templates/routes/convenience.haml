@@ -1,0 +1,27 @@
+-http_methods = { get:'GET', post:'POST', put:'PUT', patch:'PATCH', del:'DELETE', options:'OPTIONS' }
+-actions = { get:'show', post:'create', put:'update', patch:'update', del:'destroy', options:'options' }
+#convenience-methods
+  %h3 Convenience methods
+  %ul.nav.nav-tabs{role:"tablist"}
+    -http_methods.each_pair do |method, verb|
+      %li{:class=>('active' if verb == 'GET')}
+        %a{href:"#method-#{method}", role:"tab",'data-toggle'=>"tab"}= ".#{method}"
+
+  .tab-content
+    -http_methods.each_pair do |method, verb|
+      %div.tab-pane{id: "method-#{method}", :class=>('active' if verb == 'GET')}
+        %pre.language-javascript
+          %a.btn.btn-default{href:'#try'} try it
+          %code{ 'data-url'=>'/users/123', 'data-method'=>verb }
+            :preserve
+              // equivalent to router.match( '/users/:id', '#{verb}' )
+              router.#{method}( '/users/:id' )
+                    .to( 'Users.#{actions[method]}' )
+        %pre.language-coffeescript
+          %a.btn.btn-default{href:'#try'} try it
+          %code{ 'data-url'=>'/users/123', 'data-method'=>verb }
+            :preserve
+              router
+              # equivalent to .match '/users/:id', '#{verb}'
+              .#{method} '/users/:id'
+              .to 'Users.#{actions[method]}'

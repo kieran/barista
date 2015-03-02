@@ -1,0 +1,24 @@
+#router-first
+  %h3
+    %code router.first
+  %p
+    This method takes a URL and an optional HTTP method, returning the resolved params if there's a matching route.
+  %p
+    Check
+    %a{href: '/docs/router.html#-router-first-path-method-callback-'} the annotated source
+    for more info.
+
+  %pre.language-javascript
+    %code
+      :preserve
+        #{File.read 'templates/resolution/first.js'}
+    %code.output
+      :preserve
+        #{File.read 'templates/resolution/firstout.js'}
+  %pre.language-coffeescript
+    %code
+      :preserve
+        #{File.read 'templates/resolution/first.coffee'}
+    %code.output
+      :preserve
+        #{File.read 'templates/resolution/firstout.coffee'}

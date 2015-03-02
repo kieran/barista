@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>Barista</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script src="sh_main.min.js"></script>
+  <script src="sh_javascript.min.js"></script>
+
+  <link href='http://fonts.googleapis.com/css?family=Swanky+and+Moo+Moo' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" title="Default" href="twilight.css" type='text/css'>
+  <link rel="stylesheet" title="Default" href="screen.css" type='text/css'>
+
+
+  <script>
+  $(function(){
+    sh_highlightDocument();
+
+    $('pre span.sh_string').each(function(id,el){
+      $(el).html(
+        $(el).text()
+          .replace(/(:\w+)/g,'<span class="barista_key">$1</span>')
+          .replace(/(\*\w+)/g,'<span class="barista_glob">$1</span>')
+      )
+    })
+
+    $('#convenience_methods span.sh_function').each(function(id,el){
+      var t = $(el).text()
+      if ( t == 'get' ||  t == 'put' || t == 'post' || t == 'del' ) $(el).addClass('highlight')
+    })
+
+    $('#variables span.barista_key').addClass('highlight')
+    $('#globs span.barista_glob').addClass('highlight')
+
+    $('#resources span.sh_function').each(function(id,el){
+      if ( $(el).text() == 'resource' ) $(el).addClass('highlight')
+    })
+
+    $('#conditions span.sh_function').each(function(id,el){
+      if ( $(el).text() == 'where' ) $(el).addClass('highlight')
+    })
+
+    $('#generation span.sh_function, #generation span.sh_keyword').each(function(id,el){
+      if ( $(el).text() == 'url' || $(el).text() == 'true' ) $(el).addClass('highlight')
+    })
+
+    $('#resolution span.sh_function').each(function(id,el){
+      if ( $(el).text() == 'first' || $(el).text() == 'all' ) $(el).addClass('highlight')
+    })
+
+  })
+
+
+  </script>
+</head>
+
+<body>
+  <a href="https://github.com/kieran/barista"><img style="position: fixed; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+  <img id='title' src="barista.png" />
+
+  <section>
+    <header>
+      <h2>The Skinny</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// define a route
+router.get( '/:beverage/near/:location(.:format)' )
+      .to( 'Beverages.byLocation' )
+
+// convert a URL to a params object
+router.first( '/coffee/near/90210', 'GET' )
+
+// =>
+{
+  controller: 'Beverages',
+  action: 'byLocation',
+  beverage: 'coffee',
+  location: 90210,
+  method: 'GET'
+}
+
+
+// generate a URL from a params object
+router.url({
+  controller: 'Beverages',
+  action: 'byLocation',
+  beverage: 'coffee',
+  location: 90210,
+  format: 'json'
+})
+
+// => '/coffee/near/90210.json'
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Installation</h1>
+
+  <section id="installation">
+    <header>
+      <h2>Install via npm</h2>
+    </header>
+    <div class='code'>
+<pre>
+npm install barista
+</pre>
+    </div>
+  </section>
+
+  <section>
+    <header>
+      <h2>Use it in your app</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+var Router = require('barista').Router
+  , router = new Router
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Defining routes</h1>
+
+  <section>
+    <header>
+      <h2>A simple example</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// a GET request to '/products'
+router.match( '/products', 'GET' )
+      .to( 'products.index' )
+
+// =>
+{
+  controller: 'products',
+  action: 'index',
+  method: 'GET'
+}
+</pre>
+    </div>
+  </section>
+
+  <section id='variables'>
+    <header>
+      <h2>Rails-esque variable names</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.match( '/products/:id', 'GET' )
+      .to( 'Products.show' )
+
+router.match( '/profiles/:username', 'GET' )
+      .to( 'Users.show' )
+
+// things enclosed in parens are optional
+router.match( '/products/:id(.:format)', 'GET' )
+      .to( 'Products.show' )
+</pre>
+    </div>
+  </section>
+
+
+  <section id='convenience_methods'>
+    <header>
+      <h2>Convenience methods</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.get( '/products/:id(.:format)' )
+      .to( 'Products.show' )
+
+router.put( '/products/:id(.:format)' )
+      .to( 'Products.update' )
+
+router.post( '/products' )
+      .to( 'Products.create' )
+
+router.del( '/products' )
+      .to( 'Products.destroy' )
+</pre>
+    </div>
+  </section>
+
+
+  <section id='globs'>
+    <header>
+      <h2>Route globbing</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.get('/timezones/*tzname')
+      .to( 'Timezones.select' )
+
+router.first( '/timezones/America/Toronto', 'GET' )
+
+// =>
+{
+  controller: 'Timezones',
+  action: 'select',
+  tzname: 'America/Toronto',
+  method: 'GET'
+}
+</pre>
+<br/>
+<pre class="sh_javascript">
+// a "catch-all" route:
+router.match( '/*path(.:format)' )
+      .to( 'Errors.notFound' )
+
+
+router.first( '/somewhere/that/four-oh-fours.json', 'GET' )
+
+// =>
+{
+  controller: 'Errors',
+  action: 'notFound',
+  path: 'somewhere/that/four-oh-fours',
+  format: 'json',
+  method: 'GET'
+}
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Resolution &amp; dispatching</h1>
+  <section id='resolution'>
+    <header>
+      <h2>router.first</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// get the first route that matches
+
+params = router.first( '/products/15', 'GET' )
+
+// returns a params object, or false if nothing matches
+</pre>
+<br/>
+<pre class="sh_javascript">
+// go all callback on this shit
+
+router.first( '/products/15', 'GET', function(params){
+  // passes a params object in
+  // this has not been well thought out.
+})
+</pre>
+<br/>
+<header>
+  <h2>router.all</h2>
+</header>
+<pre class="sh_javascript">
+// if you want all matching routes...
+
+params_array = router.all( '/products/15', 'GET' )
+
+// => [ params, params, params... ]
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Resources</h1>
+  <section id='resources'>
+    <header>
+      <h2>REST resources</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.resource( 'BlogPosts' )
+
+// is equivalent to:
+
+router.get( '/blog_posts(.:format)' )
+      .to( 'BlogPosts.index' )
+
+router.get( '/blog_posts/add(.:format)' )
+      .to( 'BlogPosts.add' )
+
+router.get( '/blog_posts/:id(.:format)' )
+      .to('BlogPosts.show' )
+
+router.get('/blog_posts/:id/edit(.:format)' )
+      .to( 'BlogPosts.edit' )
+
+router.post('/blog_posts(.:format)' )
+      .to( 'BlogPosts.create' )
+
+router.put('/blog_posts/:id(.:format)' )
+      .to( 'BlogPosts.update' )
+
+router.del('/blog_posts/:id(.:format)' )
+      .to( 'BlogPosts.destroy' )
+</pre>
+    </div>
+
+    <header>
+      <h2>Nested routes &amp; resources</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// resources can nest both routes and deeper resources
+router.resource( 'BlogPosts' )
+      // nest on the collection
+      .collection(function(){
+        this.get( 'print(.:format)' )
+            .to('BlogPosts.print')
+      })
+      // nest on the member
+      .member(function(){
+        this.resource( 'Comments' )
+      })
+
+
+router.first( '/blog_posts/5/comments' )
+
+// =>
+{
+  controller: 'Comments',
+  action: 'index',
+  blog_posts_id: 5,
+  method: 'GET'
+}
+
+
+router.first( '/blog_posts/print.pdf' )
+
+// =>
+{
+  controller: 'BlogPosts',
+  action: 'print',
+  format: 'pdf',
+  method: 'GET'
+}
+</pre>
+    </div>
+  </section>
+
+
+  <h1>Conditions</h1>
+  <section id='conditions'>
+    <header>
+      <h2>Match conditions</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+router.get( '/:beverage/near/:zipcode' )
+      .to( 'Beverages.byZipCode' )
+      .where({
+        // an array of options
+        beverage: [ 'coffee', 'tea', 'beer', 'warm_sake' ],
+        // a regex pattern
+        zipcode: /^\d{5}(-\d{4})?$/
+      })
+</pre>
+<br/>
+<header>
+  <h2>Mixing conditions</h2>
+</header>
+<pre class="sh_javascript">
+router.get( '/:beverage/near/:location' )
+      .to( 'Beverage.byLocation' )
+      .where({
+        location: [
+          // could be a zip code
+          /^\d{5}(-\d{4})?$/,
+          // OR a postal code
+          /^[A-Z]{1}\d{1}[A-Z]{1} *\d{1}[A-Z]{1}\d{1}$/,
+          // OR the word 'me'
+          'me'
+        ]
+      })
+</pre>
+    </div>
+  </section>
+
+
+  <h1>URL generation</h1>
+  <section id='generation'>
+    <header>
+      <h2>Turn a params object into a URL</h2>
+    </header>
+    <div class='code'>
+<pre class="sh_javascript">
+// assuming:
+router.resource( 'products' )
+
+// then
+router.url( {
+  controller: 'products',
+  action: 'show',
+  id: 5
+} )
+
+// => '/products/5'
+</pre>
+<br/>
+<pre class="sh_javascript">
+router.url( {
+  controller: 'products',
+  action: 'show',
+  id: 5,
+  format: 'json'
+} )
+
+// => '/products/5.json'
+</pre>
+<br/>
+<header>
+  <h2>Extra params</h2>
+</header>
+<pre class="sh_javascript">
+// you can optionally include extra params as a query string
+router.url({
+  controller: 'products',
+  action: 'show',
+  id: 5,
+  format: 'json',
+  love: 'cheese' // <--------
+}, true )
+
+// => '/products/5.json?love=cheese'
+</pre>
+    </div>
+  </section>
+
+</body>
+</html>

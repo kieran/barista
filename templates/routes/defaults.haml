@@ -1,0 +1,141 @@
+#default-params
+  %h3 Default parameters
+  %p You can attach arbitrary default params to a route by passing a hash of defaults to the <code>.to</code> method (as a second argument).
+  %p Anything defined in your default params will be present in the output params. In the even you have a key in your route definition with the same name, the default param will be overridden by the one in the URL.
+  %p Default params are useful for providing fallback values for optional keys (<code>:format</code>, for instance), or for inferring implicit values based on a static part of the route (often used for language-specific routes).
+
+  %ul.nav.nav-tabs{role:"tablist"}
+    %li.active
+      %a{href:"#defaults-format",role:"tab",'data-toggle'=>"tab"} Defaults for existing keys
+    %li
+      %a{href:"#defaults-lang",role:"tab",'data-toggle'=>"tab"} Implicit params
+
+  .tab-content
+    #defaults-format.tab-pane.active
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/comments/5','data-method'=>'GET'}
+          :preserve
+            router.get('/comments/:id(.:format)')
+                  .to('comments.show', { format: 'pdf' } )
+        %code.output
+          :preserve
+            router.first('/comments/5','GET')
+
+            // =>
+            {
+              controller: 'comments',
+              action: 'show',
+              id: 5,
+              format: 'pdf'
+            }
+
+            router.first('/comments/5.html','GET')
+
+            // =>
+            {
+              controller: 'comments',
+              action: 'show',
+              id: 5,
+              format: 'html'
+            }
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/comments/5','data-method'=>'GET'}
+          :preserve
+            router
+            .get '/comments/:id(.:format)'
+            .to 'comments.show', format: 'pdf'
+        %code.output
+          :preserve
+            router.first '/comments/5','GET'
+
+            # =>
+            {
+              controller: 'comments'
+              action: 'show'
+              id: 5
+              format: 'pdf'
+            }
+
+            router.first '/comments/5.html', 'GET'
+
+            # =>
+            {
+              controller: 'comments'
+              action: 'show'
+              id: 5
+              format: 'html'
+            }
+    #defaults-lang.tab-pane
+      %pre.language-javascript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/comments/5','data-method'=>'GET'}
+          :preserve
+            // english
+            router.get('/comments/:id')
+                  .to('comments.show', { lang: 'en' } )
+
+            // français
+            router.get('/commentaires/:id')
+                  .to('comments.show', { lang: 'fr' } )
+        %code.output
+          :preserve
+            // english
+            router.first('/comments/5', 'GET')
+
+            // =>
+            {
+              controller: 'comments',
+              action: 'show',
+              id: 5,
+              lang: 'en'
+            }
+
+            // français
+            router.first('/commentaires/5', 'GET')
+
+            // =>
+            {
+              controller: 'comments',
+              action: 'show',
+              id: 5,
+              lang: 'fr'
+            }
+      %pre.language-coffeescript
+        %a.btn.btn-default{href:'#try'} try it
+        %code{'data-url'=>'/comments/5','data-method'=>'GET'}
+          :preserve
+            # english
+            router
+            .get '/comments/:id'
+            .to 'comments.show', lang: 'en'
+
+            # français
+            router
+            .get '/commentaires/:id'
+            .to 'comments.show', lang: 'fr'
+        %code.output
+          :preserve
+            # english
+            router.first '/comments/5', 'GET'
+
+            # =>
+            {
+              controller: 'comments'
+              action: 'show'
+              id: 5
+              lang: 'en'
+            }
+
+            # français
+            router.first '/commentaires/5', 'GET'
+
+            # =>
+            {
+              controller: 'comments'
+              action: 'show'
+              id: 5
+              lang: 'fr'
+            }
+

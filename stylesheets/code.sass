@@ -1,0 +1,79 @@
+span.barista_key, span.barista_glob
+  color: orange !important
+
+
+=keyframes($name)
+  @-webkit-keyframes #{$name}
+    @content
+  @-moz-keyframes #{$name}
+    @content
+  @-ms-keyframes #{$name}
+    @content
+  @keyframes #{$name}
+    @content
+
++keyframes(pulse)
+  50%
+    color: red
+    background: #ff8
+
+
+pre:hover span.highlight
+  animation-name: pulse
+  animation-duration: 0.5s
+  animation-iteration-count: 3
+  -webkit-animation-name: pulse
+  -webkit-animation-duration: 0.5s
+  -webkit-animation-iteration-count: 3
+  -moz-animation-name: pulse
+  -moz-animation-duration: 0.5s
+  -moz-animation-iteration-count: 3
+
+
+pre[class*=language-]
+  position: relative
+  font-size: 0px
+  white-space: normal !important
+  padding: 0 !important
+
+  margin: 0 0 1em 0
+  background: white
+  border: 0
+  font-size: 15px
+  border-left: 4px solid #f4f4f4
+  border-radius: 0
+  &.language-coffeescript, &.language-javascript
+    display: none !important
+
+  > code
+    display: block
+    white-space: pre !important
+    margin: 0
+    padding: 1em
+
+    &.output
+      background: #f8f8f8
+      position: relative
+      &:before
+        content: "output"
+        display: block
+        position: absolute
+        top: 0.5em
+        right: 1em
+        color: #bbb
+        font-family: "Open Sans"
+        text-transform: uppercase
+        font-size: 0.8em
+        font-weight: bold
+
+
+  a[href='#try']
+    font-size: 15px
+    position: absolute
+    top: 1em
+    right: 1em
+    color: green
+    font-family: 'Open Sans'
+    text-transform: capitalize
+    font-size: 0.8em
+

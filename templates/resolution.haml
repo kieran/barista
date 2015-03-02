@@ -1,0 +1,12 @@
+-def partial(path); Haml::Engine.new(File.read(path)).render; end
+#resolution
+  %h2 Parsing URLs
+  %p
+    If you're using Barista in your framework or "off-grid" in a custom project, you'll need to parse URLs at some point in rder to route and dispatch requests. There are two methods for doing this:
+    %code router.first
+    and
+    %code router.all
+    , though you'll almost always use the former.
+
+  = partial 'templates/resolution/first.haml'
+  = partial 'templates/resolution/all.haml'
