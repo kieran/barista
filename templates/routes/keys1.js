@@ -7,3 +7,6 @@ router.match( '/profiles/:username', 'GET' )
 // things enclosed in parens are optional
 router.match( '/products/:id(.:format)', 'GET' )
       .to( 'Products.show' )
+
+// optional segments are also nestable
+router.match( '/:controller(/:action(/:id))(.:format)', 'GET' )

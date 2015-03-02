@@ -242,8 +242,10 @@
             <code class='output'># =>&#x000A;{&#x000A;  controller: 'Products'&#x000A;  action: 'index'&#x000A;  method: 'GET'&#x000A;}&#x000A;</code></pre>
             <div id='keys'>
               <h3>Route keys</h3>
-              <pre class='language-javascript'><code>router.match( '/products/:id', 'GET' )&#x000A;      .to( 'Products.show' )&#x000A;&#x000A;router.match( '/profiles/:username', 'GET' )&#x000A;      .to( 'Users.show' )&#x000A;&#x000A;// things enclosed in parens are optional&#x000A;router.match( '/products/:id(.:format)', 'GET' )&#x000A;      .to( 'Products.show' )&#x000A;</code></pre>
-              <pre class='language-coffeescript'><code>router&#x000A;.match '/products/:id', 'GET'&#x000A;.to 'Products.show'&#x000A;&#x000A;router&#x000A;.match '/profiles/:username', 'GET'&#x000A;.to 'Users.show'&#x000A;&#x000A;# things enclosed in parens are optional&#x000A;router&#x000A;.match '/products/:id(.:format)', 'GET'&#x000A;.to 'Products.show'&#x000A;</code></pre>
+              <pre class='language-javascript'><a class='btn btn-default' href='#try'>try it</a>
+              <code>router.match( '/products/:id', 'GET' )&#x000A;      .to( 'Products.show' )&#x000A;&#x000A;router.match( '/profiles/:username', 'GET' )&#x000A;      .to( 'Users.show' )&#x000A;&#x000A;// things enclosed in parens are optional&#x000A;router.match( '/products/:id(.:format)', 'GET' )&#x000A;      .to( 'Products.show' )&#x000A;&#x000A;// optional segments are also nestable&#x000A;router.match( '/:controller(/:action(/:id))(.:format)', 'GET' )&#x000A;</code></pre>
+              <pre class='language-coffeescript'><a class='btn btn-default' href='#try'>try it</a>
+              <code>router&#x000A;.match '/products/:id', 'GET'&#x000A;.to 'Products.show'&#x000A;&#x000A;router&#x000A;.match '/profiles/:username', 'GET'&#x000A;.to 'Users.show'&#x000A;&#x000A;# things enclosed in parens are optional&#x000A;router&#x000A;.match '/products/:id(.:format)', 'GET'&#x000A;.to 'Products.show'&#x000A;&#x000A;# optional segments are also nestable&#x000A;router&#x000A;.match '/:controller(/:action(/:id))(.:format)', 'GET'&#x000A;</code></pre>
             </div>
             <div id='globs'>
               <h3>Globs</h3>
