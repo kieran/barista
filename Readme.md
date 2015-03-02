@@ -1,6 +1,9 @@
-Barista is a simple URL router for NodeJS.
+[![npm](https://badge.fury.io/js/barista.svg)](http://badge.fury.io/js/barista) [![Bower](https://badge.fury.io/bo/barista.svg)](http://badge.fury.io/bo/barista)  [![Build Status](https://travis-ci.org/kieran/barista.svg?branch=master)](https://travis-ci.org/kieran/barista)
 
-[![Build Status](https://travis-ci.org/kieran/barista.svg?branch=master)](https://travis-ci.org/kieran/barista)
+[![NPM](https://nodei.co/npm/barista.png?downloads=true&downloadRank=true)](https://nodei.co/npm/barista/)
+
+
+Barista is a simple URL router for NodeJS.
 
 In a nutshell
 =============
@@ -29,17 +32,30 @@ Getting Barista
 Install via npm, thusly:
 
 ```javascript
-npm install barista
+npm install --save barista
+```
+
+Running barista in the browser? Try bower:
+
+```javascript
+bower install --save barista
 ```
 
 Using Barista
 -------------
 
+via node:
 ```javascript
 var Router = require('barista').Router;
 
 var router = new Router;
 ```
+
+in the browser:
+```javascript
+var router = new Barista
+```
+
 
 Adding routes
 -------------
@@ -188,8 +204,8 @@ OR
 
 ```javascript
 router.first( '/products/15', 'GET', function( err, params ){
-  if (err) { 
-    // couldn't find match 
+  if (err) {
+    // couldn't find match
   }
   // dispatch the request or something
 })

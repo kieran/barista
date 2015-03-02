@@ -2,7 +2,7 @@
   "name": "barista",
   "description": "URL router & generator, similar to Rails / merb",
   "version": "0.5.3",
-  "homepage": "http://kieran.github.io/barista/",
+  "homepage": "https://kieran.github.io/barista",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kieran/barista/issues"

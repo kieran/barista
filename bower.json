@@ -1,0 +1,24 @@
+{
+  "name": "barista",
+  "main": "dist/barista.js",
+  "version": "0.5.3",
+  "homepage": "https://kieran.github.io/barista",
+  "authors": [
+    "Kieran Huggins <kieran@kieran.ca>"
+  ],
+  "description": "URL router & generator, similar to Rails / merb",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "router"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
